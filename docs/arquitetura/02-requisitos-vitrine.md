@@ -1,56 +1,31 @@
 # Requisitos da Vitrine
 
-## Requisitos funcionais
+## Requisitos funcionais (RF)
 
-### RF01 - Exibir estoque físico local na vitrine
-O sistema deve apresentar os produtos físicos disponíveis para venda na região de atendimento da revendedora.
+| ID | Descrição | Prioridade | Ator/Origem |
+|----|-----------|------------|-------------|
+| RF01 | Sistema deve exibir o estoque físico local disponível para venda na região de atendimento da revendedora na página principal | Alta | Cliente final |
+| RF02 | Sistema deve validar/confirmar a região de atendimento antes de liberar o botão de contato via WhatsApp | Alta | Cliente final |
+| RF03 | Sistema deve gerar o link do WhatsApp com mensagem pré-formatada após a confirmação da região e seleção do produto | Alta | Cliente final |
+| RF04 | Sistema deve exibir blocos com links externos de categorias/produtos do site oficial da matriz para redirecionamento | Média | Cliente final |
+| RF05 | Sistema deve disponibilizar o catálogo geral em PDF ou visualizador embutido na vitrine | Média | Cliente final |
+| RF06 | Sistema deve exibir uma área separada de captação B2B, sem misturar com a experiência B2C | Média | Potencial parceira |
+| RF07 | Sistema deve permitir que a administradora cadastre, edite e remova logicamente produtos do estoque físico e categorias | Alta | Revendedora/administradora |
+| RF08 | Sistema deve permitir que a administradora atualize textos, imagens e blocos visuais da página pública | Média | Revendedora/administradora |
+| RF09 | Sistema deve controlar a publicação/ocultação de itens com base no estoque e no status de disponibilidade | Alta | Sistema/Revendedora |
+| RF10 | Sistema deve exigir autenticação segura para acesso à área administrativa | Alta | Revendedora/administradora |
 
-### RF02 - Validar região de atendimento antes do WhatsApp
-O sistema deve bloquear o botão de contato até que o usuário confirme ou informe a cidade/região de atendimento permitida.
+## Requisitos não funcionais (RNF)
 
-### RF03 - Redirecionar para WhatsApp com mensagem pré-formatada
-Ao confirmar a região e selecionar um produto, o sistema deve gerar um link para WhatsApp com mensagem pronta para atendimento.
-
-### RF04 - Exibir blocos de links externos de afiliada
-O sistema deve mostrar blocos com links de categorias ou produtos do site oficial da matriz para redirecionamento direto.
-
-### RF05 - Exibir catálogo em PDF na página
-O sistema deve disponibilizar o catálogo geral em PDF ou visualizador embutido para consulta do cliente.
-
-### RF06 - Exibir bloco de captação B2B
-O sistema deve disponibilizar uma área separada para captar novas parceiras, sem misturar com a experiência B2C.
-
-### RF07 - Gerenciar catálogo físico por backoffice
-O administrador deve poder cadastrar, editar e remover logicamente produtos do estoque físico e suas categorias.
-
-### RF08 - Gerenciar conteúdo da vitrine
-O administrador deve conseguir atualizar textos, imagens e blocos visuais da página pública.
-
-### RF09 - Publicar e ocultar produtos conforme disponibilidade
-O sistema deve controlar a publicação de itens com base no estoque e no status de disponibilidade.
-
-### RF10 - Acessar área administrativa com autenticação
-A área administrativa deve exigir autenticação segura para proteger os dados operacionais e o conteúdo da vitrine.
-
-## Requisitos não funcionais
-
-### RNF01 - Performance
-A página inicial deve carregar rapidamente em dispositivos móveis, com foco em tempo de resposta e experiência fluida.
-
-### RNF02 - Usabilidade mobile-first
-A interface deve ser pensada para uso em celular, com CTAs claros, espaço de toque adequado e leitura simples.
-
-### RNF03 - Segurança
-As rotas administrativas devem exigir autenticação e autorização adequadas, com proteção contra acessos indevidos.
-
-### RNF04 - Confiabilidade
-A sequência de conversão deve evitar erros de navegação, bloqueios indevidos e links quebrados.
-
-### RNF05 - Manutenibilidade
-O frontend deve seguir componentes isolados e hooks para manter o código modular, escalável e fácil de evoluir.
-
-### RNF06 - Integridade de dados
-O banco deve manter consistência no estoque físico, com regras claras de publicação e ausência de duplicidade funcional.
+| ID | Descrição | Prioridade | Ator/Origem |
+|----|-----------|------------|-------------|
+| RNF01 | Desempenho: página inicial deve carregar em até 3s em dispositivos móveis com rede 4G, exibindo blocos principais sem bloqueio visual | Alta | Equipe |
+| RNF02 | Usabilidade: interface mobile-first, com CTAs claros, áreas de toque ≥ 44px e leitura simples em tela até 360px de largura | Alta | Equipe |
+| RNF03 | Segurança: rotas administrativas devem exigir autenticação e autorização, com proteção contra acesso indevido (ex: rate limit de login, sessão expirável) | Alta | Equipe |
+| RNF04 | Confiabilidade: links externos e catálogo devem ser verificados para evitar quebras; erros de navegação devem ser mínimos | Média | Equipe |
+| RNF05 | Manutenibilidade: frontend deve seguir componentes isolados e hooks, mantendo módulos pequenos e reutilizáveis | Média | Equipe |
+| RNF06 | Integridade de dados: banco deve manter consistência do estoque físico, sem duplicidade funcional e com regras claras de publicação | Alta | Equipe |
+| RNF07 | Portabilidade: vitrine deve funcionar em navegadores modernos de desktop e mobile, sem dependência de app nativo | Média | Equipe |
 
 ## Critérios de aceitação
 - A página principal exibe todos os blocos principais da vitrine em layout mobile-first.
