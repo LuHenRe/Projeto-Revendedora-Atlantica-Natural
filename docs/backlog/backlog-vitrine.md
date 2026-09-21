@@ -87,14 +87,7 @@
   - alterações refletem diretamente na vitrine;
   - o conteúdo tem validação básica de preenchimento.
 
-#### BP-10 - Registro e consulta de leads B2B
-- Prioridade: Média
-- Tipo: Produto
-- Descrição: O sistema deve registrar as interações de captação para revendedoras e parceiros e permitir consulta posterior.
-- Critério de aceitação:
-  - os leads são armazenados com dados mínimos obrigatórios;
-  - o administrador consegue listar e filtrar os registros;
-  - a jornada de captura permanece separada da compra local.
+
 
 ### Melhorias e expansão
 
@@ -178,10 +171,10 @@
   - link público;
   - gestão de atualização por administração.
 
-#### BT-08 - Modelar banco de dados para vitrine e B2B
+#### BT-08 - Modelar banco de dados para vitrine
 - Prioridade: Média
 - Tipo: Técnico
-- Descrição: Estruturar tabelas para produtos, categorias, conteúdo público e leads de parceiros.
+- Descrição: Estruturar tabelas para produtos, categorias e conteúdo público.
 - Entregáveis:
   - schema inicial e relações;
   - integridade de dados;
@@ -223,7 +216,6 @@
 - BP-05
 - BP-06
 - BP-09
-- BP-10
 - BT-05
 - BT-06
 - BT-07

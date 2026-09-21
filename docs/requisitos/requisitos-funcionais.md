@@ -15,8 +15,8 @@ A página pública deve exibir blocos com links para categorias ou produtos da m
 ## RF05 - Disponibilizar catálogo PDF
 O sistema deve disponibilizar o catálogo geral em PDF ou em visualizador embutido, acessível pelos usuários da página pública.
 
-## RF06 - Exibir CTA de captação de parceiros
-A vitrine deve ter um bloco ou página dedicada para recrutamento de novas revendedoras, separada da jornada B2C.
+## RF06 - Redirecionar para captação de parceiros (B2B)
+A vitrine deve ter um bloco ou página dedicada que redireciona o usuário para o formulário de captação B2B externo no site da matriz.
 
 ## RF07 - Gerenciar produtos do estoque local
 O administrador deve poder criar, editar e desativar produtos físicos do estoque local, com categoria, preço, imagem e status de disponibilidade.
@@ -33,5 +33,3 @@ O sistema deve realizar autenticação segura para acesso ao painel administrati
 ## RF11 - Exibir conteúdo editável da página
 O administrador deve conseguir atualizar textos, imagens e blocos visuais da vitrine sem alteração no código fonte.
 
-## RF12 - Acessar histórico de leads B2B
-O sistema deve permitir ao administrador consultar os leads ou interesses de captação B2B.

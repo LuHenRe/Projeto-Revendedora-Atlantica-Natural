@@ -99,8 +99,6 @@ A regra da região de atendimento deve ficar no front-end por três motivos:
 * **OfertaLocal:** produto disponível para venda física com estoque local e disponibilidade imediata.
 * **LinkExterno:** URL de afiliado apontando para a matriz; não é uma entidade persistida no banco de produtos.
 * **CatalogoDigital:** material em PDF ou visualizador web.
-* **Lead:** visitante que demonstra intenção de compra ou contato.
-* **ParceiraB2B:** lead de recrutamento para o programa de revenda.
 * **Administrador:** usuário autenticado para gerir conteúdos, produtos e links do hub.
 
 ### Contextos Delimitados (Bounded Contexts)
@@ -111,7 +109,7 @@ A regra da região de atendimento deve ficar no front-end por três motivos:
 
 ### Entidades e Invariantes
 * **Agregado Principal:** `Produto`.
-* **Entidades de Apoio:** `Categoria`, `OfertaLocal`, `CatalogoDigital`, `ParceiraB2B`.
+* **Entidades de Apoio:** `Categoria`, `OfertaLocal`, `CatalogoDigital`.
 * **Objetos de Valor:** `Preco` (não negativo, inclui moeda), `ContatoWhatsApp` (validado), `RegiaoAtendimento`.
 * **Regras Invariantes:**
   * um produto deve possuir nome, categoria e imagem para publicação;
@@ -169,7 +167,6 @@ A comunicação com PostgreSQL deve seguir o padrão Repository, com ORM (SQLAlc
 * `POST /admin/produtos` — criação de produto.
 * `PUT /admin/produtos/{id}` — atualização.
 * `DELETE /admin/produtos/{id}` — remoção lógica.
-* `GET /admin/b2b` — lista de leads ou oportunidades de recrutamento.
 
 ---
 
