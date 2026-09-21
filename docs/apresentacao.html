@@ -1,0 +1,1244 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vitrine Virtual — Apresentação Técnica & Simulador</title>
+  
+  <!-- Tipografia Moderna Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #0f1117;
+      --bg-card: rgba(22, 27, 38, 0.75);
+      --bg-card-hover: rgba(30, 37, 52, 0.85);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --border-highlight: rgba(16, 185, 129, 0.4);
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent-primary: #10b981; /* Emerald / Nature */
+      --accent-secondary: #3b82f6; /* Blue */
+      --accent-warning: #f59e0b; /* Amber */
+      --gradient-accent: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --shadow-glow: 0 0 25px rgba(16, 185, 129, 0.25);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(16, 185, 129, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(59, 130, 246, 0.08) 0%, transparent 40%);
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* HEADER */
+    header {
+      height: 70px;
+      padding: 0 28px;
+      background: rgba(15, 17, 23, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-logo {
+      width: 40px;
+      height: 40px;
+      background: var(--gradient-accent);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+    }
+
+    .brand-title {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-subtitle {
+      font-size: 11px;
+      color: var(--accent-primary);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* TABS */
+    .nav-tabs {
+      display: flex;
+      background: rgba(22, 27, 38, 0.8);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 4px;
+      gap: 4px;
+    }
+
+    .nav-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      padding: 8px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: all 0.25s ease;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .nav-btn:hover {
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.05);
+    }
+
+    .nav-btn.active {
+      background: var(--gradient-accent);
+      color: #fff;
+      box-shadow: 0 2px 10px rgba(16, 185, 129, 0.35);
+    }
+
+    /* MAIN */
+    main {
+      flex: 1;
+      padding: 24px;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    .tab-pane {
+      display: none;
+      animation: fadeIn 0.3s ease forwards;
+    }
+
+    .tab-pane.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* SLIDES */
+    .slides-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+      position: relative;
+      overflow: hidden;
+      min-height: 600px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .slide-progress-bar {
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      width: 100%;
+    }
+
+    .slide-progress-fill {
+      height: 100%;
+      background: var(--gradient-accent);
+      width: 0%; /* Será calculado via JS */
+      transition: width 0.3s ease;
+    }
+
+    .slide-body {
+      flex: 1;
+      padding: 48px 56px;
+      display: none;
+      overflow-y: auto;
+    }
+
+    .slide-body.active {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      animation: slideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    
+    .slide-body.centered {
+      align-items: center;
+      text-align: center;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .slide-tag {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent-primary);
+      margin-bottom: 8px;
+    }
+
+    .slide-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 34px;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 24px;
+      background: linear-gradient(90deg, #fff 0%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .slide-subtitle {
+      font-size: 16px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      max-width: 900px;
+      margin-bottom: 32px;
+    }
+
+    .slide-grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      width: 100%;
+    }
+
+    .slide-grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 20px;
+      width: 100%;
+    }
+
+    .slide-card {
+      background: rgba(15, 17, 23, 0.6);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 24px;
+      transition: all 0.25s;
+    }
+
+    .slide-card h4 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--accent-primary);
+    }
+
+    .slide-card p, .slide-card li {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .slide-card ul {
+      list-style-position: inside;
+      margin-top: 8px;
+      margin-left: 10px;
+    }
+    
+    .slide-image-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #ffffff;
+      padding: 20px;
+      border-radius: var(--radius-md);
+      margin-top: 20px;
+    }
+    
+    .slide-image-container img {
+      max-width: 100%;
+      max-height: 400px;
+      object-fit: contain;
+    }
+    
+    .slide-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+      background: rgba(15, 17, 23, 0.6);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      margin-top: 10px;
+    }
+    
+    .slide-table th {
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--accent-primary);
+      text-align: left;
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-color);
+    }
+    
+    .slide-table td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-main);
+    }
+    .slide-table tr:last-child td { border-bottom: none; }
+
+    .slide-footer {
+      height: 64px;
+      padding: 0 32px;
+      background: rgba(15, 17, 23, 0.8);
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: auto;
+    }
+
+    .btn-slide-nav {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.2s;
+    }
+
+    .btn-slide-nav:hover {
+      background: var(--accent-primary);
+      border-color: var(--accent-primary);
+    }
+
+    /* SIMULADOR JORNADA */
+    .sim-container {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 30px;
+      align-items: start;
+    }
+
+    .mobile-mockup {
+      width: 320px;
+      height: 640px;
+      background: #ffffff;
+      border-radius: 36px;
+      border: 8px solid #2a3143;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    }
+
+    .mobile-header {
+      background: var(--accent-primary);
+      color: white;
+      padding: 20px 16px 12px;
+      text-align: center;
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+
+    .mobile-body {
+      flex: 1;
+      background: #f8fafc;
+      padding: 16px;
+      color: #334155;
+      overflow-y: auto;
+    }
+
+    .product-card-mock {
+      background: white;
+      border-radius: 12px;
+      padding: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      margin-bottom: 16px;
+      border: 1px solid #e2e8f0;
+    }
+
+    .product-image-mock {
+      height: 120px;
+      background: #e2e8f0;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 30px;
+    }
+
+    .mock-title { font-weight: 700; font-size: 14px; margin-bottom: 4px; }
+    .mock-price { font-weight: 800; color: var(--accent-primary); font-size: 16px; margin-bottom: 12px;}
+
+    .trava-geo {
+      background: #f1f5f9;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px dashed #cbd5e1;
+      font-size: 12px;
+      margin-bottom: 10px;
+    }
+    .trava-geo input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #cbd5e1;
+      border-radius: 4px;
+      margin-top: 6px;
+      outline: none;
+    }
+
+    .btn-mock-wpp {
+      display: block;
+      width: 100%;
+      text-align: center;
+      background: #cbd5e1;
+      color: #64748b;
+      padding: 10px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 13px;
+      text-decoration: none;
+      transition: all 0.3s;
+      pointer-events: none;
+    }
+    .btn-mock-wpp.active {
+      background: #25D366;
+      color: white;
+      pointer-events: auto;
+      box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3);
+    }
+
+    .btn-mock-affiliate {
+      display: block;
+      width: 100%;
+      text-align: center;
+      background: var(--accent-secondary);
+      color: white;
+      padding: 10px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 13px;
+      text-decoration: none;
+      margin-top: 10px;
+    }
+
+    .sim-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    /* REQUISITOS */
+    .req-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+    }
+
+    .req-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 24px;
+    }
+
+    .req-list {
+      list-style: none;
+      margin-top: 16px;
+    }
+    
+    .req-list li {
+      padding: 12px;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+      font-size: 14px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .req-list li:last-child { border-bottom: none; }
+    
+    .req-id {
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--accent-primary);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    /* DIAGRAMAS (Aba) */
+    .diagrams-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    .diagram-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      cursor: pointer;
+      transition: all 0.25s;
+    }
+
+    .diagram-card:hover {
+      border-color: var(--accent-primary);
+      transform: translateY(-4px);
+    }
+
+    .diagram-card h4 {
+      font-size: 15px;
+      margin-bottom: 10px;
+      color: var(--text-main);
+    }
+
+    .diagram-preview {
+      background: #ffffff;
+      height: 180px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+
+    .diagram-preview img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0.9;
+    }
+
+    /* MODAL DE DIAGRAMAS */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      padding: 24px;
+    }
+
+    .modal-backdrop.active {
+      display: flex;
+    }
+
+    .modal-content {
+      background: #ffffff;
+      border-radius: var(--radius-lg);
+      width: 90vw;
+      max-width: 1200px;
+      height: 85vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .modal-header {
+      padding: 14px 24px;
+      background: var(--bg-dark);
+      color: white;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .btn-close {
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .modal-body {
+      flex: 1;
+      padding: 20px;
+      overflow: auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-body img {
+      max-width: 100%;
+      height: auto;
+      object-fit: contain;
+    }
+
+    /* MATRIZ DE RASTREABILIDADE */
+    .matrix-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+      background: var(--bg-card);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+
+    .matrix-table th {
+      background: rgba(15, 17, 23, 0.95);
+      color: var(--accent-secondary);
+      text-align: left;
+      padding: 14px 18px;
+      font-weight: 700;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .matrix-table td {
+      padding: 14px 18px;
+      border-bottom: 1px solid var(--border-color);
+      color: #cbd5e1;
+    }
+    
+    .code-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      padding: 2px 6px;
+      background: rgba(0, 0, 0, 0.4);
+      border-radius: 4px;
+      color: var(--accent-primary);
+    }
+
+  </style>
+</head>
+<body>
+
+  <!-- HEADER NAVEGADOR -->
+  <header>
+    <div class="brand">
+      <div class="brand-logo">🌿</div>
+      <div>
+        <div class="brand-title">Atlântica Natural</div>
+        <div class="brand-subtitle">Hub Híbrido de Curadoria</div>
+      </div>
+    </div>
+
+    <!-- TABS SELECTOR -->
+    <div class="nav-tabs">
+      <button class="nav-btn active" onclick="switchTab('slides')">🎬 Apresentação PDF</button>
+      <button class="nav-btn" onclick="switchTab('simulator')">📱 Jornada de Conversão</button>
+      <button class="nav-btn" onclick="switchTab('requirements')">📋 Requisitos</button>
+      <button class="nav-btn" onclick="switchTab('diagrams')">📐 Diagramas Livres</button>
+      <button class="nav-btn" onclick="switchTab('matrix')">🎯 Matriz de Rastreabilidade</button>
+    </div>
+  </header>
+
+  <main>
+    <!-- =========================================================
+         ABA 1: SLIDES (Full Presentation Matching PDF)
+         ========================================================= -->
+    <div id="tab-slides" class="tab-pane active">
+      <div class="slides-container">
+        <div class="slide-progress-bar">
+          <div class="slide-progress-fill" id="slideProgress"></div>
+        </div>
+
+        <!-- SLIDE 1: Capa -->
+        <div class="slide-body centered active" data-slide="1">
+          <h1 class="slide-title" style="font-size:48px; margin-bottom: 10px;">PROPOSTA DE ESPECIFICAÇÃO<br>E ARQUITETURA</h1>
+          <p class="slide-subtitle" style="font-size: 24px; color: #fff; margin-bottom: 10px;">Vitrine Virtual - Atlântica Natural</p>
+          <p style="color: var(--text-muted);">Digitalização do Hub Híbrido de Curadoria - Next.js, FastAPI e PostgreSQL</p>
+          <p style="margin-top: 30px; font-size: 14px; color: var(--accent-secondary);">Luiz Henrique Garcia Braga dos Reis - Lab. Programação Web</p>
+        </div>
+
+        <!-- SLIDE 2: Agenda -->
+        <div class="slide-body" data-slide="2">
+          <h2 class="slide-title">Agenda de Apresentação</h2>
+          <div class="slide-grid-2">
+            <div>
+              <ul style="font-size: 18px; line-height: 2; list-style: none;">
+                <li><strong>01.</strong> Contexto e escopo</li>
+                <li><strong>02.</strong> Stack de referência</li>
+                <li><strong>03.</strong> Requisitos funcionais e não funcionais</li>
+                <li><strong>04.</strong> Atores do sistema e Casos de Uso</li>
+                <li><strong>05.</strong> Arquitetura: Componentes e Clean Architecture</li>
+                <li><strong>06 e 07.</strong> Modelagem de Dados: Classes e DER</li>
+              </ul>
+            </div>
+            <div>
+              <ul style="font-size: 18px; line-height: 2; list-style: none;">
+                <li><strong>08.</strong> Diagramas de Sequência</li>
+                <li><strong>09.</strong> Persistência e Diagrama de Objetos</li>
+                <li><strong>10.</strong> Diagramas de Estado</li>
+                <li><strong>11.</strong> Padrão Boundary-Control-Entity (BCE)</li>
+                <li><strong>12.</strong> Diagramas de Atividade (Jornada Principal)</li>
+                <li><strong>13.</strong> Mapeamento DDD e Estratégia de Testes (TDD)</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- SLIDE 3: Contexto -->
+        <div class="slide-body" data-slide="3">
+          <h2 class="slide-title">01. Contexto: Por que este site existe</h2>
+          <ul style="font-size: 18px; line-height: 1.8;">
+            <li><strong>Problema:</strong> Falta de centralização nas vendas da revendedora. Venda física, links de afiliado, e captação de parceiros acontecem em canais dispersos e não otimizados.</li>
+            <li><strong>Restrição:</strong> Não há escopo ou orçamento para um e-commerce complexo com gateway de pagamento nativo ou cálculo de frete.</li>
+            <li><strong>Abordagem:</strong> Hub Híbrido de Curadoria (Next.js + FastAPI) focando apenas em conversão via WhatsApp (pronta-entrega) e links externos, com área administrativa simples.</li>
+            <li><strong>Método:</strong> UML + DDD + Clean Architecture + TDD</li>
+          </ul>
+        </div>
+
+        <!-- SLIDE 4: Decisões -->
+        <div class="slide-body" data-slide="4">
+          <h2 class="slide-title">01.1 Decisões de Arquitetura</h2>
+          <table class="slide-table">
+            <thead>
+              <tr><th>Decisão</th><th>Resumo</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Fechamento via WhatsApp</strong></td>
+                <td>Mantém a proximidade do atendimento humano e elimina complexidade de checkout.</td>
+              </tr>
+              <tr>
+                <td><strong>Trava Geográfica (Frontend)</strong></td>
+                <td>Evita requisições ao backend e impede fechamento físico para clientes fora da região atendida.</td>
+              </tr>
+              <tr>
+                <td><strong>Bypass B2C x B2B</strong></td>
+                <td>Fluxo de captação de novas revendedoras isolado da experiência de compra.</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- SLIDE 5: Stack -->
+        <div class="slide-body" data-slide="5">
+          <h2 class="slide-title">02. Stack Tecnológico (Arquitetura de Referência)</h2>
+          <table class="slide-table">
+            <thead>
+              <tr><th>Camada</th><th>Escolha</th><th>Observação</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>Frontend / Web</td><td>Next.js (React) + TypeScript</td><td>UX Mobile-first, alta performance, páginas rápidas para conversão.</td></tr>
+              <tr><td>Backend / API</td><td>FastAPI (Python)</td><td>Leve, assíncrono, documentação automática (Swagger).</td></tr>
+              <tr><td>Persistência / BD</td><td>PostgreSQL</td><td>Fonte da verdade relacional para o estoque físico e leads.</td></tr>
+              <tr><td>Integração Externa</td><td>Deep Links WhatsApp e Matriz</td><td>O sistema gera URLs dinâmicas e de afiliada.</td></tr>
+              <tr><td>Design System</td><td>Tailwind CSS</td><td>Estilização utilitária e responsiva.</td></tr>
+              <tr><td>Autenticação Admin</td><td>JWT</td><td>Protege as rotas do Backoffice.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- SLIDE 6: Requisitos Funcionais -->
+        <div class="slide-body" data-slide="6">
+          <h2 class="slide-title">03. Requisitos Funcionais (Principais)</h2>
+          <table class="slide-table">
+            <thead>
+              <tr><th>ID</th><th>Descrição</th><th>Prior.</th><th>Ator</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>RF01</td><td>Exibir estoque físico local na vitrine.</td><td>Alta</td><td>Cliente Final</td></tr>
+              <tr><td>RF02</td><td>Validar região de atendimento (trava geográfica) antes de liberar contato.</td><td>Alta</td><td>Sistema</td></tr>
+              <tr><td>RF03</td><td>Redirecionar para WhatsApp com mensagem pré-formatada.</td><td>Alta</td><td>Cliente Final</td></tr>
+              <tr><td>RF04</td><td>Exibir blocos com links externos de afiliada para a matriz.</td><td>Alta</td><td>Cliente Final</td></tr>
+              <tr><td>RF05</td><td>Exibir catálogo oficial em PDF na página.</td><td>Média</td><td>Cliente Final</td></tr>
+              <tr><td>RF06</td><td>Disponibilizar área isolada (CTA) para captação de revendedoras (B2B).</td><td>Alta</td><td>Lead</td></tr>
+              <tr><td>RF07</td><td>Gerenciar produtos, estoque físico e categorias por backoffice.</td><td>Alta</td><td>Revendedora</td></tr>
+              <tr><td>RF10</td><td>Autenticar na área administrativa (segurança JWT).</td><td>Alta</td><td>Revendedora</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- SLIDE 7: Requisitos Não Funcionais -->
+        <div class="slide-body" data-slide="7">
+          <h2 class="slide-title">03.1 Requisitos Não Funcionais</h2>
+          <table class="slide-table">
+            <thead>
+              <tr><th>ID</th><th>Categoria</th><th>Descrição + critério</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>RNF01</td><td>Performance</td><td>A página inicial deve carregar rapidamente em mobile (Mobile-first).</td></tr>
+              <tr><td>RNF02</td><td>Usabilidade</td><td>Interface otimizada para celular (espaçamento de botões, leitura simples).</td></tr>
+              <tr><td>RNF03</td><td>Segurança</td><td>Rotas de gestão no backend restritas via autenticação JWT.</td></tr>
+              <tr><td>RNF04</td><td>Manutenibilidade</td><td>Frontend com componentes isolados e Clean Architecture no Backend.</td></tr>
+              <tr><td>RNF05</td><td>Confiabilidade</td><td>A conversão e validação geográfica devem estar blindadas contra bypass no fluxo feliz.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- SLIDE 8: Atores -->
+        <div class="slide-body" data-slide="8">
+          <h2 class="slide-title">04. Atores do Sistema</h2>
+          <table class="slide-table">
+            <thead>
+              <tr><th>Ator</th><th>Tipo</th><th>Papel</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Cliente final (B2C)</strong></td><td>Usuário não autenticado</td><td>Acessa vitrine, valida região, clica no WhatsApp, acessa links, lê PDF.</td></tr>
+              <tr><td><strong>Lead (B2B)</strong></td><td>Usuário não autenticado</td><td>Interessado em revender a marca. Clica no link e é redirecionado para a matriz.</td></tr>
+              <tr><td><strong>Revendedora (Admin)</strong></td><td>Usuário autenticado</td><td>Gerencia estoque, categorias e conteúdo da vitrine via painel.</td></tr>
+              <tr><td><strong>Sistema WhatsApp</strong></td><td>Sistema externo</td><td>Recebe o tráfego gerado pela vitrine virtual.</td></tr>
+              <tr><td><strong>Loja Matriz</strong></td><td>Sistema externo</td><td>Destino dos links de afiliada para produtos de cauda longa.</td></tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- SLIDE 9: Componentes -->
+        <div class="slide-body" data-slide="9">
+          <h2 class="slide-title">05. Arquitetura: Componentes e Clean Architecture</h2>
+          <p>O Backend adota Clean Architecture isolando domínio de frameworks (FastAPI/SQLAlchemy).</p>
+          <div class="slide-image-container">
+            <img src="./fotos-diagramas/07-diagrama-componentes_1.png" alt="Diagrama de Componentes">
+          </div>
+        </div>
+
+        <!-- SLIDE 10: Classes -->
+        <div class="slide-body" data-slide="10">
+          <h2 class="slide-title">06. Modelagem de Dados: Diagrama de Classes</h2>
+          <p>Centraliza a lógica nas entidades puras (Produto como Aggregate Root).</p>
+          <div class="slide-image-container">
+            <img src="./fotos-diagramas/04-diagrama-classes_1.png" alt="Diagrama de Classes">
+          </div>
+        </div>
+
+        <!-- SLIDE 11: ER -->
+        <div class="slide-body" data-slide="11">
+          <h2 class="slide-title">07. Modelo Entidade-Relacionamento (DER)</h2>
+          <p>Reflete o banco de dados PostgreSQL.</p>
+          <div class="slide-image-container">
+            <img src="./fotos-diagramas/05-diagrama-er_1.png" alt="Diagrama ER">
+          </div>
+        </div>
+
+        <!-- SLIDE 12: Sequência Venda Local -->
+        <div class="slide-body" data-slide="12">
+          <h2 class="slide-title">08.1 Diagrama de Sequência</h2>
+          <p>Fluxo de Venda Local</p>
+          <div class="slide-image-container">
+            <img src="./fotos-diagramas/06-diagrama-sequencia_1.png" alt="Sequência Venda Local" onerror="this.src='./fotos-diagramas/12-diagrama-atividades_1.png'; this.alt='Imagem de sequência não encontrada, mostrando atividades'">
+          </div>
+        </div>
+
+        <!-- SLIDE 13: Sequência Loja Afiliada -->
+        <div class="slide-body" data-slide="13">
+          <h2 class="slide-title">08.2 Diagrama de Sequência</h2>
+          <p>Fluxo de Venda na Loja Afiliada</p>
+          <div class="slide-image-container">
+            <img src="./fotos-diagramas/06-diagrama-sequencia_2.png" alt="Sequência Loja Afiliada" onerror="this.style.display='none'">
+          </div>
+        </div>
+
+        <!-- SLIDE 14: Objetos -->
+        <div class="slide-body" data-slide="14">
+          <h2 class="slide-title">09. Diagrama de Objetos</h2>
+          <p>Exemplo de um cenário real (Produto associado a uma Oferta Local para São Paulo).</p>
+          <div class="slide-image-container">
+            <img src="./fotos-diagramas/09-diagrama-objetos_1.png" alt="Diagrama de Objetos">
+          </div>
+        </div>
+
+        <!-- SLIDE 15: Estados -->
+        <div class="slide-body" data-slide="15">
+          <h2 class="slide-title">10. Diagramas de Estado</h2>
+          <div style="text-align: center;">
+            <h4>Produto (Estoque Físico)</h4>
+            <img src="./fotos-diagramas/10-diagrama-estados_1.png" alt="Estado Produto" style="max-width: 100%; max-height: 400px; background: white; padding: 10px; border-radius: 8px; margin-top: 20px;">
+          </div>
+        </div>
+
+        <!-- SLIDE 16: BCE -->
+        <div class="slide-body" data-slide="16">
+          <h2 class="slide-title">11. Padrão Boundary-Control-Entity (BCE)</h2>
+          <p>Mapeamento estrutural separando interface gráfica/API, regras de orquestração e entidades de domínio.</p>
+          <div class="slide-image-container">
+            <img src="./fotos-diagramas/11-bce-mapeamento_1.png" alt="BCE">
+          </div>
+        </div>
+
+        <!-- SLIDE 17: Atividades -->
+        <div class="slide-body" data-slide="17">
+          <h2 class="slide-title">12. Diagrama de Atividades (Jornada Principal)</h2>
+          <p>Todo fluxo possível de atividade realizável no site.</p>
+          <div class="slide-image-container">
+            <img src="./fotos-diagramas/12-diagrama-atividades_1.png" alt="Atividades">
+          </div>
+        </div>
+
+        <!-- SLIDE 18: DDD e TDD -->
+        <div class="slide-body" data-slide="18">
+          <h2 class="slide-title">13. Implementação: Mapeamento DDD e TDD</h2>
+          <table class="slide-table" style="margin-bottom: 20px;">
+            <thead>
+              <tr><th>Aggregate Root</th><th>Entidades Internas</th><th>Value Objects</th><th>Repository</th></tr>
+            </thead>
+            <tbody>
+              <tr><td><strong>Produto</strong></td><td>OfertaLocal</td><td>Preco, RegiaoAtendimento</td><td>ProdutoRepository</td></tr>
+              <tr><td><strong>Categoria</strong></td><td>-</td><td>-</td><td>CategoriaRepository</td></tr>
+
+            </tbody>
+          </table>
+          <div class="slide-card">
+            <h4>Pirâmide de Testes (TDD: Red → Green → Refactor)</h4>
+            <ol style="margin-left: 20px; font-size: 15px; line-height: 1.8;">
+              <li><strong>Domínio:</strong> Sem mock — validações de <code>Preco</code> e <code>RegiaoAtendimento</code>.</li>
+              <li><strong>Use Case:</strong> Fakes in-memory de repositórios (ex: testar <code>CadastrarProdutoUseCase</code>).</li>
+              <li><strong>Gateway/Adapter/API:</strong> Controllers do FastAPI e ORM testados com cliente HTTP e DB real em ambiente de testes.</li>
+            </ol>
+          </div>
+        </div>
+
+        <!-- SLIDE 19: Fim -->
+        <div class="slide-body centered" data-slide="19">
+          <h1 class="slide-title" style="font-size:56px;">Muito Obrigado!</h1>
+          <p class="slide-subtitle" style="font-size: 28px;">Perguntas?</p>
+        </div>
+
+
+        <!-- CONTROLES DO SLIDE -->
+        <div class="slide-footer">
+          <div class="slide-counter" id="slideCounter" style="font-family:'JetBrains Mono'; font-weight:600;">01 / 19</div>
+          <div style="display:flex; gap:10px;">
+            <button class="btn-slide-nav" onclick="prevSlide()">◀</button>
+            <button class="btn-slide-nav" onclick="nextSlide()">▶</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========================================================
+         ABA 2: SIMULADOR (Jornada de Conversão)
+         ========================================================= -->
+    <div id="tab-simulator" class="tab-pane">
+      <div class="sim-container">
+        <!-- MOCKUP MOBILE (VISÃO CLIENTE) -->
+        <div class="mobile-mockup">
+          <div class="mobile-header">
+            Atlântica Natural
+          </div>
+          <div class="mobile-body">
+            <!-- Produto Pronta Entrega -->
+            <div class="product-card-mock">
+              <div class="product-image-mock">🧴</div>
+              <div class="mock-title">Sérum Vitamina C (Pronta Entrega)</div>
+              <div class="mock-price">R$ 89,90</div>
+              
+              <div class="trava-geo">
+                <strong>Verificar Disponibilidade:</strong><br>
+                Insira sua cidade para liberar a compra via WhatsApp.
+                <input type="text" id="cityInput" placeholder="Ex: São Paulo" oninput="validateCity()">
+              </div>
+              
+              <a href="#" class="btn-mock-wpp" id="wppButton" onclick="event.preventDefault(); alert('Redirecionando para o WhatsApp com a mensagem pronta!')">
+                <span id="wppText">Bloqueado (Informe a Cidade)</span>
+              </a>
+            </div>
+
+            <!-- Produto Afiliada (Matriz) -->
+            <div class="product-card-mock" style="border-style: dashed;">
+              <div class="product-image-mock" style="background:#f1f5f9;">📦</div>
+              <div class="mock-title">Kit Skincare Completo</div>
+              <div style="font-size: 11px; color: #64748b; margin-bottom: 8px;">Enviado pela Loja Oficial</div>
+              <a href="#" class="btn-mock-affiliate" onclick="event.preventDefault(); alert('Redirecionando para a loja da Matriz (Link Afiliada)')">
+                Comprar no Site Oficial
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- PAINEL DE CONTROLE (VISÃO BACKOFFICE / ADMIN) -->
+        <div class="sim-panel">
+          <h3>Visão Revendedora (Backoffice)</h3>
+          <p style="color:var(--text-muted); font-size:14px;">
+            Aqui a revendedora gerencia as regras de negócio que afetam o frontend em tempo real.
+          </p>
+
+          <div style="background: rgba(15, 17, 23, 0.5); padding: 16px; border-radius: 8px; border: 1px solid var(--border-color);">
+            <h4 style="margin-bottom:12px; font-size: 15px; color:var(--accent-primary);">Trava Geográfica Configurada</h4>
+            <p style="font-size:13px; color: #cbd5e1; margin-bottom: 8px;">Cidades aceitas para entrega em mãos:</p>
+            <div style="display:flex; gap:8px;">
+              <span style="background:var(--accent-primary); color:white; padding:4px 10px; border-radius:12px; font-size:12px; font-weight:600;">São Paulo</span>
+              <span style="background:var(--accent-primary); color:white; padding:4px 10px; border-radius:12px; font-size:12px; font-weight:600;">Osasco</span>
+            </div>
+            <p style="font-size:12px; color: #64748b; margin-top: 12px; font-style:italic;">
+              (Tente digitar "Osasco" ou "São Paulo" no simulador mobile para liberar o botão de WhatsApp).
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========================================================
+         ABA 3: REQUISITOS
+         ========================================================= -->
+    <div id="tab-requirements" class="tab-pane">
+      <div class="req-grid">
+        <div class="req-box">
+          <h3 style="color:var(--accent-primary); border-bottom:1px solid var(--border-color); padding-bottom:10px;">Requisitos Funcionais</h3>
+          <ul class="req-list">
+            <li><span class="req-id">RF01</span> Exibir estoque físico local na vitrine.</li>
+            <li><span class="req-id">RF02</span> Validar região de atendimento (trava geográfica) no client-side.</li>
+            <li><span class="req-id">RF03</span> Redirecionar para WhatsApp com mensagem pré-formatada do produto local.</li>
+            <li><span class="req-id">RF04</span> Exibir blocos estáticos de links de afiliada para a loja matriz.</li>
+            <li><span class="req-id">RF05</span> Disponibilizar acesso (link ou visualizador) ao catálogo oficial em PDF.</li>
+            <li><span class="req-id">RF06</span> Redirecionar para formulário externo de captação de revendedoras (B2B).</li>
+            <li><span class="req-id">RF07</span> Painel Backoffice para gestão de estoque e categorias.</li>
+          </ul>
+        </div>
+        <div class="req-box">
+          <h3 style="color:var(--accent-secondary); border-bottom:1px solid var(--border-color); padding-bottom:10px;">Requisitos Não Funcionais</h3>
+          <ul class="req-list">
+            <li><span class="req-id">RNF01</span> <strong>Performance:</strong> O frontend deve ter carregamento otimizado (SSG em Next.js).</li>
+            <li><span class="req-id">RNF02</span> <strong>Usabilidade:</strong> Interface Mobile-first, focada na visualização por smartphones.</li>
+            <li><span class="req-id">RNF03</span> <strong>Segurança:</strong> Backoffice protegido por JWT.</li>
+            <li><span class="req-id">RNF04</span> <strong>Arquitetura:</strong> Adoção de Clean Architecture no backend (FastAPI) para manutenibilidade.</li>
+            <li><span class="req-id">RNF05</span> <strong>Confiabilidade:</strong> O botão de WhatsApp deve ser bloqueado programaticamente até aprovação da trava geográfica.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========================================================
+         ABA 4: DIAGRAMAS (Galeria Livre)
+         ========================================================= -->
+    <div id="tab-diagrams" class="tab-pane">
+      <div class="diagrams-grid">
+        <div class="diagram-card" onclick="openDiagramModal('./fotos-diagramas/12-diagrama-atividades_1.png', 'Diagrama de Atividades (Jornada Híbrida)')">
+          <h4>Diagrama de Atividades</h4>
+          <div class="diagram-preview"><img src="./fotos-diagramas/12-diagrama-atividades_1.png" alt="Atividades"></div>
+        </div>
+        <div class="diagram-card" onclick="openDiagramModal('./fotos-diagramas/04-diagrama-classes_1.png', 'Diagrama de Classes (DDD)')">
+          <h4>Diagrama de Classes</h4>
+          <div class="diagram-preview"><img src="./fotos-diagramas/04-diagrama-classes_1.png" alt="Classes"></div>
+        </div>
+        <div class="diagram-card" onclick="openDiagramModal('./fotos-diagramas/05-diagrama-er_1.png', 'Modelo Entidade-Relacionamento')">
+          <h4>Diagrama ER (Banco)</h4>
+          <div class="diagram-preview"><img src="./fotos-diagramas/05-diagrama-er_1.png" alt="ER"></div>
+        </div>
+        <div class="diagram-card" onclick="openDiagramModal('./fotos-diagramas/06-diagrama-sequencia_1.png', 'Diagrama de Sequência - Venda Local')">
+          <h4>Diagrama de Sequência (Local)</h4>
+          <div class="diagram-preview"><img src="./fotos-diagramas/06-diagrama-sequencia_1.png" alt="Sequência 1"></div>
+        </div>
+        <div class="diagram-card" onclick="openDiagramModal('./fotos-diagramas/06-diagrama-sequencia_2.png', 'Diagrama de Sequência - Afiliada')">
+          <h4>Diagrama de Sequência (Afiliada)</h4>
+          <div class="diagram-preview"><img src="./fotos-diagramas/06-diagrama-sequencia_2.png" alt="Sequência 2"></div>
+        </div>
+        <div class="diagram-card" onclick="openDiagramModal('./fotos-diagramas/07-diagrama-componentes_1.png', 'Arquitetura de Componentes')">
+          <h4>Diagrama de Componentes</h4>
+          <div class="diagram-preview"><img src="./fotos-diagramas/07-diagrama-componentes_1.png" alt="Componentes"></div>
+        </div>
+        <div class="diagram-card" onclick="openDiagramModal('./fotos-diagramas/09-diagrama-objetos_1.png', 'Diagrama de Objetos')">
+          <h4>Diagrama de Objetos</h4>
+          <div class="diagram-preview"><img src="./fotos-diagramas/09-diagrama-objetos_1.png" alt="Objetos"></div>
+        </div>
+        <div class="diagram-card" onclick="openDiagramModal('./fotos-diagramas/11-bce-mapeamento_1.png', 'Mapeamento Boundary-Control-Entity')">
+          <h4>Mapeamento BCE</h4>
+          <div class="diagram-preview"><img src="./fotos-diagramas/11-bce-mapeamento_1.png" alt="BCE"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =========================================================
+         ABA 5: MATRIZ DE RASTREABILIDADE
+         ========================================================= -->
+    <div id="tab-matrix" class="tab-pane">
+      <table class="matrix-table">
+        <thead>
+          <tr>
+            <th>ID Req.</th>
+            <th>Descrição Breve</th>
+            <th>Entidade / Value Object (DDD)</th>
+            <th>Camada / Componente (BCE)</th>
+            <th>Nível de Teste (TDD)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="code-tag">RF01</span></td>
+            <td>Exibir estoque físico local</td>
+            <td><code>Produto</code>, <code>OfertaLocal</code></td>
+            <td>Boundary (Vitrine API)</td>
+            <td>Integração (Endpoint GET /produtos)</td>
+          </tr>
+          <tr>
+            <td><span class="code-tag">RF02</span></td>
+            <td>Validar região de atendimento (Trava)</td>
+            <td><code>RegiaoAtendimento</code> (VO)</td>
+            <td>Boundary (React State)</td>
+            <td>Unitário (Validador JS)</td>
+          </tr>
+          <tr>
+            <td><span class="code-tag">RF03</span></td>
+            <td>Redirecionar para WhatsApp</td>
+            <td><code>ContatoWhatsApp</code> (VO)</td>
+            <td>Boundary (WhatsAppButton UI)</td>
+            <td>Unitário (Geração de Link)</td>
+          </tr>
+          <tr>
+            <td><span class="code-tag">RF04</span></td>
+            <td>Exibir links de afiliada (Matriz)</td>
+            <td><code>LinkExterno</code></td>
+            <td>Boundary (BlocoDeepLinks UI)</td>
+            <td>Integração (Renderização SSG)</td>
+          </tr>
+
+          <tr>
+            <td><span class="code-tag">RF07</span></td>
+            <td>Painel Admin / Gestão</td>
+            <td><code>Produto</code>, <code>Categoria</code></td>
+            <td>Control (AdminUseCase), Entity</td>
+            <td>Integração (Autenticação JWT, ORM)</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </main>
+
+  <!-- MODAL DE DIAGRAMAS -->
+  <div class="modal-backdrop" id="diagramModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modalTitle" style="font-family:'Outfit'; font-weight:600;">Diagrama</h3>
+        <button class="btn-close" onclick="closeDiagramModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <img id="modalImage" src="" alt="Diagrama Ampliado">
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // TABS LOGIC
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(el => el.classList.remove('active'));
+      
+      document.getElementById('tab-' + tabId).classList.add('active');
+      event.currentTarget.classList.add('active');
+    }
+
+    // SLIDES LOGIC
+    let currentSlide = 1;
+    const totalSlides = 19;
+
+    function updateSlideUI() {
+      document.querySelectorAll('.slide-body').forEach(el => el.classList.remove('active'));
+      document.querySelector(`.slide-body[data-slide="${currentSlide}"]`).classList.add('active');
+      
+      // Pad single digits
+      const currentStr = currentSlide < 10 ? '0' + currentSlide : currentSlide;
+      const totalStr = totalSlides < 10 ? '0' + totalSlides : totalSlides;
+      
+      document.getElementById('slideCounter').innerText = `${currentStr} / ${totalStr}`;
+      const percentage = (currentSlide / totalSlides) * 100;
+      document.getElementById('slideProgress').style.width = percentage + '%';
+    }
+
+    function nextSlide() {
+      if(currentSlide < totalSlides) {
+        currentSlide++;
+        updateSlideUI();
+      }
+    }
+
+    function prevSlide() {
+      if(currentSlide > 1) {
+        currentSlide--;
+        updateSlideUI();
+      }
+    }
+    
+    // Keyboard navigation for slides
+    document.addEventListener('keydown', function(event) {
+      if(document.getElementById('tab-slides').classList.contains('active')) {
+        if(event.key === 'ArrowRight' || event.key === ' ') {
+          nextSlide();
+        } else if(event.key === 'ArrowLeft') {
+          prevSlide();
+        }
+      }
+    });
+    
+    // Initialize slide progress
+    updateSlideUI();
+
+    // SIMULADOR: Lógica da Trava Geográfica
+    function validateCity() {
+      const input = document.getElementById('cityInput').value.toLowerCase().trim();
+      const wppBtn = document.getElementById('wppButton');
+      const wppText = document.getElementById('wppText');
+
+      // Cidades aceitas
+      if(input === 'são paulo' || input === 'sao paulo' || input === 'osasco') {
+        wppBtn.classList.add('active');
+        wppText.innerText = '📲 Comprar via WhatsApp';
+      } else {
+        wppBtn.classList.remove('active');
+        wppText.innerText = 'Bloqueado (Fora da Região)';
+        if(input === '') wppText.innerText = 'Bloqueado (Informe a Cidade)';
+      }
+    }
+
+    // MODAL DE DIAGRAMAS
+    function openDiagramModal(imageSrc, title) {
+      document.getElementById('modalImage').src = imageSrc;
+      document.getElementById('modalTitle').innerText = title;
+      document.getElementById('diagramModal').classList.add('active');
+    }
+
+    function closeDiagramModal() {
+      document.getElementById('diagramModal').classList.remove('active');
+      document.getElementById('modalImage').src = '';
+    }
+
+    // Fechar modal clicando fora
+    document.getElementById('diagramModal').addEventListener('click', function(e) {
+      if (e.target === this) closeDiagramModal();
+    });
+
+  </script>
+</body>
+</html>
