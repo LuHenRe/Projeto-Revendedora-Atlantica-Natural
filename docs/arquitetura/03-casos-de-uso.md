@@ -2,9 +2,35 @@
 
 ## Atores
 - Cliente final
-- Revendedora / administradora
+- Revendedora / administradora (especialização de Cliente? Não — acesso restrito, herda de `Usuario` conceitual)
+- Potencial parceira B2B (especialização do Cliente final)
 - Sistema externo de matriz
 - Sistema de WhatsApp
+
+**Herança de ator:** `Potencial Parceira --|> Cliente final` (acessa parte da jornada pública e adiciona a captação B2B). A `Revendedora/Administradora` herda a capacidade de navegar pela vitrine, mas participa de casos de uso exclusivos do backoffice, tratados como generalização de um ator administrativo.
+
+## Diagrama de casos de uso
+
+```mermaid
+flowchart LR
+    Cliente((Cliente final))
+    Parceira((Potencial parceira))
+    Admin((Administradora))
+    Admin -.->|"herda de"| Cliente
+    Parceira -.->|"herda de"| Cliente
+
+    Cliente --> UC01[Visualizar vitrine pública]
+    Cliente --> UC02[Confirmar região para compra local]
+    UC02 -.->|"<<include>>"| UC03[Enviar mensagem via WhatsApp]
+    UC04[Navegar por links externos de afiliada] -.->|"<<extend>>"| UC01
+    UC05[Visualizar catálogo em PDF] -.->|"<<extend>>"| UC01
+    Parceira --> UC06[Acessar página de captação B2B]
+    Admin --> UC07[Cadastrar ou atualizar produto físico]
+    UC07 -.->|"<<include>>"| UC08[Autenticar no backoffice]
+    Admin --> UC08[Autenticar no backoffice]
+```
+
+> Leitura: `UC02` **sempre** executa `UC03` (include — o link do WhatsApp só é gerado após a confirmação da região). `UC04` e `UC05` são opcionais e apenas estendem a vitrine pública em ponto de extensão (extend). `UC07` sempre inclui `UC08` (autenticação obrigatória antes de gerenciar estoque).
 
 ## Casos de uso principais
 
@@ -68,7 +94,7 @@
 3. o cliente navega pelo material.
 
 ### UC06 - Acessar página de captação B2B
-**Ator:** Cliente final / potencial parceira
+**Ator:** Potencial parceira (herda de Cliente final)
 
 **Descrição:** a pessoa acessa a página especializada para conhecer o programa de revenda.
 
@@ -79,6 +105,8 @@
 
 ### UC07 - Cadastrar ou atualizar produto físico
 **Ator:** Revendedora / administradora
+
+**Relações:** `<<include>> UC08 - Autenticar no backoffice` (autenticação é obrigatória antes de gerenciar estoque).
 
 **Descrição:** a administradora gerencia o estoque físico exibido na vitrine.
 
