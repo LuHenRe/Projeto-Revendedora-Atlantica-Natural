@@ -7,7 +7,7 @@ Este projeto consiste na criação de um **Hub Híbrido de Curadoria (Concierge 
 *   **Venda Física (Pronta-Entrega):** Escoamento rápido do estoque local via WhatsApp (Trava geográfica estrita).
 *   **Venda Online (Deep Links):** Bypass estratégico do menu hambúrguer do site oficial da matriz, entregando atalhos diretos para checkout.
 *   **Catálogo Digital:** Acesso *zero-friction* à revista em PDF.
-*   **Captação B2B:** Funil secundário para recrutamento de novas parceiras, isolado da jornada B2C.
+*   **Captação B2B:** Funil secundário para direcionamento externo de novas parceiras, isolado da jornada B2C.
 
 ---
 
@@ -29,7 +29,7 @@ A interface deve ser estruturada verticalmente, respeitando a seguinte hierarqui
 | **1. Bloco Alfa (Estoque Físico)** | Largo (100% width). Cor quente de conversão. Micro-selo animado "⚡ Envio Imediato". | **Título:** *"Pronta-Entrega Varginha & Região: Escolha hoje, receba hoje."* <br> **Botão:** *"Ver Estoque no WhatsApp"* | **WhatsApp API:** Direciona para o mensageiro com texto pré-preenchido. Funciona como prevenção de erros (filtro geográfico pelo título). |
 | **2. Blocos Beta (Online / Deep Links)** | Grid 2x2. Imagens de *lifestyle* com overlay escuro (40%) para contraste do texto branco. | *"Skincare Noturno"* <br> *"Kits & Presentes"* <br> *"Perfumes & Assinaturas"* <br> *"Favoritos da Semana"* | **Link Externo:** Card inteiro clicável (área de toque alta). Direciona direto para subcategorias do site matriz (Bypass de menu). |
 | **3. Bloco Gama (Revista PDF)** | Estreito, fundo claro (Off-White). Ícone em *line-art* de uma revista. | *"Prefere a experiência clássica? Explore o nosso catálogo completo."* | **Visualizador Web:** Abre o PDF em nova aba no navegador (formato *flipbook* ou link de nuvem) para não forçar download. |
-| **4. Bloco Ômega (Captação B2B)** | Rodapé. Inversão total de paleta (Dark Mode: Grafite/Azul Marinho) para quebra de padrão visual. | *"Seja dona do seu tempo. Torne-se uma curadora e lucre."* <br> **Botão:** *"Quero ser Parceira" (Ghost Button)* | **Link Externo:** Direciona para funil de recrutamento, sem canibalizar o B2C. |
+| **4. Bloco Ômega (Captação B2B)** | Rodapé. Inversão total de paleta (Dark Mode: Grafite/Azul Marinho) para quebra de padrão visual. | *"Seja dona do seu tempo. Torne-se uma curadora e lucre."* <br> **Botão:** *"Quero ser Parceira" (Ghost Button)* | **Link Externo:** Direciona para formulário de recrutamento na loja matriz, sem canibalizar o B2C. |
 
 ---
 

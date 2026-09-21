@@ -32,7 +32,7 @@ Abaixo estão os entregáveis previstos para a Vitrine Virtual, com foco no bene
 ### 2.4. Captação de Novos Parceiros
 - Criação de uma página ou bloco de conversão dedicado à captação de novas revendedoras.
 - Estrutura de chamada para ação clara e objetiva, com foco em recrutamento e apresentação do programa.
-- Link de cadastro/contato para acompanhamento do interesse.
+- Redirecionamento direto para o formulário externo no site da matriz.
 - Benefício: transforma a vitrine em uma ferramenta também de expansão comercial e fortalecimento da rede.
 
 ### 2.5. Área Administrativa (Backoffice)

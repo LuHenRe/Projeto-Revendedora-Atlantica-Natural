@@ -7,7 +7,7 @@ O projeto combina quatro pilares principais:
 - venda física com estoque local e pronta-entrega;
 - direcionamento para compras online por links externos;
 - acesso a catálogo digital em PDF;
-- captação de novas parceiras por meio de um funil B2B separado.
+- captação de novas parceiras por meio de redirecionamento externo para B2B.
 
 ## Objetivo do projeto
 O objetivo principal é conectar o cliente ao canal mais adequado para sua intenção de compra, reduzindo atrito e aumentando a taxa de conversão. Em vez de uma loja tradicional, a vitrine funciona como uma central de curadoria e conversão.
@@ -39,7 +39,7 @@ A vitrine também inclui um fluxo separado para captar novas revendedoras e parc
 - validação de região de atendimento;
 - links externos para a matriz;
 - catálogo em PDF;
-- fluxo de captação B2B;
+- CTA para captação B2B externa;
 - painel administrativo para gestão básica do conteúdo e catálogo.
 
 ### Fora de escopo

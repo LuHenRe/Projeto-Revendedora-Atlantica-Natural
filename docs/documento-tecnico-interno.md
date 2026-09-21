@@ -75,7 +75,7 @@ Responsabilidades:
 - autenticação de usuários do painel administrativo;
 - gerenciamento de produtos e categorias;
 - consulta de catálogo local;
-- gerenciamento de conteúdo e leads B2B;
+- gerenciamento de conteúdo da vitrine;
 - APIs para frontend.
 
 ### 4.3. Modelo de integração
@@ -91,7 +91,7 @@ A arquitetura favorece desacoplamento entre:
 - Vitrine: composição visual e conteúdo público
 - Conversão: WhatsApp, deep links e CTA
 - Backoffice: autenticação, autorização e gestão interna
-- B2B: leads e parceiros
+- B2B: redirecionamento de parceiras
 
 ### Entidades principais
 - Produto
@@ -99,8 +99,6 @@ A arquitetura favorece desacoplamento entre:
 - OfertaLocal
 - LinkExterno
 - CatalogoDigital
-- Lead
-- ParceiraB2B
 - Administrador
 
 ### Invariantes centrais
@@ -137,8 +135,7 @@ Links externos, campanhas e URLs de afiliados não devem ser tratados como produ
 - apresentar blocos com links externos;
 - disponibilizar catálogo em PDF;
 - permitir gestão do catálogo e categorias por admin;
-- disponibilizar autenticação segura para área administrativa;
-- permitir acesso a leads B2B.
+- disponibilizar autenticação segura para área administrativa.
 
 ### Requisitos não funcionais principais
 - performance em mobile;
@@ -160,8 +157,7 @@ Links externos, campanhas e URLs de afiliados não devem ser tratados como produ
 ### P1
 - links externos e blocos de campanhas;
 - catálogo PDF;
-- conteúdo editável da página;
-- registro de leads B2B.
+- conteúdo editável da página.
 
 ### P2
 - filtros por categoria e busca;
