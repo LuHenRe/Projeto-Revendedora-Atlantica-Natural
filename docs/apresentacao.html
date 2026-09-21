@@ -550,7 +550,8 @@
     .diagram-preview img {
       width: 100%;
       height: 100%;
-      object-fit: cover;
+      object-fit: contain;
+      padding: 10px;
       opacity: 0.9;
     }
 
@@ -871,8 +872,17 @@
           </div>
         </div>
 
-        <!-- SLIDE 14: Objetos -->
+        <!-- SLIDE 14: Sequência B2B -->
         <div class="slide-body" data-slide="14">
+          <h2 class="slide-title">08.3 Diagrama de Sequência</h2>
+          <p>Fluxo de Captação B2B (Site Matriz)</p>
+          <div class="slide-image-container">
+            <img src="./fotos-diagramas/06-diagrama-sequencia_3.png" alt="Sequência Captação B2B">
+          </div>
+        </div>
+
+        <!-- SLIDE 15: Objetos -->
+        <div class="slide-body" data-slide="15">
           <h2 class="slide-title">09. Diagrama de Objetos</h2>
           <p>Exemplo de um cenário real (Produto associado a uma Oferta Local para São Paulo).</p>
           <div class="slide-image-container">
@@ -880,8 +890,8 @@
           </div>
         </div>
 
-        <!-- SLIDE 15: Estados -->
-        <div class="slide-body" data-slide="15">
+        <!-- SLIDE 16: Estados -->
+        <div class="slide-body" data-slide="16">
           <h2 class="slide-title">10. Diagramas de Estado</h2>
           <div style="text-align: center;">
             <h4>Produto (Estoque Físico)</h4>
@@ -889,8 +899,8 @@
           </div>
         </div>
 
-        <!-- SLIDE 16: BCE -->
-        <div class="slide-body" data-slide="16">
+        <!-- SLIDE 17: BCE -->
+        <div class="slide-body" data-slide="17">
           <h2 class="slide-title">11. Padrão Boundary-Control-Entity (BCE)</h2>
           <p>Mapeamento estrutural separando interface gráfica/API, regras de orquestração e entidades de domínio.</p>
           <div class="slide-image-container">
@@ -898,8 +908,8 @@
           </div>
         </div>
 
-        <!-- SLIDE 17: Atividades -->
-        <div class="slide-body" data-slide="17">
+        <!-- SLIDE 18: Atividades -->
+        <div class="slide-body" data-slide="18">
           <h2 class="slide-title">12. Diagrama de Atividades (Jornada Principal)</h2>
           <p>Todo fluxo possível de atividade realizável no site.</p>
           <div class="slide-image-container">
@@ -907,8 +917,8 @@
           </div>
         </div>
 
-        <!-- SLIDE 18: DDD e TDD -->
-        <div class="slide-body" data-slide="18">
+        <!-- SLIDE 19: DDD e TDD -->
+        <div class="slide-body" data-slide="19">
           <h2 class="slide-title">13. Implementação: Mapeamento DDD e TDD</h2>
           <table class="slide-table" style="margin-bottom: 20px;">
             <thead>
@@ -930,8 +940,8 @@
           </div>
         </div>
 
-        <!-- SLIDE 19: Fim -->
-        <div class="slide-body centered" data-slide="19">
+        <!-- SLIDE 20: Fim -->
+        <div class="slide-body centered" data-slide="20">
           <h1 class="slide-title" style="font-size:56px;">Muito Obrigado!</h1>
           <p class="slide-subtitle" style="font-size: 28px;">Perguntas?</p>
         </div>
@@ -939,8 +949,9 @@
 
         <!-- CONTROLES DO SLIDE -->
         <div class="slide-footer">
-          <div class="slide-counter" id="slideCounter" style="font-family:'JetBrains Mono'; font-weight:600;">01 / 19</div>
+          <div class="slide-counter" id="slideCounter" style="font-family:'JetBrains Mono'; font-weight:600;">01 / 20</div>
           <div style="display:flex; gap:10px;">
+            <button class="btn-slide-nav" onclick="toggleFullScreen()" title="Tela Cheia">⛶</button>
             <button class="btn-slide-nav" onclick="prevSlide()">◀</button>
             <button class="btn-slide-nav" onclick="nextSlide()">▶</button>
           </div>
@@ -1065,6 +1076,10 @@
           <h4>Diagrama de Sequência (Afiliada)</h4>
           <div class="diagram-preview"><img src="./fotos-diagramas/06-diagrama-sequencia_2.png" alt="Sequência 2"></div>
         </div>
+        <div class="diagram-card" onclick="openDiagramModal('./fotos-diagramas/06-diagrama-sequencia_3.png', 'Diagrama de Sequência - Captação B2B')">
+          <h4>Diagrama de Sequência (Captação B2B)</h4>
+          <div class="diagram-preview"><img src="./fotos-diagramas/06-diagrama-sequencia_3.png" alt="Sequência 3"></div>
+        </div>
         <div class="diagram-card" onclick="openDiagramModal('./fotos-diagramas/07-diagrama-componentes_1.png', 'Arquitetura de Componentes')">
           <h4>Diagrama de Componentes</h4>
           <div class="diagram-preview"><img src="./fotos-diagramas/07-diagrama-componentes_1.png" alt="Componentes"></div>
@@ -1076,6 +1091,10 @@
         <div class="diagram-card" onclick="openDiagramModal('./fotos-diagramas/11-bce-mapeamento_1.png', 'Mapeamento Boundary-Control-Entity')">
           <h4>Mapeamento BCE</h4>
           <div class="diagram-preview"><img src="./fotos-diagramas/11-bce-mapeamento_1.png" alt="BCE"></div>
+        </div>
+        <div class="diagram-card" onclick="openDiagramModal('./fotos-diagramas/10-diagrama-estados_1.png', 'Diagrama de Estados (Produto)')">
+          <h4>Diagrama de Estados (Produto)</h4>
+          <div class="diagram-preview"><img src="./fotos-diagramas/10-diagrama-estados_1.png" alt="Estados Produto"></div>
         </div>
       </div>
     </div>
@@ -1162,7 +1181,7 @@
 
     // SLIDES LOGIC
     let currentSlide = 1;
-    const totalSlides = 19;
+    const totalSlides = 20;
 
     function updateSlideUI() {
       document.querySelectorAll('.slide-body').forEach(el => el.classList.remove('active'));
@@ -1204,6 +1223,18 @@
     
     // Initialize slide progress
     updateSlideUI();
+
+    // FULLSCREEN
+    function toggleFullScreen() {
+      const elem = document.querySelector('.slides-container');
+      if (!document.fullscreenElement) {
+        elem.requestFullscreen().catch(err => {
+          console.error(`Erro ao tentar entrar em tela cheia: ${err.message}`);
+        });
+      } else {
+        document.exitFullscreen();
+      }
+    }
 
     // SIMULADOR: Lógica da Trava Geográfica
     function validateCity() {

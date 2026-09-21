@@ -191,16 +191,14 @@ Exemplo de um cenário real (Produto associado a uma Oferta Local para São Paul
 <img src="./docs/fotos-diagramas/09-diagrama-objetos_1.png" class="h-80 mx-auto" />
 
 ---
-layout: two-cols
+layout: center
 ---
 
-# 09. Diagramas de Estado
-<br>
+# 09. Diagrama de Estado
 
-### Produto (Estoque Físico)
-<img src="./docs/fotos-diagramas/10-diagrama-estados_1.png" class="h-60" />
+Exemplo de ciclo de vida do Produto (Estoque Físico).
 
-
+<img src="./docs/fotos-diagramas/10-diagrama-estados_1.png" class="h-80 mx-auto" />
 
 ---
 layout: center
