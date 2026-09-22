@@ -64,5 +64,5 @@ sequenceDiagram
 - a validação geográfica fica no front-end;
 - produtos afiliados não são consultados no banco local;
 - o backend trata apenas dados locais e administrativos;
-- o fluxo B2B é separado do fluxo B2C;
+- o fluxo B2B é um mero redirecionamento externo;
 - o fechamento de venda local ocorre via WhatsApp e não por checkout nativo.

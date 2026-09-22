@@ -17,9 +17,6 @@ Usuário autenticado com permissão para gerenciar conteúdo e estoque. Herda pr
 ### Usuario
 Classe geral que concentra identidade e credenciais compartilhadas.
 
-### LeadB2B
-Representa o interesse de um potencial parceiro na captação de revenda.
-
 ### LinkExterno
 Valor de configuração externa (não persistente como entidade de produto).
 
@@ -97,14 +94,6 @@ classDiagram
         +atualizarEstoque(qtd) void
         +habilitar() void
         +desabilitar() void
-    }
-
-    class LeadB2B {
-        -id: UUID
-        -nome: string
-        -contato: string
-        -interesse: string
-        -dataCadastro: Date
     }
 
     class LinkExterno {

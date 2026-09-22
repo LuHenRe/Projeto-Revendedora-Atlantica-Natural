@@ -11,7 +11,6 @@
 - uma categoria pode ter muitos produtos;
 - um produto pode ter várias ofertas locais;
 - um administrador pode gerenciar vários produtos;
-- um lead B2B é um registro independente e não depende de produtos físicos.
 
 ## Observações
 - o banco guarda somente o estoque físico e os dados operacionais do negócio;
@@ -52,13 +51,5 @@ erDiagram
         varchar nome
         varchar email
         varchar senha_hash
-    }
-
-    LEADS_B2B {
-        uuid id PK
-        varchar nome
-        varchar contato
-        varchar interesse
-        timestamp data_cadastro
     }
 ```
