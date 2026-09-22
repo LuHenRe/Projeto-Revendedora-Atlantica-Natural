@@ -788,7 +788,10 @@
               <tr><td>RF05</td><td>Exibir catálogo oficial em PDF na página.</td><td>Média</td><td>Cliente Final</td></tr>
               <tr><td>RF06</td><td>Disponibilizar área isolada (CTA) para captação de revendedoras (B2B).</td><td>Alta</td><td>Lead</td></tr>
               <tr><td>RF07</td><td>Gerenciar produtos, estoque físico e categorias por backoffice.</td><td>Alta</td><td>Revendedora</td></tr>
+              <tr><td>RF08</td><td>Criar, editar e excluir categorias de forma consistente.</td><td>Média</td><td>Revendedora</td></tr>
+              <tr><td>RF09</td><td>Ocultar itens indisponíveis ou fora de estoque da vitrine.</td><td>Alta</td><td>Sistema</td></tr>
               <tr><td>RF10</td><td>Autenticar na área administrativa (segurança JWT).</td><td>Alta</td><td>Revendedora</td></tr>
+              <tr><td>RF11</td><td>Atualizar textos, imagens e blocos visuais da vitrine pelo painel.</td><td>Baixa</td><td>Revendedora</td></tr>
             </tbody>
           </table>
         </div>
@@ -804,8 +807,13 @@
               <tr><td>RNF01</td><td>Performance</td><td>A página inicial deve carregar rapidamente em mobile (Mobile-first).</td></tr>
               <tr><td>RNF02</td><td>Usabilidade</td><td>Interface otimizada para celular (espaçamento de botões, leitura simples).</td></tr>
               <tr><td>RNF03</td><td>Segurança</td><td>Rotas de gestão no backend restritas via autenticação JWT.</td></tr>
-              <tr><td>RNF04</td><td>Manutenibilidade</td><td>Frontend com componentes isolados e Clean Architecture no Backend.</td></tr>
-              <tr><td>RNF05</td><td>Confiabilidade</td><td>A conversão e validação geográfica devem estar blindadas contra bypass no fluxo feliz.</td></tr>
+              <tr><td>RNF04</td><td>Integridade</td><td>Manter consistência no cadastro de produtos e categorias no banco de dados.</td></tr>
+              <tr><td>RNF05</td><td>Manutenibilidade</td><td>Frontend com componentes isolados e Clean Architecture no Backend.</td></tr>
+              <tr><td>RNF06</td><td>Confiabilidade</td><td>A conversão e validação geográfica devem estar blindadas contra bypass no fluxo feliz.</td></tr>
+              <tr><td>RNF07</td><td>Escalabilidade</td><td>Estrutura deve permitir inclusão de novos blocos sem quebrar o layout.</td></tr>
+              <tr><td>RNF08</td><td>Portabilidade</td><td>Garantir funcionamento fluido em navegadores modernos (Chrome, Safari, Edge).</td></tr>
+              <tr><td>RNF09</td><td>Acessibilidade</td><td>Uso de contraste adequado e tags semânticas (WCAG AA básico).</td></tr>
+              <tr><td>RNF10</td><td>Desacoplamento</td><td>Geração de links de WhatsApp e matriz devem operar independente do BD local.</td></tr>
             </tbody>
           </table>
         </div>
@@ -1029,24 +1037,33 @@
         <div class="req-box">
           <h3 style="color:var(--accent-primary); border-bottom:1px solid var(--border-color); padding-bottom:10px;">Requisitos Funcionais</h3>
           <ul class="req-list">
-            <li><span class="req-id">RF01</span> Exibir estoque físico local na vitrine.</li>
-            <li><span class="req-id">RF02</span> Validar região de atendimento (trava geográfica) no client-side.</li>
-            <li><span class="req-id">RF03</span> Redirecionar para WhatsApp com mensagem pré-formatada do produto local.</li>
-            <li><span class="req-id">RF04</span> Exibir blocos estáticos de links de afiliada para a loja matriz.</li>
-            <li><span class="req-id">RF05</span> Disponibilizar acesso (link ou visualizador) ao catálogo oficial em PDF.</li>
-            <li><span class="req-id">RF06</span> Redirecionar para formulário externo de captação de revendedoras (B2B).</li>
-            <li><span class="req-id">RF07</span> Painel Backoffice para gestão de estoque e categorias.</li>
-          </ul>
+              <li><span class="req-id">RF01</span> Exibir estoque físico local na vitrine.</li>
+              <li><span class="req-id">RF02</span> Validar região de atendimento (trava geográfica) no client-side.</li>
+              <li><span class="req-id">RF03</span> Redirecionar para WhatsApp com mensagem pré-formatada do produto local.</li>
+              <li><span class="req-id">RF04</span> Exibir blocos estáticos de links de afiliada para a loja matriz.</li>
+              <li><span class="req-id">RF05</span> Disponibilizar acesso (link ou visualizador) ao catálogo oficial em PDF.</li>
+              <li><span class="req-id">RF06</span> Redirecionar para formulário externo de captação de revendedoras (B2B).</li>
+              <li><span class="req-id">RF07</span> Painel Backoffice para gestão de estoque e categorias.</li>
+              <li><span class="req-id">RF08</span> Gerenciar criação, edição e exclusão de categorias.</li>
+              <li><span class="req-id">RF09</span> Controlar disponibilidade e exibição do produto (ativo/inativo).</li>
+              <li><span class="req-id">RF10</span> Autenticação segura do painel administrativo.</li>
+              <li><span class="req-id">RF11</span> Exibir conteúdo CMS dinâmico editável pela revendedora.</li>
+            </ul>
         </div>
         <div class="req-box">
           <h3 style="color:var(--accent-secondary); border-bottom:1px solid var(--border-color); padding-bottom:10px;">Requisitos Não Funcionais</h3>
           <ul class="req-list">
-            <li><span class="req-id">RNF01</span> <strong>Performance:</strong> O frontend deve ter carregamento otimizado (SSG em Next.js).</li>
-            <li><span class="req-id">RNF02</span> <strong>Usabilidade:</strong> Interface Mobile-first, focada na visualização por smartphones.</li>
-            <li><span class="req-id">RNF03</span> <strong>Segurança:</strong> Backoffice protegido por JWT.</li>
-            <li><span class="req-id">RNF04</span> <strong>Arquitetura:</strong> Adoção de Clean Architecture no backend (FastAPI) para manutenibilidade.</li>
-            <li><span class="req-id">RNF05</span> <strong>Confiabilidade:</strong> O botão de WhatsApp deve ser bloqueado programaticamente até aprovação da trava geográfica.</li>
-          </ul>
+              <li><span class="req-id">RNF01</span> <strong>Performance:</strong> O frontend deve ter carregamento otimizado (SSG em Next.js).</li>
+              <li><span class="req-id">RNF02</span> <strong>Usabilidade:</strong> Interface Mobile-first, focada na visualização por smartphones.</li>
+              <li><span class="req-id">RNF03</span> <strong>Segurança:</strong> Backoffice protegido por JWT.</li>
+              <li><span class="req-id">RNF04</span> <strong>Integridade:</strong> Garantir que um produto não possa pertencer a uma categoria deletada.</li>
+              <li><span class="req-id">RNF05</span> <strong>Arquitetura:</strong> Adoção de Clean Architecture no backend (FastAPI) para manutenibilidade.</li>
+              <li><span class="req-id">RNF06</span> <strong>Confiabilidade:</strong> O botão de WhatsApp deve ser bloqueado programaticamente até aprovação da trava geográfica.</li>
+              <li><span class="req-id">RNF07</span> <strong>Escalabilidade:</strong> Código frontend modular para novos blocos.</li>
+              <li><span class="req-id">RNF08</span> <strong>Portabilidade:</strong> Aplicação compatível com WebKit e Chromium modernos.</li>
+              <li><span class="req-id">RNF09</span> <strong>Acessibilidade:</strong> Elementos visuais com contraste satisfatório para leitura ao ar livre.</li>
+              <li><span class="req-id">RNF10</span> <strong>Desacoplamento:</strong> Redirecionamentos externos são stateless.</li>
+            </ul>
         </div>
       </div>
     </div>
