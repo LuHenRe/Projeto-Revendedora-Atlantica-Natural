@@ -47,22 +47,17 @@ sequenceDiagram
 sequenceDiagram
     actor Visitante
     participant Frontend as Frontend (Next.js)
-    participant API as Backend (FastAPI)
-    participant DB as Banco (PostgreSQL)
+    participant Externo as Site da Matriz (B2B)
 
-    Visitante->>Frontend: Acessa CTA de parceria
-    Frontend-->>Visitante: Exibe página B2B
-    Visitante->>Frontend: Envia interesse
-    Frontend->>API: POST /b2b/interesse
-    API->>DB: Salva lead
-    DB-->>API: Confirma cadastro
-    API-->>Frontend: Sucesso
-    Frontend-->>Visitante: Mensagem de confirmação
+    Visitante->>Frontend: Clica no CTA "Seja uma Revendedora"
+    Frontend-->>Visitante: Redireciona para URL de cadastro da Matriz
+    Visitante->>Externo: Acessa formulário oficial
+    Externo-->>Visitante: Captação conduzida pela marca
 ```
 
 ## Premissas de comportamento
 - a validação geográfica fica no front-end;
 - produtos afiliados não são consultados no banco local;
-- o backend trata apenas dados locais e administrativos;
-- o fluxo B2B é um mero redirecionamento externo;
+- o backend trata apenas dados locais e administrativos da vitrine;
+- o fluxo B2B apenas redireciona o visitante para a matriz;
 - o fechamento de venda local ocorre via WhatsApp e não por checkout nativo.
