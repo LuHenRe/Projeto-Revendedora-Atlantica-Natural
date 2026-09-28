@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from src.core.config import settings
-from src.api.routes import auth
+from src.api.routes import auth, categorias, produtos
 
 app = FastAPI(
     title="Vitrine Virtual API",
@@ -22,4 +22,9 @@ app.add_middleware(
 def read_root():
     return {"message": "Bem vindo à API da Vitrine Virtual"}
 
-app.include_router(auth.router, prefix="/admin", tags=["Admin"])
+app.include_router(auth.router, prefix="/admin", tags=["Admin (Autenticação)"])
+app.include_router(categorias.admin_router, prefix="/admin/categorias", tags=["Admin (Categorias)"])
+app.include_router(produtos.admin_router, prefix="/admin/produtos", tags=["Admin (Produtos)"])
+
+app.include_router(categorias.router, prefix="/categorias", tags=["Público (Categorias)"])
+app.include_router(produtos.router, prefix="/produtos", tags=["Público (Produtos)"])
