@@ -1,2 +1,18 @@
-
 **/node_modules
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# FastAPI / alembic
+alembic.ini.bak
