@@ -12,15 +12,15 @@ router = APIRouter()
 admin_router = APIRouter()
 
 # --- Rotas Públicas ---
-@router.get("/", response_model=list[ProdutoResponse])
+@router.get("/", response_model=list[ProdutoResponse], summary="Listar produtos", description="Retorna uma lista paginada de todos os produtos ativos no catálogo.")
 def listar_produtos(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return repo_produto.get_produtos_ativos(db, skip=skip, limit=limit)
 
-@router.get("/ofertas-locais", response_model=list[ProdutoResponse])
+@router.get("/ofertas-locais", response_model=list[ProdutoResponse], summary="Listar ofertas locais", description="Retorna os produtos ativos que possuem estoque disponível (> 0).")
 def ofertas_locais(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
     return repo_produto.get_ofertas_locais(db, skip=skip, limit=limit)
 
-@router.get("/{id}", response_model=ProdutoResponse)
+@router.get("/{id}", response_model=ProdutoResponse, summary="Obter produto", description="Busca os detalhes de um produto específico, garantindo que ele esteja ativo.")
 def obter_produto(id: UUID, db: Session = Depends(get_db)):
     produto = repo_produto.get_produto(db, produto_id=id)
     if not produto or not produto.ativo:
@@ -28,14 +28,14 @@ def obter_produto(id: UUID, db: Session = Depends(get_db)):
     return produto
 
 # --- Rotas Privadas (Admin) ---
-@admin_router.post("/", response_model=ProdutoResponse, status_code=status.HTTP_201_CREATED)
+@admin_router.post("/", response_model=ProdutoResponse, status_code=status.HTTP_201_CREATED, summary="Criar produto", description="Adiciona um novo produto ao catálogo. Requer autenticação de administrador.")
 def criar_produto(produto_in: ProdutoCreate, db: Session = Depends(get_db), current_user: str = Depends(get_current_user)):
     categoria = repo_categoria.get_categoria(db, categoria_id=produto_in.categoria_id)
     if not categoria:
         raise HTTPException(status_code=400, detail="Categoria fornecida não existe")
     return repo_produto.create_produto(db, produto_in)
 
-@admin_router.put("/{id}", response_model=ProdutoResponse)
+@admin_router.put("/{id}", response_model=ProdutoResponse, summary="Atualizar produto", description="Atualiza os dados de um produto existente. Requer autenticação de administrador.")
 def atualizar_produto(id: UUID, produto_in: ProdutoUpdate, db: Session = Depends(get_db), current_user: str = Depends(get_current_user)):
     produto = repo_produto.get_produto(db, produto_id=id)
     if not produto:
@@ -48,7 +48,7 @@ def atualizar_produto(id: UUID, produto_in: ProdutoUpdate, db: Session = Depends
             
     return repo_produto.update_produto(db, db_produto=produto, produto_update=produto_in)
 
-@admin_router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT)
+@admin_router.delete("/{id}", status_code=status.HTTP_204_NO_CONTENT, summary="Deletar produto (Lógico)", description="Realiza a exclusão lógica do produto, alterando a flag ativo para False. Requer autenticação de administrador.")
 def deletar_produto(id: UUID, db: Session = Depends(get_db), current_user: str = Depends(get_current_user)):
     produto = repo_produto.get_produto(db, produto_id=id)
     if not produto:
