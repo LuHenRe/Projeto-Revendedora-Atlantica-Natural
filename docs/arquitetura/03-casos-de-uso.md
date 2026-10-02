@@ -11,23 +11,39 @@
 
 ## Diagrama de casos de uso
 
-```mermaid
-flowchart LR
-    Cliente((Cliente final))
-    Parceira((Potencial parceira))
-    Admin((Administradora))
-    Admin -.->|"herda de"| Cliente
-    Parceira -.->|"herda de"| Cliente
+```plantuml
+@startuml
+left to right direction
+skinparam actorStyle stick
 
-    Cliente --> UC01[Visualizar vitrine pública]
-    Cliente --> UC02[Confirmar região para compra local]
-    UC02 -.->|"<<include>>"| UC03[Enviar mensagem via WhatsApp]
-    UC04[Navegar por links externos de afiliada] -.->|"<<extend>>"| UC01
-    UC05[Visualizar catálogo em PDF] -.->|"<<extend>>"| UC01
-    Parceira --> UC06[Acessar página de captação B2B]
-    Admin --> UC07[Cadastrar ou atualizar produto físico]
-    UC07 -.->|"<<include>>"| UC08[Autenticar no backoffice]
-    Admin --> UC08[Autenticar no backoffice]
+actor "Cliente final" as Cliente
+actor "Potencial parceira" as Parceira
+actor "Administradora" as Admin
+
+Admin --|> Cliente : herda de
+Parceira --|> Cliente : herda de
+
+usecase "Visualizar vitrine pública" as UC01
+usecase "Confirmar região para compra local" as UC02
+usecase "Enviar mensagem via WhatsApp" as UC03
+usecase "Navegar por links externos de afiliada" as UC04
+usecase "Visualizar catálogo em PDF" as UC05
+usecase "Acessar página de captação B2B" as UC06
+usecase "Cadastrar ou atualizar produto físico" as UC07
+usecase "Autenticar no backoffice" as UC08
+
+Cliente --> UC01
+Cliente --> UC02
+UC02 ..> UC03 : <<include>>
+UC04 ..> UC01 : <<extend>>
+UC05 ..> UC01 : <<extend>>
+
+Parceira --> UC06
+
+Admin --> UC07
+UC07 ..> UC08 : <<include>>
+Admin --> UC08
+@enduml
 ```
 
 > Leitura: `UC02` **sempre** executa `UC03` (include — o link do WhatsApp só é gerado após a confirmação da região). `UC04` e `UC05` são opcionais e apenas estendem a vitrine pública em ponto de extensão (extend). `UC07` sempre inclui `UC08` (autenticação obrigatória antes de gerenciar estoque).
