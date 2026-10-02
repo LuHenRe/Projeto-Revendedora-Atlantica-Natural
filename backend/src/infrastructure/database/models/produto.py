@@ -4,7 +4,7 @@ from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 from src.core.database import Base
 
-class Produto(Base):
+class ProdutoModel(Base):
     __tablename__ = "produtos"
 
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
@@ -15,4 +15,4 @@ class Produto(Base):
     imagem_url = Column(String, nullable=True)
     ativo = Column(Boolean, default=True, nullable=False)
 
-    categoria = relationship("Categoria", back_populates="produtos")
+    categoria = relationship("CategoriaModel", back_populates="produtos")

@@ -23,7 +23,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 from src.core.config import settings
 from src.core.database import Base
 # Importar os modelos aqui para que o Alembic os reconheça, por exemplo:
-from src.models import Categoria, Produto
+from src.infrastructure.database.models import CategoriaModel, ProdutoModel
 
 # Definir a URL do banco de dados na configuração do Alembic
 config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
