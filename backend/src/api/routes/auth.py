@@ -7,7 +7,7 @@ from src.schemas.token import Token
 
 router = APIRouter()
 
-@router.post("/login", response_model=Token)
+@router.post("/login", response_model=Token, summary="Autenticação de Admin", description="Verifica as credenciais do administrador e retorna um token JWT para acesso às rotas privadas.")
 def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
     # Como é um sistema de usuário único (admin), validamos direto das variáveis de ambiente
     if form_data.username != settings.ADMIN_USERNAME or form_data.password != settings.ADMIN_PASSWORD:
