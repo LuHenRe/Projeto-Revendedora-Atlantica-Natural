@@ -148,10 +148,12 @@ Respeitando as restrições arquiteturais, o banco de dados gerenciará apenas o
 * **APIs Privadas:** cadastro e edição de produtos, categorias, estoque físico, PDF e dados administrativos.
 * **Autenticação:** JWT para proteger as rotas de administração e gestão de conteúdo.
 
-### 7.2. Persistência e Repositórios
-A comunicação com PostgreSQL deve seguir o padrão Repository, com ORM (SQLAlchemy/SQLModel) na camada de infraestrutura.
-
-### 7.3. DTOs e Injeção de Dependências
+### 7.2. Arquitetura: Clean Architecture, DDD e TDD
+O desenvolvimento do backend segue rigorosamente:
+* **Domain-Driven Design (DDD):** Entidades puras e encapsuladas na camada de domínio (`domain/entities`), com regras de negócio blindadas (ex: validação de estoque, exclusão lógica).
+* **Clean Architecture:** A arquitetura é dividida em 4 camadas (`domain/`, `application/`, `infrastructure/`, `interfaces/`). O núcleo (Domínio e Casos de Uso) não possui acoplamento com o banco de dados (SQLAlchemy) nem com o framework HTTP (FastAPI).
+* **TDD (Test-Driven Development):** O núcleo da aplicação foi desenvolvido sob a filosofia Red-Green-Refactor, garantindo alta resiliência nas lógicas de negócio através de testes unitários (Pytest) com *Fake Repositories*, além de testes de integração E2E.
+* **Repositórios e Infraestrutura:** A comunicação com PostgreSQL segue o padrão Repository, onde o ORM (SQLAlchemy) fica estritamente confinado à camada de infraestrutura (`infrastructure/database`), apenas implementando as interfaces ditadas pelo Domínio.
 * **Pydantic** para validação de entrada/saída.
 * **FastAPI `Depends`** para injeção de repositórios, autenticação e permissões.
 * Criação de serviços isolados para geração de links de WhatsApp e montagem de URLs externas.
