@@ -97,7 +97,7 @@ A regra da região de atendimento deve ficar no front-end por três motivos:
 * **Produto:** item apresentado na vitrine e disponível em estoque físico local.
 * **Categoria:** agrupamento lógico da oferta (ex.: skincare, beleza, kits, perfumes, wellness).
 * **OfertaLocal:** produto disponível para venda física com estoque local e disponibilidade imediata.
-* **LinkExterno:** URL de afiliado apontando para a matriz; não é uma entidade persistida no banco de produtos.
+* **ProdutoMatriz (Link Externo):** Produto da matriz cujos dados (foto, nome, preço) são capturados via web scraping e cacheados localmente para exibição rica, gerando um redirecionamento de afiliada sem se misturar com o controle de estoque local.
 * **CatalogoDigital:** material em PDF ou visualizador web.
 * **Administrador:** usuário autenticado para gerir conteúdos, produtos e links do hub.
 

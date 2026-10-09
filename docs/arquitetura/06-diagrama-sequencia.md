@@ -33,11 +33,15 @@ sequenceDiagram
 sequenceDiagram
     actor Cliente
     participant Frontend as Frontend (Next.js)
+    participant API as Backend (FastAPI)
     participant Externo as Loja matriz / afiliada
 
-    Cliente->>Frontend: Clica em card de categoria
-    Frontend-->>Cliente: Redireciona para URL externa
-    Cliente->>Externo: Acessa a página de destino
+    Cliente->>Frontend: Acessa vitrine
+    Frontend->>API: GET /produtos-matriz
+    API-->>Frontend: Retorna cache (foto, nome, preço e url afiliada)
+    Cliente->>Frontend: Clica no produto da matriz
+    Frontend-->>Cliente: Redireciona para URL afiliada
+    Cliente->>Externo: Acessa a página de destino na matriz
     Externo-->>Cliente: Exibe oferta e checkout oficial
 ```
 
@@ -57,7 +61,7 @@ sequenceDiagram
 
 ## Premissas de comportamento
 - a validação geográfica fica no front-end;
-- produtos afiliados não são consultados no banco local;
+- produtos afiliados são consultados no cache local (`produtos_matriz`), gerado via Web Scraping, totalmente separados do estoque físico;
 - o backend trata apenas dados locais e administrativos da vitrine;
 - o fluxo B2B apenas redireciona o visitante para a matriz;
 - o fechamento de venda local ocorre via WhatsApp e não por checkout nativo.

@@ -35,7 +35,7 @@
 #### BP-04 - Exibir links externos para matriz/afiliados
 - Prioridade: Média
 - Tipo: Produto
-- Descrição: A vitrine deve mostrar blocos de links externos para produtos, categorias ou campanhas da matriz, sem armazenar esses itens no banco local.
+- Descrição: A vitrine deve mostrar blocos de links externos para produtos da matriz. Para melhorar a experiência do usuário, os dados desses produtos (nome, foto e preço) devem ser extraídos da URL original via Web Scraping e cacheados no banco de dados local em uma tabela específica (`produtos_matriz`), isolada do estoque físico.
 - Critério de aceitação:
   - os links são exibidos em blocos visuais;
   - o conteúdo não depende do cadastro local de produtos afiliados;

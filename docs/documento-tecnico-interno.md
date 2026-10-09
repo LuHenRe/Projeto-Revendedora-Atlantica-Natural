@@ -41,7 +41,7 @@ A vitrine exibe somente itens físicos e ativos no estoque local. O cliente pode
 A regra de geofencing deve permanecer no frontend. Isso evita requisições desnecessárias ao backend e melhora a experiência do usuário.
 
 ### 3.3. Links externos
-Produtos e categorias da matriz não são armazenados como entidades do banco local do sistema. A URL externa deve ser tratada como configuração de conteúdo, frontend ou CMS, e não como item de banco relacional do estoque local.
+Produtos e categorias da matriz são tratados separadamente do estoque local. Para evitar trabalho manual e manter uma vitrine atrativa, o sistema utiliza um serviço de **Web Scraping** para capturar Nome, Preço, Imagem e Descrição diretamente da matriz. Esses dados são cacheados em uma tabela separada (`produtos_matriz`), servindo apenas como referência visual e atalho de redirecionamento (Deep Link de Afiliada), e não como item de controle de estoque local.
 
 ### 3.4. Catálogo digital
 O catálogo deve estar acessível em PDF ou em visualizador web, servindo como suporte e material complementar à conversão.
