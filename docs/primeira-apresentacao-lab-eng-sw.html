@@ -297,6 +297,39 @@
       width: 220px;
       color: var(--accent-primary);
     }
+    @media print {
+      body {
+        background-color: #0f1117 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      header, .slide-footer, .slide-progress-bar {
+        display: none !important;
+      }
+      main {
+        padding: 0 !important;
+      }
+      .slides-container {
+        border: none !important;
+        box-shadow: none !important;
+        overflow: visible !important;
+        display: block !important;
+        min-height: auto !important;
+      }
+      .slide-body {
+        display: flex !important;
+        flex-direction: column !important;
+        opacity: 1 !important;
+        transform: none !important;
+        page-break-after: always;
+        height: 100vh !important;
+        page-break-inside: avoid;
+      }
+      .slide-body.centered {
+        justify-content: center !important;
+        align-items: center !important;
+      }
+    }
   </style>
 </head>
 

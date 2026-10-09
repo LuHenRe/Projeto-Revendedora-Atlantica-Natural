@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Backend — Arquitetura e Estrutura</title>
+  
+  <!-- Tipografia Moderna Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #0f1117;
+      --bg-card: rgba(22, 27, 38, 0.75);
+      --bg-card-hover: rgba(30, 37, 52, 0.85);
+      --border-color: rgba(255, 255, 255, 0.08);
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent-primary: #10b981; /* Emerald */
+      --accent-secondary: #3b82f6; /* Blue */
+      --gradient-accent: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image: 
+        radial-gradient(circle at 15% 15%, rgba(16, 185, 129, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(59, 130, 246, 0.08) 0%, transparent 40%);
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* HEADER */
+    header {
+      height: 70px;
+      padding: 0 28px;
+      background: rgba(15, 17, 23, 0.85);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-logo {
+      width: 40px;
+      height: 40px;
+      background: var(--gradient-accent);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+    }
+
+    .brand-title {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-subtitle {
+      font-size: 11px;
+      color: var(--accent-primary);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    /* MAIN */
+    main {
+      flex: 1;
+      padding: 24px;
+      max-width: 1400px;
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* SLIDES */
+    .slides-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+      position: relative;
+      overflow: hidden;
+      min-height: 600px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .slide-progress-bar {
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      width: 100%;
+    }
+
+    .slide-progress-fill {
+      height: 100%;
+      background: var(--gradient-accent);
+      width: 0%; 
+      transition: width 0.3s ease;
+    }
+
+    .slide-body {
+      flex: 1;
+      padding: 48px 56px;
+      display: none;
+      overflow-y: auto;
+    }
+
+    .slide-body.active {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      animation: slideIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+    
+    .slide-body.centered {
+      align-items: center;
+      text-align: center;
+    }
+
+    @keyframes slideIn {
+      from { opacity: 0; transform: translateX(20px); }
+      to { opacity: 1; transform: translateX(0); }
+    }
+
+    .slide-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 34px;
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 24px;
+      background: linear-gradient(90deg, #fff 0%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .slide-subtitle {
+      font-size: 16px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      max-width: 900px;
+      margin-bottom: 32px;
+    }
+
+    .slide-content-list {
+      font-size: 20px;
+      line-height: 2;
+      list-style-position: inside;
+      color: var(--text-main);
+    }
+    
+    .slide-content-list li {
+      margin-bottom: 12px;
+    }
+
+    .slide-content-list strong {
+      color: var(--accent-primary);
+    }
+
+    .slide-footer {
+      height: 64px;
+      padding: 0 32px;
+      background: rgba(15, 17, 23, 0.8);
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: auto;
+    }
+
+    .btn-slide-nav {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.2s;
+    }
+
+    .btn-slide-nav:hover {
+      background: var(--accent-primary);
+      border-color: var(--accent-primary);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER NAVEGADOR -->
+  <header>
+    <div class="brand">
+      <div class="brand-logo">⚙️</div>
+      <div>
+        <div class="brand-title">Atlântica Natural</div>
+        <div class="brand-subtitle">Arquitetura de Backend</div>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="slides-container">
+      <div class="slide-progress-bar">
+        <div class="slide-progress-fill" id="slideProgress"></div>
+      </div>
+
+      <!-- SLIDE 1: Capa -->
+      <div class="slide-body centered active" data-slide="1">
+        <h1 class="slide-title" style="font-size:48px; margin-bottom: 10px;">ARQUITETURA E ESTRUTURA DO BACKEND</h1>
+        <p class="slide-subtitle" style="font-size: 24px; color: #fff; margin-bottom: 10px;">Hub Híbrido de Curadoria - Atlântica Natural</p>
+        <p style="color: var(--text-muted);">Uma visão aprofundada da construção da API</p>
+      </div>
+
+      <!-- SLIDE 2: Introdução e Visão Geral -->
+      <div class="slide-body" data-slide="2">
+        <h2 class="slide-title">1. Introdução e Visão Geral do Backend</h2>
+        <ul class="slide-content-list">
+          <li><strong>Apresentação da Estrutura:</strong> Visão geral do repositório backend e suas responsabilidades.</li>
+          <li><strong>Organização do Projeto:</strong> Divisão clara entre o código da aplicação (<code>src/</code>) e a suíte de testes (<code>tests/</code>).</li>
+          <li><strong>Gerenciamento:</strong> Controle de dependências, testes e lint centralizados e configurados via <code>pyproject.toml</code>.</li>
+        </ul>
+      </div>
+
+      <!-- SLIDE 3: Domínio Rico e Clean Architecture -->
+      <div class="slide-body" data-slide="3">
+        <h2 class="slide-title">2. Domínio Rico e Clean Architecture</h2>
+        <ul class="slide-content-list">
+          <li><strong>Domínio Rico:</strong> Regras de negócio expressivas e centralizadas no núcleo da aplicação (<code>src/</code>).</li>
+          <li><strong>Clean Architecture:</strong> Separação rigorosa entre entidades de negócio, casos de uso, interfaces e infraestrutura.</li>
+          <li><strong>Baixo Acoplamento:</strong> Componentes desacoplados, garantindo facilidade de manutenção e evolução do código ao longo do tempo.</li>
+        </ul>
+      </div>
+
+      <!-- SLIDE 4: Banco de Dados e Migrações -->
+      <div class="slide-body" data-slide="4">
+        <h2 class="slide-title">3. Banco de Dados e Migrações com Alembic</h2>
+        <ul class="slide-content-list">
+          <li><strong>Mapeamento Relacional:</strong> Definição robusta da estrutura de tabelas da aplicação.</li>
+          <li><strong>Gerenciamento de Migrations:</strong> Criação de tabelas e alterações de esquema geradas e versionadas de forma segura via Alembic.</li>
+          <li><strong>Rastreabilidade:</strong> Controle total das mudanças no banco de dados entre os ambientes de desenvolvimento e produção.</li>
+        </ul>
+      </div>
+
+      <!-- SLIDE 5: Rotas e Documentação -->
+      <div class="slide-body" data-slide="5">
+        <h2 class="slide-title">4. Rotas e Documentação Interativa com Swagger</h2>
+        <ul class="slide-content-list">
+          <li><strong>Rotas RESTful:</strong> Exposição clara e execução facilitada dos endpoints do sistema.</li>
+          <li><strong>Swagger / OpenAPI:</strong> Interface interativa acoplada para exploração e execução das rotas em tempo real.</li>
+          <li><strong>Integração:</strong> Facilidade de conexão com o frontend e validação nativa de payloads de requisição e resposta.</li>
+        </ul>
+      </div>
+
+      <!-- SLIDE 6: Controle de Acesso e Segurança -->
+      <div class="slide-body" data-slide="6">
+        <h2 class="slide-title">5. Controle de Acesso, Autenticação e Segurança</h2>
+        <ul class="slide-content-list">
+          <li><strong>Controle de Login:</strong> Fluxo de autenticação seguro para identificação e validação dos usuários do painel.</li>
+          <li><strong>Segurança na Autenticação:</strong> Criptografia forte de credenciais (hashing) e proteção contra acessos não autorizados.</li>
+          <li><strong>Uso de Tokens:</strong> Emissão e validação de tokens JWT para autorização em requisições protegidas.</li>
+        </ul>
+      </div>
+
+      <!-- SLIDE 7: Estratégia de Qualidade -->
+      <div class="slide-body" data-slide="7">
+        <h2 class="slide-title">6. Estratégia de Qualidade e Cobertura de Testes</h2>
+        <ul class="slide-content-list">
+          <li><strong>Estrutura de Testes:</strong> Concentrada e organizada no diretório <code>tests/</code>.</li>
+          <li><strong>Testes Unitários:</strong> Validação isolada e rigorosa da lógica de domínio e dos casos de uso.</li>
+          <li><strong>Testes de Integração:</strong> Verificação do comportamento em conjunto entre rotas, banco de dados e serviços externos.</li>
+          <li><strong>Meta de Qualidade:</strong> 80% de cobertura de testes estabelecida e mantida para assegurar a confiabilidade a cada alteração.</li>
+        </ul>
+      </div>
+
+      <!-- SLIDE 8: Destaques da Arquitetura -->
+      <div class="slide-body" data-slide="8">
+        <h2 class="slide-title">7. Destaques da Arquitetura</h2>
+        <ul class="slide-content-list">
+          <li><strong>Docker Compose:</strong> Utilizado para orquestrar a execução de todos os serviços de forma integrada.</li>
+          <li><strong>Dockerfile:</strong> Configurado para a execução consistente e isolada do backend.</li>
+          <li><strong>Base Sólida:</strong> Backend escalável, seguro e fundamentado em boas práticas consolidadas de software.</li>
+          <li><strong>Evolução Contínua:</strong> Código testado e documentado para garantir longevidade ao projeto.</li>
+        </ul>
+      </div>
+
+      <!-- SLIDE 9: Fim -->
+      <div class="slide-body centered" data-slide="9">
+        <h1 class="slide-title" style="font-size:56px;">Muito Obrigado!</h1>
+        <p class="slide-subtitle" style="font-size: 28px;">Perguntas?</p>
+      </div>
+
+      <!-- CONTROLES DO SLIDE -->
+      <div class="slide-footer">
+        <div class="slide-counter" id="slideCounter" style="font-family:'JetBrains Mono'; font-weight:600;">01 / 09</div>
+        <div style="display:flex; gap:10px;">
+          <button class="btn-slide-nav" onclick="toggleFullScreen()" title="Tela Cheia">⛶</button>
+          <button class="btn-slide-nav" onclick="prevSlide()">◀</button>
+          <button class="btn-slide-nav" onclick="nextSlide()">▶</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script>
+    let currentSlide = 1;
+    const totalSlides = 9;
+
+    function updateSlideUI() {
+      document.querySelectorAll('.slide-body').forEach(el => el.classList.remove('active'));
+      document.querySelector(`.slide-body[data-slide="${currentSlide}"]`).classList.add('active');
+      
+      const currentStr = currentSlide < 10 ? '0' + currentSlide : currentSlide;
+      const totalStr = totalSlides < 10 ? '0' + totalSlides : totalSlides;
+      
+      document.getElementById('slideCounter').innerText = `${currentStr} / ${totalStr}`;
+      const percentage = (currentSlide / totalSlides) * 100;
+      document.getElementById('slideProgress').style.width = percentage + '%';
+    }
+
+    function nextSlide() {
+      if(currentSlide < totalSlides) {
+        currentSlide++;
+        updateSlideUI();
+      }
+    }
+
+    function prevSlide() {
+      if(currentSlide > 1) {
+        currentSlide--;
+        updateSlideUI();
+      }
+    }
+    
+    document.addEventListener('keydown', function(event) {
+      if(event.key === 'ArrowRight' || event.key === ' ') {
+        nextSlide();
+      } else if(event.key === 'ArrowLeft') {
+        prevSlide();
+      }
+    });
+    
+    updateSlideUI();
+
+    function toggleFullScreen() {
+      const elem = document.querySelector('.slides-container');
+      if (!document.fullscreenElement) {
+        elem.requestFullscreen().catch(err => {
+          console.error(`Erro ao tentar entrar em tela cheia: ${err.message}`);
+        });
+      } else {
+        document.exitFullscreen();
+      }
+    }
+  </script>
+</body>
+</html>
