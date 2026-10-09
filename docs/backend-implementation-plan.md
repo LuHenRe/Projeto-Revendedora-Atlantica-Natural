@@ -100,7 +100,7 @@ A estrutura interna em `backend/src/` foi desenhada para isolar o núcleo do neg
 
 ## Fase 6: Integração, Documentação e Cors
 
-**Objetivo:** Preparar a API para consumo pelo frontend.
+**Objetivo:** Garantir a qualidade, resiliência do código e do fluxo HTTP.
 
 1. **Configuração de CORS:**
    - Adicionar `CORSMiddleware` para permitir acesso de clientes HTTP.
@@ -118,19 +118,3 @@ A estrutura interna em `backend/src/` foi desenhada para isolar o núcleo do neg
 2. **Cobertura Implementada:**
    - Unitários: Testes do core de domínio e use cases (com *Fake Repositories*).
    - E2E: Autenticação, CRUD Categoria, CRUD Produto (verificando fluxos como inativação lógica de produtos e visualização pública).
-
----
-
-## Fase 8: Integração de Destaques da Matriz (Scraping)
-
-**Objetivo:** Permitir exibir produtos da matriz na vitrine sem a necessidade de digitação manual de fotos e nomes, utilizando *Web Scraping* para gerar os deep links.
-
-1. **Scraper (Infraestrutura):**
-   - Criação da classe `AtlanticaScraper` (usando `beautifulsoup4` e `httpx`) para extrair Título, Imagem, Preço e Descrição de uma URL oficial da matriz.
-2. **Entidades e Repositórios:**
-   - Modelagem de `ProdutoMatriz` e `ProdutoMatrizModel` em uma tabela PostgreSQL separada para cache (não afeta o estoque local).
-3. **Casos de Uso e Endpoints:**
-   - Rota admin (`POST /admin/produtos-matriz`) que processa a URL original, faz o scraping, adiciona o código de rastreamento do afiliado e salva no cache.
-   - Rota pública (`GET /produtos-matriz`) super rápida para o Frontend renderizar a vitrine.
-4. **Dependências Extras:**
-   - Adicionado `beautifulsoup4` e `lxml` ao pacote do projeto.
