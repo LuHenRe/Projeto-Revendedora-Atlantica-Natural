@@ -100,7 +100,7 @@ A estrutura interna em `backend/src/` foi desenhada para isolar o núcleo do neg
 
 ## Fase 6: Integração, Documentação e Cors
 
-**Objetivo:** Preparar a API para consumo pelo frontend.
+**Objetivo:** Garantir a qualidade, resiliência do código e do fluxo HTTP.
 
 1. **Configuração de CORS:**
    - Adicionar `CORSMiddleware` para permitir acesso de clientes HTTP.

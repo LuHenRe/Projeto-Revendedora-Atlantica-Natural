@@ -18,13 +18,15 @@ dependencies = [
     "pydantic-settings",
     "python-jose[cryptography]",
     "passlib[bcrypt]",
-    "python-multipart"
+    "python-multipart",
+    "beautifulsoup4",
+    "lxml",
+    "httpx"
 ]
 
 [project.optional-dependencies]
 dev = [
-    "pytest",
-    "httpx"
+    "pytest"
 ]
 
 [tool.pytest.ini_options]
