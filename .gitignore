@@ -16,3 +16,6 @@ venv.bak/
 
 # FastAPI / alembic
 alembic.ini.bak
+
+# Temporários
+*.egg-info/

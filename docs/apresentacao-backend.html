@@ -1105,6 +1105,117 @@ tests/test_auth.py ..                               <span class="str">PASSED [ 6
 tests/test_categorias.py .....                      <span class="str">PASSED [ 80%]</span>
 tests/test_produtos.py ....                         <span class="str">PASSED [100%]</span>
 
+<span class="str">============================== 20 passed in 1.48s ==============================</span></code></pre>
+            </div>
+            <div style="background: rgba(16,185,129,0.08); padding: 12px 14px; border-radius: 8px; margin-top: 12px; font-size: 14px; line-height: 1.5;">
+              <strong style="color:var(--accent-primary);">⚡ Performance & Isolamento:</strong> Execução total em <strong>1.48s</strong> via SQLite in-memory com fixtures automáticas de rollback em <code>conftest.py</code>.
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- =========================================================
+           SLIDE 8: DESTAQUES DA ARQUITETURA E INFRAESTRUTURA
+           ========================================================= -->
+      <div class="slide-body" data-slide="8">
+        <div class="slide-tag">07. DESTAQUES & DECISÕES DE ENGENHARIA</div>
+        <h2 class="slide-title">Destaques da Arquitetura & Decisões de Projeto</h2>
+        <p class="slide-subtitle">
+          Padrões de engenharia adotados para garantir resiliência, manutenibilidade e alta velocidade de entrega.
+        </p>
+
+        <div class="grid-2">
+          <!-- Card 1: Docker Compose -->
+          <div class="card">
+            <h4>🐳 Orquestração com Docker Compose</h4>
+            <p style="font-size:14.5px; line-height:1.6; margin-bottom:12px; color:var(--text-main);">
+              Ambiente de desenvolvimento unificado e reproduzível com um único comando (<code>docker compose up -d</code>):
+            </p>
+            <ul style="font-size:14px; line-height:1.6;">
+              <li><strong>PostgreSQL 15 Alpine:</strong> Banco relacional leve e performático com volume persistente (<code>postgres_data</code>).</li>
+              <li><strong>Adminer Web (porta 8080):</strong> Interface de administração visual do banco para conferência ágil de dados durante a sprint.</li>
+              <li><strong>Healthcheck & Isolamento:</strong> Contêineres operando em rede isolada, protegendo dados locais.</li>
+            </ul>
+          </div>
+
+          <!-- Card 2: Exclusão Lógica e Integridade -->
+          <div class="card">
+            <h4>🛡️ Exclusão Lógica (Soft Delete) & Integridade</h4>
+            <p style="font-size:14.5px; line-height:1.6; margin-bottom:12px; color:var(--text-main);">
+              Proteção contra perda acidental de histórico e garantia de integridade referencial:
+            </p>
+            <ul style="font-size:14px; line-height:1.6;">
+              <li><strong>Flag <code>ativo: bool</code>:</strong> Produtos e categorias nunca são excluídos fisicamente de forma destrutiva.</li>
+              <li><strong>Histórico Preservado:</strong> Pedidos e relatórios mantêm o rastreamento íntegro sem violação de Foreign Keys.</li>
+              <li><strong>Consultas Otimizadas:</strong> Filtro automático em repositório traz apenas dados ativos para a vitrine.</li>
+            </ul>
+          </div>
+
+          <!-- Card 3: Trava Geográfica Desacoplada -->
+          <div class="card">
+            <h4>📍 Trava Geográfica Desacoplada (Frontend-First)</h4>
+            <p style="font-size:14.5px; line-height:1.6; margin-bottom:12px; color:var(--text-main);">
+              Arquitetura voltada a alta performance e economia de recursos no servidor:
+            </p>
+            <ul style="font-size:14px; line-height:1.6;">
+              <li><strong>Sem consultas pesadas de CEP:</strong> A verificação de região física (Varginha & Região) é feita no cliente via modal interativo.</li>
+              <li><strong>Rotas Especializadas:</strong> O frontend chama <code>/produtos/ofertas-locais</code> para pronta-entrega ou <code>/produtos</code> para entrega nacional.</li>
+              <li><strong>Baixa Latência:</strong> O backend permanece enxuto e escalável respondendo em milissegundos.</li>
+            </ul>
+          </div>
+
+          <!-- Card 4: Coletor de Catálogo Matriz -->
+          <div class="card highlight">
+            <h4>🕷️ Sincronização e Coletor Matriz (BeautifulSoup)</h4>
+            <p style="font-size:14.5px; line-height:1.6; margin-bottom:12px; color:var(--text-main);">
+              Integração inteligente com o portal oficial da Atlântica Natural:
+            </p>
+            <ul style="font-size:14px; line-height:1.6;">
+              <li><strong>Módulo Desacoplado:</strong> Localizado na camada externa em <code>src/infrastructure/external/scraper.py</code>.</li>
+              <li><strong>Extração Automatizada:</strong> Coleta título, descrição original, imagens em alta resolução e preços oficiais da Matriz.</li>
+              <li><strong>Curadoria Local:</strong> Permite à revendedora importar dados da matriz e definir sua própria quantidade em estoque local.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- =========================================================
+           SLIDE 9: CONCLUSÃO, PRÓXIMOS PASSOS E Q&A
+           ========================================================= -->
+      <div class="slide-body centered" data-slide="9">
+        <div class="slide-tag">08. CONCLUSÃO & DEFESA TÉCNICA</div>
+        <h1 class="slide-title" style="font-size:46px; margin-bottom: 12px;">Muito Obrigado!</h1>
+        <p class="slide-subtitle" style="font-size: 20px; max-width: 720px; margin: 0 auto 32px auto; color: var(--text-muted);">
+          O backend da <strong>Vitrine Virtual</strong> entrega uma base sólida, altamente testada e arquitetada para evoluir com segurança e máxima manutenibilidade.
+        </p>
+
+        <!-- Grade de Destaques Finais -->
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; width: 100%; max-width: 920px; margin: 0 auto 36px auto; text-align: left;">
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); border-radius: 12px; padding: 18px;">
+            <div style="font-size: 26px; margin-bottom: 6px;">🏛️</div>
+            <strong style="color: var(--accent-primary); font-size: 15px; display: block; margin-bottom: 4px;">Clean Arch & DDD</strong>
+            <p style="font-size: 13px; color: var(--text-muted); line-height: 1.4;">Domínio rico desacoplado de frameworks e banco de dados.</p>
+          </div>
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); border-radius: 12px; padding: 18px;">
+            <div style="font-size: 26px; margin-bottom: 6px;">⚡</div>
+            <strong style="color: var(--accent-secondary); font-size: 15px; display: block; margin-bottom: 4px;">FastAPI & Async</strong>
+            <p style="font-size: 13px; color: var(--text-muted); line-height: 1.4;">Alta performance, tipagem estrita com Pydantic e Swagger nativo.</p>
+          </div>
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); border-radius: 12px; padding: 18px;">
+            <div style="font-size: 26px; margin-bottom: 6px;">🔐</div>
+            <strong style="color: var(--accent-purple); font-size: 15px; display: block; margin-bottom: 4px;">Bcrypt + JWT</strong>
+            <p style="font-size: 13px; color: var(--text-muted); line-height: 1.4;">Rotas administrativas blindadas e autenticação sem estado.</p>
+          </div>
+          <div style="background: rgba(255,255,255,0.03); border: 1px solid var(--border-color); border-radius: 12px; padding: 18px;">
+            <div style="font-size: 26px; margin-bottom: 6px;">🧪</div>
+            <strong style="color: var(--accent-warning); font-size: 15px; display: block; margin-bottom: 4px;">100% de Testes</strong>
+            <p style="font-size: 13px; color: var(--text-muted); line-height: 1.4;">Pirâmide de testes completa (Unitários, Casos de Uso e Rotas).</p>
+          </div>
+        </div>
+
+        <div style="display: inline-flex; align-items: center; gap: 10px; background: rgba(16,185,129,0.12); border: 1px solid var(--accent-primary); padding: 12px 28px; border-radius: 30px; font-weight: 600; color: #fff; font-size: 16px;">
+          <span>💬</span> Espaço aberto para perguntas e considerações da banca
+        </div>
       </div>
 
       <!-- CONTROLES DO SLIDE -->
