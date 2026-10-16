@@ -74,3 +74,45 @@ def test_ofertas_locais(client: TestClient, admin_token_headers, categoria_teste
     nomes = [p["nome"] for p in data]
     assert "Com Estoque" in nomes
     assert "Sem Estoque" not in nomes
+
+def test_atualizar_produto_sucesso(client: TestClient, admin_token_headers, categoria_teste_id):
+    # Criar produto
+    res_create = client.post("/admin/produtos/", json={
+        "nome": "Produto Original", "preco": 30.0, "quantidade_estoque": 10, "categoria_id": categoria_teste_id
+    }, headers=admin_token_headers)
+    prod_id = res_create.json()["id"]
+
+    # Atualizar dados
+    res_update = client.put(f"/admin/produtos/{prod_id}", json={
+        "nome": "Produto Atualizado",
+        "preco": 35.90,
+        "quantidade_estoque": 25
+    }, headers=admin_token_headers)
+    assert res_update.status_code == 200
+    data = res_update.json()
+    assert data["nome"] == "Produto Atualizado"
+    assert data["preco"] == 35.90
+    assert data["quantidade_estoque"] == 25
+
+def test_atualizar_produto_inexistente(client: TestClient, admin_token_headers):
+    import uuid
+    res = client.put(f"/admin/produtos/{uuid.uuid4()}", json={"nome": "Não existe"}, headers=admin_token_headers)
+    assert res.status_code == 404
+
+def test_atualizar_produto_categoria_invalida(client: TestClient, admin_token_headers, categoria_teste_id):
+    import uuid
+    res_create = client.post("/admin/produtos/", json={
+        "nome": "Prod Categoria", "preco": 20.0, "categoria_id": categoria_teste_id
+    }, headers=admin_token_headers)
+    prod_id = res_create.json()["id"]
+
+    res = client.put(f"/admin/produtos/{prod_id}", json={
+        "categoria_id": str(uuid.uuid4())
+    }, headers=admin_token_headers)
+    assert res.status_code == 400
+
+def test_deletar_produto_inexistente(client: TestClient, admin_token_headers):
+    import uuid
+    res = client.delete(f"/admin/produtos/{uuid.uuid4()}", headers=admin_token_headers)
+    assert res.status_code == 404
+

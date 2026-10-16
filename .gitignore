@@ -19,3 +19,6 @@ alembic.ini.bak
 
 # Temporários
 *.egg-info/
+.coverage
+.pytest_cache/
+htmlcov/
