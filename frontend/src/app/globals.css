@@ -1,0 +1,78 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-50: #f0fdf4;
+  --color-brand-100: #dcfce7;
+  --color-brand-200: #bbf7d0;
+  --color-brand-300: #86efac;
+  --color-brand-400: #4ade80;
+  --color-brand-500: #22c55e;
+  --color-brand-600: #16a34a;
+  --color-brand-700: #15803d;
+  --color-brand-800: #166534;
+  --color-brand-900: #14532d;
+  --color-brand-950: #052e16;
+
+  --color-gold-50: #fffbeb;
+  --color-gold-100: #fef3c7;
+  --color-gold-200: #fde68a;
+  --color-gold-300: #fcd34d;
+  --color-gold-400: #fbbf24;
+  --color-gold-500: #f59e0b;
+  --color-gold-600: #d97706;
+
+  --color-whatsapp: #25D366;
+  --color-whatsapp-hover: #1ebd5a;
+  --color-whatsapp-dark: #128C7E;
+}
+
+:root {
+  --background: #fafaf8;
+  --foreground: #17231c;
+  --card: #ffffff;
+  --card-foreground: #17231c;
+  --muted: #f1f4f1;
+  --muted-foreground: #596a60;
+  --border: #e2e8e3;
+  --primary: #14532d;
+  --primary-foreground: #ffffff;
+  --accent: #d97706;
+  --accent-foreground: #ffffff;
+  --ring: #16a34a;
+}
+
+body {
+  background-color: var(--background);
+  color: var(--foreground);
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Utilitários Visuais Personalizados */
+@layer utilities {
+  .glassmorphism {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .glassmorphism-dark {
+    background: rgba(15, 35, 23, 0.90);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  .shadow-soft {
+    box-shadow: 0 4px 20px -2px rgba(20, 83, 45, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
+  }
+
+  .shadow-hover {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .shadow-hover:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px -4px rgba(20, 83, 45, 0.16), 0 4px 10px -2px rgba(0, 0, 0, 0.06);
+  }
+}
