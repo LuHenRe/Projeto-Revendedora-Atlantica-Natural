@@ -1,19 +1,7 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Outfit } from "next/font/google";
 import { QueryProvider } from "@/infrastructure/query/QueryProvider";
+import { VitrineProvider } from "@/presentation/context/VitrineContext";
 import "./globals.css";
-
-const inter = Inter({
-  variable: "--font-inter",
-  subsets: ["latin"],
-  display: "swap",
-});
-
-const outfit = Outfit({
-  variable: "--font-outfit",
-  subsets: ["latin"],
-  display: "swap",
-});
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -42,9 +30,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="pt-BR" className={`${inter.variable} ${outfit.variable} h-full antialiased`}>
+    <html lang="pt-BR" className="h-full antialiased font-sans">
       <body className="min-h-full flex flex-col font-sans bg-background text-foreground">
-        <QueryProvider>{children}</QueryProvider>
+        <QueryProvider>
+          <VitrineProvider>{children}</VitrineProvider>
+        </QueryProvider>
       </body>
     </html>
   );

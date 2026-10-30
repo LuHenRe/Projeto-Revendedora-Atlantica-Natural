@@ -1,0 +1,64 @@
+databases:
+  - name: atlantica-db
+    databaseName: atlantica_db
+    user: atlantica_user
+    plan: free
+    region: oregon
+
+services:
+  # Backend API - FastAPI
+  - type: web
+    name: atlantica-backend
+    env: python
+    region: oregon
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: alembic upgrade head && uvicorn src.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: atlantica-db
+          property: connectionString
+      - key: SECRET_KEY
+        generateValue: true
+      - key: ALGORITHM
+        value: HS256
+      - key: ACCESS_TOKEN_EXPIRE_MINUTES
+        value: 1440
+      - key: ADMIN_USERNAME
+        value: admin
+      - key: ADMIN_PASSWORD
+        value: Atlantica@2026
+      - key: FRONTEND_URL
+        fromService:
+          name: atlantica-frontend
+          type: web
+          property: host
+
+  # Frontend Web App - Next.js 16 (App Router)
+  - type: web
+    name: atlantica-frontend
+    env: node
+    region: oregon
+    plan: free
+    rootDir: frontend
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NEXT_PUBLIC_API_URL
+        fromService:
+          name: atlantica-backend
+          type: web
+          property: host
+      - key: NEXT_PUBLIC_WHATSAPP_NUMBER
+        value: "5561999999999"
+      - key: NEXT_PUBLIC_CIDADE_PADRAO
+        value: "Valparaíso de Goiás"
+      - key: NEXT_PUBLIC_UF_PADRAO
+        value: "GO"
+      - key: NEXT_PUBLIC_AFILIADA_ID
+        value: "REV-ATLANTICA-GO"
+
