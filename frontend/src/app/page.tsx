@@ -36,13 +36,23 @@ async function getDadosVitrine() {
 export default async function HomePage() {
   const { ofertasLocais, categorias, destaquesMatriz } = await getDadosVitrine();
 
+  const ofertasLocaisDTO = ofertasLocais.map((p) =>
+    typeof p.toDTO === 'function' ? p.toDTO() : p
+  );
+  const categoriasDTO = categorias.map((c) =>
+    typeof c.toDTO === 'function' ? c.toDTO() : c
+  );
+  const destaquesMatrizDTO = destaquesMatriz.map((p) =>
+    typeof p.toDTO === 'function' ? p.toDTO() : p
+  );
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-1">
         <HeroBanner />
-        <BlocoEstoqueLocal produtosIniciais={ofertasLocais} categorias={categorias} />
-        <BlocoDeepLinks destaquesMatriz={destaquesMatriz} />
+        <BlocoEstoqueLocal produtosIniciais={ofertasLocaisDTO} categorias={categoriasDTO} />
+        <BlocoDeepLinks destaquesMatriz={destaquesMatrizDTO} />
         <BlocoCatalogoPDF />
         <BlocoB2B />
       </main>

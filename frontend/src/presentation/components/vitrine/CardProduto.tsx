@@ -1,9 +1,9 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import Image from 'next/image';
 import { ShoppingBag, Check, Sparkles } from 'lucide-react';
-import { Produto } from '../../../domain/entities/Produto';
+import { Produto, ProdutoDTO } from '../../../domain/entities/Produto';
 import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
@@ -11,10 +11,14 @@ import { WhatsAppButton } from './WhatsAppButton';
 import { useVitrine } from '../../context/VitrineContext';
 
 interface CardProdutoProps {
-  produto: Produto;
+  produto: Produto | ProdutoDTO;
 }
 
-export function CardProduto({ produto }: CardProdutoProps) {
+export function CardProduto({ produto: produtoProp }: CardProdutoProps) {
+  const produto = useMemo(
+    () => (produtoProp instanceof Produto ? produtoProp : Produto.fromDTO(produtoProp)),
+    [produtoProp]
+  );
   const { solicitarCompraProduto, sacola } = useVitrine();
   const [adicionadoAnimacao, setAdicionadoAnimacao] = useState(false);
 

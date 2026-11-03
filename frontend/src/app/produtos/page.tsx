@@ -32,11 +32,18 @@ async function getDadosCatalogo() {
 export default async function ProdutosPage() {
   const { produtos, categorias } = await getDadosCatalogo();
 
+  const produtosDTO = produtos.map((p) =>
+    typeof p.toDTO === 'function' ? p.toDTO() : p
+  );
+  const categoriasDTO = categorias.map((c) =>
+    typeof c.toDTO === 'function' ? c.toDTO() : c
+  );
+
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-1 py-10 sm:py-14 bg-background">
-        <CatalogoInterativo produtosIniciais={produtos} categorias={categorias} />
+        <CatalogoInterativo produtosIniciais={produtosDTO} categorias={categoriasDTO} />
       </main>
       <Footer />
       <ModalTravaGeografica />

@@ -85,4 +85,34 @@ describe('Entidade: Produto (Estoque Local)', () => {
     expect(produto.quantidadeEstoque).toBe(15);
     expect(produto.temEstoqueDisponivel()).toBe(true);
   });
+
+  it('deve converter para DTO serializável e reconstruir a partir de DTO', () => {
+    const produto = new Produto(produtoValidoProps);
+    const dto = produto.toDTO();
+
+    expect(dto).toEqual({
+      id: 'prod-001',
+      nome: 'Óleo Essencial de Melaleuca 10ml',
+      preco: {
+        valor: 59.9,
+        formatado: expect.any(String),
+      },
+      quantidadeEstoque: 10,
+      categoriaId: 'cat-001',
+      imagemUrl: 'https://exemplo.com/melaleuca.jpg',
+      ativo: true,
+      categoria: null,
+    });
+
+    // Reconstrução a partir de DTO
+    const produtoReconstruido = Produto.fromDTO(dto);
+    expect(produtoReconstruido).toBeInstanceOf(Produto);
+    expect(produtoReconstruido.id).toBe(dto.id);
+    expect(produtoReconstruido.nome).toBe(dto.nome);
+    expect(produtoReconstruido.preco.valor).toBe(dto.preco.valor);
+    expect(produtoReconstruido.isDisponivelParaProntaEntrega()).toBe(true);
+
+    // Idempotência se já for instância
+    expect(Produto.fromDTO(produtoReconstruido)).toBe(produtoReconstruido);
+  });
 });

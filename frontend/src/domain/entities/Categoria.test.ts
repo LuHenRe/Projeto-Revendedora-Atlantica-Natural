@@ -18,4 +18,16 @@ describe('Entidade: Categoria', () => {
     categoria.atualizarNome('Perfumaria Fina');
     expect(categoria.nome).toBe('Perfumaria Fina');
   });
+
+  it('deve converter para DTO e reconstruir a partir de DTO', () => {
+    const categoria = new Categoria('cat-01', 'Linha Facial');
+    const dto = categoria.toDTO();
+    expect(dto).toEqual({ id: 'cat-01', nome: 'Linha Facial' });
+
+    const reconstruida = Categoria.fromDTO(dto);
+    expect(reconstruida).toBeInstanceOf(Categoria);
+    expect(reconstruida.id).toBe('cat-01');
+    expect(reconstruida.nome).toBe('Linha Facial');
+    expect(Categoria.fromDTO(reconstruida)).toBe(reconstruida);
+  });
 });

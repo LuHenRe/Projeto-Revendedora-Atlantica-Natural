@@ -1,5 +1,5 @@
 import { Preco } from '../value-objects/Preco';
-import { Categoria } from './Categoria';
+import { Categoria, CategoriaDTO } from './Categoria';
 
 export interface ProdutoProps {
   id: string;
@@ -10,6 +10,20 @@ export interface ProdutoProps {
   imagemUrl?: string | null;
   ativo?: boolean;
   categoria?: Categoria | null;
+}
+
+export interface ProdutoDTO {
+  id: string;
+  nome: string;
+  preco: {
+    valor: number;
+    formatado: string;
+  };
+  quantidadeEstoque: number;
+  categoriaId: string;
+  imagemUrl: string | null;
+  ativo: boolean;
+  categoria?: CategoriaDTO | null;
 }
 
 export class Produto {
@@ -60,6 +74,38 @@ export class Produto {
 
   get ativo(): boolean {
     return this._ativo;
+  }
+
+  toDTO(): ProdutoDTO {
+    return {
+      id: this.id,
+      nome: this._nome,
+      preco: {
+        valor: this._preco.valor,
+        formatado: this._preco.formatado,
+      },
+      quantidadeEstoque: this._quantidadeEstoque,
+      categoriaId: this.categoriaId,
+      imagemUrl: this.imagemUrl,
+      ativo: this._ativo,
+      categoria: this.categoria ? this.categoria.toDTO() : null,
+    };
+  }
+
+  static fromDTO(dto: ProdutoDTO | Produto): Produto {
+    if (dto instanceof Produto) {
+      return dto;
+    }
+    return new Produto({
+      id: dto.id,
+      nome: dto.nome,
+      preco: dto.preco instanceof Preco ? dto.preco : new Preco(dto.preco.valor),
+      quantidadeEstoque: dto.quantidadeEstoque,
+      categoriaId: dto.categoriaId,
+      imagemUrl: dto.imagemUrl,
+      ativo: dto.ativo,
+      categoria: dto.categoria ? Categoria.fromDTO(dto.categoria) : null,
+    });
   }
 
   temEstoqueDisponivel(): boolean {

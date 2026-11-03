@@ -42,4 +42,31 @@ describe('Entidade: ProdutoMatriz (Destaque Matriz / Afiliada)', () => {
     produto.ativar();
     expect(produto.ativo).toBe(true);
   });
+
+  it('deve converter para DTO e reconstruir a partir de DTO', () => {
+    const produto = new ProdutoMatriz(propsValidas);
+    const dto = produto.toDTO();
+
+    expect(dto).toEqual({
+      id: 'matriz-001',
+      nome: 'Colágeno Hidrolisado em Pó',
+      preco: {
+        valor: 119.9,
+        formatado: expect.any(String),
+      },
+      urlOrigem: { valor: 'https://atlanticanaturalbr.com.br/produto/colageno' },
+      urlAfiliada: { valor: 'https://atlanticanaturalbr.com.br/produto/colageno?ref=revendedora123' },
+      imagemUrl: 'https://exemplo.com/colageno.jpg',
+      descricao: 'Suplemento rico em vitaminas e minerais.',
+      ativo: true,
+    });
+
+    const reconstruido = ProdutoMatriz.fromDTO(dto);
+    expect(reconstruido).toBeInstanceOf(ProdutoMatriz);
+    expect(reconstruido.id).toBe(dto.id);
+    expect(reconstruido.nome).toBe(dto.nome);
+    expect(reconstruido.preco.valor).toBe(dto.preco.valor);
+    expect(reconstruido.urlAfiliada.valor).toBe(dto.urlAfiliada.valor);
+    expect(ProdutoMatriz.fromDTO(reconstruido)).toBe(reconstruido);
+  });
 });
