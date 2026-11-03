@@ -12,6 +12,20 @@ export interface ProdutoMatrizProps {
   ativo?: boolean;
 }
 
+export interface ProdutoMatrizDTO {
+  id: string;
+  nome: string;
+  preco: {
+    valor: number;
+    formatado: string;
+  };
+  urlOrigem: { valor: string };
+  urlAfiliada: { valor: string };
+  imagemUrl: string | null;
+  descricao: string | null;
+  ativo: boolean;
+}
+
 export class ProdutoMatriz {
   readonly id: string;
   readonly nome: string;
@@ -42,6 +56,40 @@ export class ProdutoMatriz {
 
   get ativo(): boolean {
     return this._ativo;
+  }
+
+  toDTO(): ProdutoMatrizDTO {
+    return {
+      id: this.id,
+      nome: this.nome,
+      preco: {
+        valor: this.preco.valor,
+        formatado: this.preco.formatado,
+      },
+      urlOrigem: { valor: this.urlOrigem.valor },
+      urlAfiliada: { valor: this.urlAfiliada.valor },
+      imagemUrl: this.imagemUrl,
+      descricao: this.descricao,
+      ativo: this._ativo,
+    };
+  }
+
+  static fromDTO(dto: ProdutoMatrizDTO | ProdutoMatriz): ProdutoMatriz {
+    if (dto instanceof ProdutoMatriz) {
+      return dto;
+    }
+    return new ProdutoMatriz({
+      id: dto.id,
+      nome: dto.nome,
+      preco: dto.preco instanceof Preco ? dto.preco : new Preco(dto.preco.valor),
+      urlOrigem:
+        dto.urlOrigem instanceof UrlExterna ? dto.urlOrigem : new UrlExterna(dto.urlOrigem.valor),
+      urlAfiliada:
+        dto.urlAfiliada instanceof UrlExterna ? dto.urlAfiliada : new UrlExterna(dto.urlAfiliada.valor),
+      imagemUrl: dto.imagemUrl,
+      descricao: dto.descricao,
+      ativo: dto.ativo,
+    });
   }
 
   inativar(): void {

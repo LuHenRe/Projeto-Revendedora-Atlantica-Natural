@@ -1,15 +1,21 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Sparkles, Globe, ArrowUpRight } from 'lucide-react';
-import { ProdutoMatriz } from '../../../domain/entities/ProdutoMatriz';
+import { ProdutoMatriz, ProdutoMatrizDTO } from '../../../domain/entities/ProdutoMatriz';
 import { CardProdutoMatriz } from './CardProdutoMatriz';
 
 interface BlocoDeepLinksProps {
-  destaquesMatriz: ProdutoMatriz[];
+  destaquesMatriz: (ProdutoMatriz | ProdutoMatrizDTO)[];
 }
 
-export function BlocoDeepLinks({ destaquesMatriz }: BlocoDeepLinksProps) {
+export function BlocoDeepLinks({ destaquesMatriz: destaquesMatrizProp }: BlocoDeepLinksProps) {
+  const destaquesMatriz = useMemo(() => {
+    return (destaquesMatrizProp || []).map((p) =>
+      p instanceof ProdutoMatriz ? p : ProdutoMatriz.fromDTO(p)
+    );
+  }, [destaquesMatrizProp]);
+
   if (!destaquesMatriz || destaquesMatriz.length === 0) {
     return null;
   }

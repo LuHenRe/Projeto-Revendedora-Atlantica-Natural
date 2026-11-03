@@ -1,19 +1,24 @@
 'use client';
 
-import React from 'react';
+import React, { useMemo } from 'react';
 import Image from 'next/image';
 import { ExternalLink, Sparkles } from 'lucide-react';
-import { ProdutoMatriz } from '../../../domain/entities/ProdutoMatriz';
+import { ProdutoMatriz, ProdutoMatrizDTO } from '../../../domain/entities/ProdutoMatriz';
 import { Card } from '../ui/Card';
 import { Badge } from '../ui/Badge';
 import { Button } from '../ui/Button';
 import { AnalyticsTracker } from '../../../infrastructure/analytics/tracker';
 
 interface CardProdutoMatrizProps {
-  produto: ProdutoMatriz;
+  produto: ProdutoMatriz | ProdutoMatrizDTO;
 }
 
-export function CardProdutoMatriz({ produto }: CardProdutoMatrizProps) {
+export function CardProdutoMatriz({ produto: produtoProp }: CardProdutoMatrizProps) {
+  const produto = useMemo(
+    () => (produtoProp instanceof ProdutoMatriz ? produtoProp : ProdutoMatriz.fromDTO(produtoProp)),
+    [produtoProp]
+  );
+
   const handleOutboundClick = () => {
     AnalyticsTracker.track('click_afiliado_matriz', {
       produtoId: produto.id,

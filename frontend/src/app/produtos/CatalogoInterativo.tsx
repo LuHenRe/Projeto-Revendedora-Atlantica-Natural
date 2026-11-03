@@ -2,18 +2,29 @@
 
 import React, { useState, useMemo } from 'react';
 import { Search, SlidersHorizontal, Package, AlertCircle } from 'lucide-react';
-import { Produto } from '../../domain/entities/Produto';
-import { Categoria } from '../../domain/entities/Categoria';
+import { Produto, ProdutoDTO } from '../../domain/entities/Produto';
+import { Categoria, CategoriaDTO } from '../../domain/entities/Categoria';
 import { CardProduto } from '../../presentation/components/vitrine/CardProduto';
 import { Input } from '../../presentation/components/ui/Input';
 import { Button } from '../../presentation/components/ui/Button';
 
 interface CatalogoInterativoProps {
-  produtosIniciais: Produto[];
-  categorias: Categoria[];
+  produtosIniciais: (Produto | ProdutoDTO)[];
+  categorias: (Categoria | CategoriaDTO)[];
 }
 
-export function CatalogoInterativo({ produtosIniciais, categorias }: CatalogoInterativoProps) {
+export function CatalogoInterativo({
+  produtosIniciais: produtosIniciaisProp,
+  categorias: categoriasProp,
+}: CatalogoInterativoProps) {
+  const produtosIniciais = useMemo(() => {
+    return (produtosIniciaisProp || []).map((p) => (p instanceof Produto ? p : Produto.fromDTO(p)));
+  }, [produtosIniciaisProp]);
+
+  const categorias = useMemo(() => {
+    return (categoriasProp || []).map((c) => (c instanceof Categoria ? c : Categoria.fromDTO(c)));
+  }, [categoriasProp]);
+
   const [busca, setBusca] = useState('');
   const [categoriaId, setCategoriaId] = useState<string | null>(null);
   const [ordenacao, setOrdenacao] = useState<'padrao' | 'menor-preco' | 'maior-preco'>('padrao');

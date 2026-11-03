@@ -2,17 +2,28 @@
 
 import React, { useState, useMemo } from 'react';
 import { Package, Filter, Sparkles, AlertCircle } from 'lucide-react';
-import { Produto } from '../../../domain/entities/Produto';
-import { Categoria } from '../../../domain/entities/Categoria';
+import { Produto, ProdutoDTO } from '../../../domain/entities/Produto';
+import { Categoria, CategoriaDTO } from '../../../domain/entities/Categoria';
 import { CardProduto } from './CardProduto';
 import { Button } from '../ui/Button';
 
 interface BlocoEstoqueLocalProps {
-  produtosIniciais: Produto[];
-  categorias: Categoria[];
+  produtosIniciais: (Produto | ProdutoDTO)[];
+  categorias: (Categoria | CategoriaDTO)[];
 }
 
-export function BlocoEstoqueLocal({ produtosIniciais, categorias }: BlocoEstoqueLocalProps) {
+export function BlocoEstoqueLocal({
+  produtosIniciais: produtosIniciaisProp,
+  categorias: categoriasProp,
+}: BlocoEstoqueLocalProps) {
+  const produtosIniciais = useMemo(() => {
+    return (produtosIniciaisProp || []).map((p) => (p instanceof Produto ? p : Produto.fromDTO(p)));
+  }, [produtosIniciaisProp]);
+
+  const categorias = useMemo(() => {
+    return (categoriasProp || []).map((c) => (c instanceof Categoria ? c : Categoria.fromDTO(c)));
+  }, [categoriasProp]);
+
   const [categoriaSelecionada, setCategoriaSelecionada] = useState<string | null>(null);
 
   const produtosFiltrados = useMemo(() => {

@@ -69,6 +69,29 @@ describe('Componente: CardProduto', () => {
     expect(screen.getByText('Pronta-Entrega')).toBeDefined();
   });
 
+  it('deve renderizar perfeitamente quando receber um ProdutoDTO serializado', () => {
+    const produtoDTO = {
+      id: 'prod-dto-1',
+      nome: 'Sabonete Vegetal em Barra',
+      preco: {
+        valor: 24.5,
+        formatado: 'R$ 24,50',
+      },
+      quantidadeEstoque: 8,
+      categoriaId: 'cat-1',
+      categoria: { id: 'cat-1', nome: 'Óleos Essenciais' },
+      imagemUrl: null,
+      ativo: true,
+    };
+
+    render(<CardProduto produto={produtoDTO} />);
+
+    expect(screen.getByText('Sabonete Vegetal em Barra')).toBeDefined();
+    expect(screen.getByText('R$ 24,50')).toBeDefined();
+    expect(screen.getByText('Óleos Essenciais')).toBeDefined();
+    expect(screen.getByText('Pronta-Entrega')).toBeDefined();
+  });
+
   it('deve exibir badge de Esgotado e desabilitar botões quando quantidade for zero', () => {
     const produtoEsgotado = new Produto({
       id: 'prod-2',

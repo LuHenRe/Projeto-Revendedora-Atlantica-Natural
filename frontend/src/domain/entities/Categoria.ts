@@ -1,3 +1,8 @@
+export interface CategoriaDTO {
+  id: string;
+  nome: string;
+}
+
 export class Categoria {
   readonly id: string;
   private _nome: string;
@@ -16,6 +21,20 @@ export class Categoria {
 
   get nome(): string {
     return this._nome;
+  }
+
+  toDTO(): CategoriaDTO {
+    return {
+      id: this.id,
+      nome: this._nome,
+    };
+  }
+
+  static fromDTO(dto: CategoriaDTO | Categoria): Categoria {
+    if (dto instanceof Categoria) {
+      return dto;
+    }
+    return new Categoria(dto.id, dto.nome);
   }
 
   atualizarNome(novoNome: string): void {
