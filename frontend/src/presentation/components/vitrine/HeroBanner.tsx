@@ -30,7 +30,7 @@ export function HeroBanner() {
 
         {/* Título Principal */}
         <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-foreground tracking-tight font-outfit max-w-4xl mx-auto leading-[1.15]">
-          Sua Vitrine de <span className="text-brand-900 dark:text-brand-400 underline decoration-brand-300 dark:decoration-brand-700 decoration-wavy decoration-2">Bem-Estar</span> e Cosméticos Naturais
+          Sua Vitrine de <span className="text-brand-900 dark:text-brand-400">Bem-Estar</span> e Cosméticos Naturais
         </h1>
 
         {/* Subtítulo */}
