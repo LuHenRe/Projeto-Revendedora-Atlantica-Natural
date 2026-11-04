@@ -46,8 +46,8 @@ export default function CatalogoPage() {
           </div>
 
           {/* Visualizador / Card de Download */}
-          <div className="rounded-3xl border border-border bg-white shadow-soft overflow-hidden p-6 sm:p-12 text-center flex flex-col items-center justify-center min-h-[450px]">
-            <div className="w-20 h-20 rounded-3xl bg-brand-50 flex items-center justify-center text-brand-900 mb-6 shadow-xs border border-brand-200">
+          <div className="rounded-3xl border border-border bg-card shadow-soft overflow-hidden p-6 sm:p-12 text-center flex flex-col items-center justify-center min-h-[450px]">
+            <div className="w-20 h-20 rounded-3xl bg-brand-50 dark:bg-brand-950/70 flex items-center justify-center text-brand-900 dark:text-brand-300 mb-6 shadow-xs border border-brand-200 dark:border-brand-800">
               <FileText className="w-10 h-10" />
             </div>
 

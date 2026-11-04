@@ -57,7 +57,7 @@ export function BlocoEstoqueLocal({
                 className={`text-xs px-3.5 py-2 rounded-xl font-medium transition-all shrink-0 cursor-pointer ${
                   categoriaSelecionada === null
                     ? 'bg-brand-900 text-white shadow-xs'
-                    : 'bg-white border border-border text-foreground hover:bg-muted'
+                    : 'bg-card border border-border text-foreground hover:bg-muted'
                 }`}
               >
                 Todos ({produtosIniciais.length})
@@ -72,7 +72,7 @@ export function BlocoEstoqueLocal({
                     className={`text-xs px-3.5 py-2 rounded-xl font-medium transition-all shrink-0 cursor-pointer ${
                       categoriaSelecionada === cat.id
                         ? 'bg-brand-900 text-white shadow-xs'
-                        : 'bg-white border border-border text-foreground hover:bg-muted'
+                        : 'bg-card border border-border text-foreground hover:bg-muted'
                     }`}
                   >
                     {cat.nome} ({totalCategoria})
@@ -91,7 +91,7 @@ export function BlocoEstoqueLocal({
             ))}
           </div>
         ) : (
-          <div className="text-center py-16 px-4 rounded-3xl border border-dashed border-border bg-white max-w-xl mx-auto space-y-4">
+          <div className="text-center py-16 px-4 rounded-3xl border border-dashed border-border bg-card max-w-xl mx-auto space-y-4">
             <div className="w-12 h-12 rounded-2xl bg-muted flex items-center justify-center text-muted-foreground mx-auto">
               <AlertCircle className="w-6 h-6" />
             </div>

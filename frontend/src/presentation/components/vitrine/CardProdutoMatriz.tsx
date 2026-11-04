@@ -32,7 +32,7 @@ export function CardProdutoMatriz({ produto: produtoProp }: CardProdutoMatrizPro
     'https://images.unsplash.com/photo-1547887537-6158d64c35b3?q=80&w=600&auto=format&fit=crop';
 
   return (
-    <Card className="flex flex-col h-full bg-white hover:border-amber-300 transition-all duration-300 group shadow-sm hover:shadow-soft">
+    <Card className="flex flex-col h-full bg-card hover:border-amber-300 dark:hover:border-amber-600 transition-all duration-300 group shadow-sm hover:shadow-soft">
       {/* Imagem do Produto */}
       <div className="relative w-full aspect-square bg-muted/40 overflow-hidden">
         <Image
@@ -45,7 +45,7 @@ export function CardProdutoMatriz({ produto: produtoProp }: CardProdutoMatrizPro
 
         <div className="absolute top-3 left-3 z-10">
           <Badge variant="matriz">
-            <Sparkles className="w-3 h-3 text-amber-600" />
+            <Sparkles className="w-3 h-3 text-amber-600 dark:text-amber-400" />
             Loja Oficial Matriz
           </Badge>
         </div>
@@ -54,7 +54,7 @@ export function CardProdutoMatriz({ produto: produtoProp }: CardProdutoMatrizPro
       {/* Conteúdo do Card */}
       <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between gap-4">
         <div>
-          <h3 className="font-semibold text-base sm:text-lg text-foreground line-clamp-2 leading-snug group-hover:text-amber-800 transition-colors">
+          <h3 className="font-semibold text-base sm:text-lg text-foreground line-clamp-2 leading-snug group-hover:text-amber-800 dark:group-hover:text-amber-400 transition-colors">
             {produto.nome}
           </h3>
 
@@ -84,7 +84,7 @@ export function CardProdutoMatriz({ produto: produtoProp }: CardProdutoMatrizPro
             <Button
               variant="outline"
               size="md"
-              className="w-full group/btn hover:bg-amber-50 hover:border-amber-300 hover:text-amber-900 font-semibold"
+              className="w-full group/btn hover:bg-amber-50 hover:border-amber-300 hover:text-amber-900 dark:hover:bg-amber-950/60 dark:hover:border-amber-700 dark:hover:text-amber-300 font-semibold"
             >
               <span>Comprar na Loja Oficial</span>
               <ExternalLink className="w-4 h-4 transition-transform group-hover/btn:translate-x-0.5 group-hover/btn:-translate-y-0.5" />

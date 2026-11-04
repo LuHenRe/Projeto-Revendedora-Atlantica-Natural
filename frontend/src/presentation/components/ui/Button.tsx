@@ -16,9 +16,9 @@ export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
       whatsapp:
         'bg-[#25D366] text-white hover:bg-[#1ebd5a] focus-visible:ring-[#25D366] shadow-soft shadow-whatsapp/20 font-semibold',
       outline:
-        'border border-border bg-white text-foreground hover:bg-muted/60 focus-visible:ring-brand-700',
+        'border border-border bg-card text-foreground hover:bg-muted/60 focus-visible:ring-brand-700',
       secondary:
-        'bg-brand-50 text-brand-900 hover:bg-brand-100 focus-visible:ring-brand-500',
+        'bg-brand-50 text-brand-900 hover:bg-brand-100 dark:bg-brand-950/60 dark:text-brand-300 dark:hover:bg-brand-900/60 focus-visible:ring-brand-500',
       ghost: 'text-foreground hover:bg-muted focus-visible:ring-brand-500',
       gold: 'bg-gold-500 text-white hover:bg-gold-600 focus-visible:ring-gold-400 font-semibold shadow-sm',
       destructive: 'bg-red-600 text-white hover:bg-red-700 focus-visible:ring-red-500',

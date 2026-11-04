@@ -14,7 +14,7 @@ export function BarraSacolaFlutuante() {
 
   return (
     <div className="fixed bottom-4 left-0 right-0 z-40 px-4 max-w-xl mx-auto pointer-events-none animate-in slide-in-from-bottom-5 duration-300">
-      <div className="bg-white/95 backdrop-blur-md border border-border shadow-2xl rounded-2xl overflow-hidden pointer-events-auto">
+      <div className="bg-card/95 backdrop-blur-md border border-border shadow-2xl rounded-2xl overflow-hidden pointer-events-auto">
         {/* Gaveta Expandida com Detalhes dos Itens */}
         {expandida && (
           <div className="p-4 border-b border-border max-h-60 overflow-y-auto space-y-3 bg-muted/20">
@@ -50,7 +50,7 @@ export function BarraSacolaFlutuante() {
                     <span className="font-semibold text-brand-950 font-outfit text-sm">
                       {item.subtotal.formatado}
                     </span>
-                    <div className="flex items-center border border-border rounded-lg bg-white overflow-hidden">
+                    <div className="flex items-center border border-border rounded-lg bg-card overflow-hidden">
                       <button
                         onClick={() => sacola.atualizarQuantidade(item.produto.id, item.quantidade - 1)}
                         disabled={item.quantidade <= 1}

@@ -21,12 +21,12 @@ export function BlocoDeepLinks({ destaquesMatriz: destaquesMatrizProp }: BlocoDe
   }
 
   return (
-    <section className="py-12 sm:py-16 bg-gradient-to-b from-amber-50/40 via-white to-background border-t border-border/50">
+    <section className="py-12 sm:py-16 bg-gradient-to-b from-amber-50/40 via-white to-background dark:from-amber-950/20 dark:via-background dark:to-background border-t border-border/50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Cabeçalho da Seção */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
           <div>
-            <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-800 mb-2">
+            <div className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-amber-800 dark:text-amber-400 mb-2">
               <Globe className="w-4 h-4" />
               <span>Envio para Todo o Brasil</span>
             </div>
@@ -42,7 +42,7 @@ export function BlocoDeepLinks({ destaquesMatriz: destaquesMatrizProp }: BlocoDe
             href="https://atlanticanaturalbr.com.br"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-900 hover:text-amber-950 px-3 py-1.5 rounded-lg border border-amber-200 bg-amber-50/80 hover:bg-amber-100 transition-colors w-fit"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-amber-900 hover:text-amber-950 dark:text-amber-300 dark:border-amber-800 dark:bg-amber-950/60 dark:hover:bg-amber-900/60 px-3 py-1.5 rounded-lg border border-amber-200 bg-amber-50/80 hover:bg-amber-100 transition-colors w-fit"
           >
             Ver loja completa na Matriz
             <ArrowUpRight className="w-4 h-4" />
