@@ -10,15 +10,15 @@ export function Badge({ className, variant = 'default', children, ...props }: Ba
     'inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium tracking-wide transition-colors';
 
   const variants = {
-    default: 'bg-brand-100 text-brand-900 border border-brand-200',
+    default: 'bg-brand-100 text-brand-900 border border-brand-200 dark:bg-brand-950/70 dark:text-brand-300 dark:border-brand-800',
     'pronta-entrega':
-      'bg-emerald-50 text-emerald-800 border border-emerald-200/80 font-semibold shadow-xs',
-    matriz: 'bg-amber-50 text-amber-800 border border-amber-200/80 font-semibold',
-    destaque: 'bg-gold-100 text-gold-900 border border-gold-300 font-semibold',
-    esgotado: 'bg-gray-100 text-gray-500 border border-gray-200',
+      'bg-emerald-50 text-emerald-800 border border-emerald-200/80 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800 font-semibold shadow-xs',
+    matriz: 'bg-amber-50 text-amber-800 border border-amber-200/80 dark:bg-amber-950/60 dark:text-amber-300 dark:border-amber-800 font-semibold',
+    destaque: 'bg-gold-100 text-gold-900 border border-gold-300 dark:bg-gold-950/60 dark:text-gold-300 dark:border-gold-800 font-semibold',
+    esgotado: 'bg-gray-100 text-gray-500 border border-gray-200 dark:bg-zinc-850 dark:text-zinc-400 dark:border-zinc-700',
     outline: 'border border-border text-foreground',
-    success: 'bg-emerald-50 text-emerald-800 border border-emerald-200/80 font-semibold',
-    destructive: 'bg-red-50 text-red-700 border border-red-200/80 font-semibold',
+    success: 'bg-emerald-50 text-emerald-800 border border-emerald-200/80 dark:bg-emerald-950/60 dark:text-emerald-300 dark:border-emerald-800 font-semibold',
+    destructive: 'bg-red-50 text-red-700 border border-red-200/80 dark:bg-red-950/60 dark:text-red-300 dark:border-red-800 font-semibold',
   };
 
   return (

@@ -16,21 +16,21 @@ export function HeroBanner() {
   };
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-brand-50/60 via-white to-background pt-10 pb-16 sm:pt-16 sm:pb-24 border-b border-border/40">
+    <section className="relative overflow-hidden bg-gradient-to-b from-brand-50/60 via-white to-background dark:from-brand-950/40 dark:via-background dark:to-background pt-10 pb-16 sm:pt-16 sm:pb-24 border-b border-border/40">
       {/* Elementos Decorativos de Fundo */}
-      <div className="absolute top-0 right-1/4 w-96 h-96 bg-brand-200/20 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute -bottom-10 left-1/4 w-80 h-80 bg-gold-200/20 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-0 right-1/4 w-96 h-96 bg-brand-200/20 dark:bg-brand-500/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute -bottom-10 left-1/4 w-80 h-80 bg-gold-200/20 dark:bg-gold-500/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
         {/* Badge de Destaque */}
-        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-100/80 border border-brand-200 text-brand-900 text-xs font-semibold mb-6 shadow-xs animate-in fade-in duration-500">
-          <Sparkles className="w-4 h-4 text-brand-700" />
+        <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-brand-100/80 border border-brand-200 text-brand-900 dark:bg-brand-950/70 dark:border-brand-800 dark:text-brand-300 text-xs font-semibold mb-6 shadow-xs animate-in fade-in duration-500">
+          <Sparkles className="w-4 h-4 text-brand-700 dark:text-brand-400" />
           <span>Curadoria Oficial Atlântica Natural</span>
         </div>
 
         {/* Título Principal */}
         <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold text-foreground tracking-tight font-outfit max-w-4xl mx-auto leading-[1.15]">
-          Sua Vitrine de <span className="text-brand-900 underline decoration-brand-300 decoration-wavy decoration-2">Bem-Estar</span> e Cosméticos Naturais
+          Sua Vitrine de <span className="text-brand-900 dark:text-brand-400 underline decoration-brand-300 dark:decoration-brand-700 decoration-wavy decoration-2">Bem-Estar</span> e Cosméticos Naturais
         </h1>
 
         {/* Subtítulo */}
@@ -64,7 +64,7 @@ export function HeroBanner() {
         {/* Destaques de Confiança / Proposta de Valor */}
         <div className="mt-12 pt-8 border-t border-border/60 grid grid-cols-1 sm:grid-cols-3 gap-6 max-w-3xl mx-auto text-left">
           <div className="flex items-start gap-3">
-            <div className="w-9 h-9 rounded-xl bg-brand-100 flex items-center justify-center text-brand-900 shrink-0">
+            <div className="w-9 h-9 rounded-xl bg-brand-100 dark:bg-brand-950/80 flex items-center justify-center text-brand-900 dark:text-brand-300 shrink-0">
               <Truck className="w-5 h-5" />
             </div>
             <div>
@@ -74,7 +74,7 @@ export function HeroBanner() {
           </div>
 
           <div className="flex items-start gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gold-100 flex items-center justify-center text-gold-900 shrink-0">
+            <div className="w-9 h-9 rounded-xl bg-gold-100 dark:bg-gold-950/80 flex items-center justify-center text-gold-900 dark:text-gold-300 shrink-0">
               <ShieldCheck className="w-5 h-5" />
             </div>
             <div>
@@ -84,7 +84,7 @@ export function HeroBanner() {
           </div>
 
           <div className="flex items-start gap-3">
-            <div className="w-9 h-9 rounded-xl bg-brand-100 flex items-center justify-center text-brand-900 shrink-0">
+            <div className="w-9 h-9 rounded-xl bg-brand-100 dark:bg-brand-950/80 flex items-center justify-center text-brand-900 dark:text-brand-300 shrink-0">
               <HeartHandshake className="w-5 h-5" />
             </div>
             <div>

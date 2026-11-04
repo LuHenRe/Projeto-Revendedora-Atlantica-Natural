@@ -82,7 +82,7 @@ export function CatalogoInterativo({
             className={`text-xs px-3.5 py-2 rounded-xl font-medium transition-all shrink-0 cursor-pointer ${
               categoriaId === null
                 ? 'bg-brand-900 text-white shadow-xs'
-                : 'bg-white border border-border text-foreground hover:bg-muted'
+                : 'bg-card border border-border text-foreground hover:bg-muted'
             }`}
           >
             Todas ({produtosIniciais.length})
@@ -97,7 +97,7 @@ export function CatalogoInterativo({
                 className={`text-xs px-3.5 py-2 rounded-xl font-medium transition-all shrink-0 cursor-pointer ${
                   categoriaId === cat.id
                     ? 'bg-brand-900 text-white shadow-xs'
-                    : 'bg-white border border-border text-foreground hover:bg-muted'
+                    : 'bg-card border border-border text-foreground hover:bg-muted'
                 }`}
               >
                 {cat.nome} ({count})
@@ -112,7 +112,7 @@ export function CatalogoInterativo({
           <select
             value={ordenacao}
             onChange={(e) => setOrdenacao(e.target.value as any)}
-            className="text-xs font-medium rounded-xl border border-border bg-white px-3 py-2 text-foreground focus:outline-none focus:ring-2 focus:ring-brand-700 cursor-pointer"
+            className="text-xs font-medium rounded-xl border border-border bg-card px-3 py-2 text-foreground focus:outline-none focus:ring-2 focus:ring-brand-700 cursor-pointer"
           >
             <option value="padrao">Padrão</option>
             <option value="menor-preco">Menor Preço</option>
@@ -129,7 +129,7 @@ export function CatalogoInterativo({
           ))}
         </div>
       ) : (
-        <div className="text-center py-20 px-4 rounded-3xl border border-dashed border-border bg-white max-w-md mx-auto space-y-4">
+        <div className="text-center py-20 px-4 rounded-3xl border border-dashed border-border bg-card max-w-md mx-auto space-y-4">
           <div className="w-12 h-12 rounded-2xl bg-muted flex items-center justify-center text-muted-foreground mx-auto">
             <AlertCircle className="w-6 h-6" />
           </div>

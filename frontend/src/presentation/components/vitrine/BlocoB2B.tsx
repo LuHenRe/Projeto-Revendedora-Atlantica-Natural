@@ -12,12 +12,12 @@ export function BlocoB2B() {
   };
 
   return (
-    <section className="py-14 sm:py-20 bg-white border-t border-border/60">
+    <section className="py-14 sm:py-20 bg-background border-t border-border/60">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="rounded-3xl border border-brand-200 bg-gradient-to-br from-brand-50/50 via-white to-gold-50/30 p-8 sm:p-12 lg:p-16 shadow-soft flex flex-col lg:flex-row items-center justify-between gap-10">
+        <div className="rounded-3xl border border-brand-200 dark:border-brand-800 bg-gradient-to-br from-brand-50/50 via-card to-gold-50/30 dark:from-brand-950/40 dark:via-card dark:to-gold-950/20 p-8 sm:p-12 lg:p-16 shadow-soft flex flex-col lg:flex-row items-center justify-between gap-10">
           {/* Textos Informativos */}
           <div className="max-w-2xl text-center lg:text-left">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-100 text-brand-900 text-xs font-bold mb-4 uppercase tracking-wider">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-100 text-brand-900 dark:bg-brand-950/80 dark:text-brand-300 dark:border dark:border-brand-800 text-xs font-bold mb-4 uppercase tracking-wider">
               <Users className="w-3.5 h-3.5" />
               <span>Oportunidade de Negócio B2B</span>
             </div>
@@ -32,20 +32,20 @@ export function BlocoB2B() {
 
             {/* Pilares */}
             <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-4 text-left">
-              <div className="p-4 rounded-2xl bg-white border border-border shadow-xs">
-                <TrendingUp className="w-5 h-5 text-emerald-600 mb-2" />
+              <div className="p-4 rounded-2xl bg-card border border-border shadow-xs">
+                <TrendingUp className="w-5 h-5 text-emerald-600 dark:text-emerald-400 mb-2" />
                 <h4 className="font-semibold text-sm text-foreground">Alta Lucratividade</h4>
                 <p className="text-xs text-muted-foreground mt-0.5">Até 100% de margem na revenda</p>
               </div>
 
-              <div className="p-4 rounded-2xl bg-white border border-border shadow-xs">
-                <BookOpen className="w-5 h-5 text-brand-700 mb-2" />
+              <div className="p-4 rounded-2xl bg-card border border-border shadow-xs">
+                <BookOpen className="w-5 h-5 text-brand-700 dark:text-brand-400 mb-2" />
                 <h4 className="font-semibold text-sm text-foreground">Capacitação</h4>
                 <p className="text-xs text-muted-foreground mt-0.5">Treinamentos sobre aromaterapia</p>
               </div>
 
-              <div className="p-4 rounded-2xl bg-white border border-border shadow-xs">
-                <Award className="w-5 h-5 text-gold-600 mb-2" />
+              <div className="p-4 rounded-2xl bg-card border border-border shadow-xs">
+                <Award className="w-5 h-5 text-gold-600 dark:text-gold-400 mb-2" />
                 <h4 className="font-semibold text-sm text-foreground">Suporte Regional</h4>
                 <p className="text-xs text-muted-foreground mt-0.5">Mentoria direta para decolar</p>
               </div>

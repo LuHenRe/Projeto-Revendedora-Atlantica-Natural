@@ -34,7 +34,7 @@ export function CardProduto({ produto: produtoProp }: CardProdutoProps) {
     'https://images.unsplash.com/photo-1608248597359-2e0618063073?q=80&w=600&auto=format&fit=crop';
 
   return (
-    <Card className="flex flex-col h-full bg-white hover:border-brand-300 transition-all duration-300 group shadow-sm hover:shadow-soft">
+    <Card className="flex flex-col h-full bg-card hover:border-brand-300 dark:hover:border-brand-600 transition-all duration-300 group shadow-sm hover:shadow-soft">
       {/* Imagem do Produto */}
       <div className="relative w-full aspect-square bg-muted/40 overflow-hidden">
         <Image
@@ -56,7 +56,7 @@ export function CardProduto({ produto: produtoProp }: CardProdutoProps) {
 
         {produto.categoria && (
           <div className="absolute top-3 right-3 z-10">
-            <span className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-white/90 backdrop-blur-xs text-foreground/80 border border-border/60">
+            <span className="text-[11px] font-medium px-2 py-0.5 rounded-md bg-card/90 backdrop-blur-xs text-foreground/80 border border-border/60">
               {produto.categoria.nome}
             </span>
           </div>
@@ -66,20 +66,20 @@ export function CardProduto({ produto: produtoProp }: CardProdutoProps) {
       {/* Conteúdo do Card */}
       <div className="p-4 sm:p-5 flex flex-col flex-1 justify-between gap-4">
         <div>
-          <h3 className="font-semibold text-base sm:text-lg text-foreground line-clamp-2 leading-snug group-hover:text-brand-900 transition-colors">
+          <h3 className="font-semibold text-base sm:text-lg text-foreground line-clamp-2 leading-snug group-hover:text-brand-900 dark:group-hover:text-brand-400 transition-colors">
             {produto.nome}
           </h3>
 
           <div className="mt-3 flex items-baseline justify-between">
             <div>
               <span className="text-xs text-muted-foreground block">Valor à vista</span>
-              <span className="text-xl sm:text-2xl font-bold text-brand-950 font-outfit">
+              <span className="text-xl sm:text-2xl font-bold text-brand-950 dark:text-brand-400 font-outfit">
                 {produto.preco.formatado}
               </span>
             </div>
 
             {isDisponivel && produto.quantidadeEstoque <= 5 && (
-              <span className="text-[11px] font-medium text-amber-700 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200">
+              <span className="text-[11px] font-medium text-amber-700 bg-amber-50 dark:text-amber-300 dark:bg-amber-950/60 dark:border-amber-800 px-2 py-0.5 rounded-md border border-amber-200">
                 Apenas {produto.quantidadeEstoque} restando!
               </span>
             )}
@@ -106,7 +106,7 @@ export function CardProduto({ produto: produtoProp }: CardProdutoProps) {
             className={`shrink-0 transition-colors ${
               adicionadoAnimacao
                 ? 'bg-emerald-600 border-emerald-600 text-white'
-                : 'hover:bg-brand-50 hover:text-brand-900 hover:border-brand-300'
+                : 'hover:bg-brand-50 hover:text-brand-900 hover:border-brand-300 dark:hover:bg-brand-950/60 dark:hover:text-brand-300 dark:hover:border-brand-700'
             }`}
             title="Adicionar à sacola de pedidos"
             aria-label="Adicionar à sacola de pedidos"

@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@variant dark (&:where([data-theme=dark], [data-theme=dark] *, .dark, .dark *));
+
 @theme {
   --color-brand-50: #f0fdf4;
   --color-brand-100: #dcfce7;
@@ -21,24 +23,106 @@
   --color-gold-500: #f59e0b;
   --color-gold-600: #d97706;
 
+  --color-terracotta-50: #fff7ed;
+  --color-terracotta-100: #ffedd5;
+  --color-terracotta-200: #fed7aa;
+  --color-terracotta-300: #fdba74;
+  --color-terracotta-400: #fb923c;
+  --color-terracotta-500: #f97316;
+  --color-terracotta-600: #ea580c;
+  --color-terracotta-700: #c2410c;
+
+  --color-lavender-50: #f5f3ff;
+  --color-lavender-100: #ede9fe;
+  --color-lavender-200: #ddd6fe;
+  --color-lavender-300: #c4b5fd;
+  --color-lavender-400: #a78bfa;
+  --color-lavender-500: #8b5cf6;
+  --color-lavender-600: #7c3aed;
+
   --color-whatsapp: #25D366;
   --color-whatsapp-hover: #1ebd5a;
   --color-whatsapp-dark: #128C7E;
 }
 
 :root {
+  color-scheme: light dark;
   --background: #fafaf8;
-  --foreground: #17231c;
+  --foreground: #14221a;
   --card: #ffffff;
-  --card-foreground: #17231c;
-  --muted: #f1f4f1;
-  --muted-foreground: #596a60;
-  --border: #e2e8e3;
+  --card-foreground: #14221a;
+  --muted: #f0f4f1;
+  --muted-foreground: #526559;
+  --border: #e1e8e3;
   --primary: #14532d;
   --primary-foreground: #ffffff;
   --accent: #d97706;
   --accent-foreground: #ffffff;
   --ring: #16a34a;
+  --color-scrollbar-track: #f0f4f1;
+  --color-scrollbar-thumb: #94a39b;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #09120c;
+    --foreground: #e8efe9;
+    --card: #101c14;
+    --card-foreground: #e8efe9;
+    --muted: #15251b;
+    --muted-foreground: #93a89a;
+    --border: #1c3325;
+    --primary: #22c55e;
+    --primary-foreground: #052e16;
+    --accent: #fbbf24;
+    --accent-foreground: #052e16;
+    --ring: #22c55e;
+    --color-scrollbar-track: #09120c;
+    --color-scrollbar-thumb: #233f2e;
+  }
+}
+
+:root[data-theme="dark"],
+.dark {
+  color-scheme: dark;
+  --background: #09120c;
+  --foreground: #e8efe9;
+  --card: #101c14;
+  --card-foreground: #e8efe9;
+  --muted: #15251b;
+  --muted-foreground: #93a89a;
+  --border: #1c3325;
+  --primary: #22c55e;
+  --primary-foreground: #052e16;
+  --accent: #fbbf24;
+  --accent-foreground: #052e16;
+  --ring: #22c55e;
+  --color-scrollbar-track: #09120c;
+  --color-scrollbar-thumb: #233f2e;
+}
+
+:root[data-theme="light"],
+.light {
+  color-scheme: light;
+  --background: #fafaf8;
+  --foreground: #14221a;
+  --card: #ffffff;
+  --card-foreground: #14221a;
+  --muted: #f0f4f1;
+  --muted-foreground: #526559;
+  --border: #e1e8e3;
+  --primary: #14532d;
+  --primary-foreground: #ffffff;
+  --accent: #d97706;
+  --accent-foreground: #ffffff;
+  --ring: #16a34a;
+  --color-scrollbar-track: #f0f4f1;
+  --color-scrollbar-thumb: #94a39b;
+}
+
+html {
+  accent-color: var(--primary);
+  scrollbar-color: var(--color-scrollbar-thumb) var(--color-scrollbar-track);
 }
 
 body {
