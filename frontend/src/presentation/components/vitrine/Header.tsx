@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRouter, usePathname } from 'next/navigation';
@@ -39,6 +39,17 @@ export function Header() {
 
   const [busca, setBusca] = useState('');
   const [menuMobileAberto, setMenuMobileAberto] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const handleBuscar = (e: React.FormEvent) => {
     e.preventDefault();
@@ -93,8 +104,15 @@ export function Header() {
 
   return (
     <header className="sticky top-0 z-40 w-full bg-white dark:bg-[#0c1810] shadow-xs border-b border-gray-100 dark:border-gray-800 transition-colors">
-      {/* 1. Barra Superior Institucional e Acessos de Apoio */}
-      <div className="bg-brand-950 text-brand-100 text-[11px] sm:text-xs py-1.5 px-4 sm:px-6 lg:px-8 border-b border-brand-900/60">
+      {/* 1. Barra Superior Institucional e Acessos de Apoio (Recua/some ao rolar a página) */}
+      <div
+        data-testid="top-bar-institucional"
+        className={`bg-brand-950 text-brand-100 text-[11px] sm:text-xs px-4 sm:px-6 lg:px-8 border-b border-brand-900/60 transition-all duration-300 ease-in-out overflow-hidden ${
+          scrolled
+            ? 'max-h-0 opacity-0 -translate-y-full py-0 border-b-0 pointer-events-none'
+            : 'max-h-14 opacity-100 translate-y-0 py-1.5'
+        }`}
+      >
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
           <div className="flex items-center gap-2.5 truncate">
             <span className="inline-flex items-center gap-1.5 font-medium truncate">

@@ -40,7 +40,7 @@ describe('Componente: CardConsultora', () => {
 
     expect(screen.getByText('Valesca Braga dos Reis')).toBeInTheDocument();
     expect(screen.getByText(/Atendimento Pessoal & Consultoria/i)).toBeInTheDocument();
-    expect(screen.getByText(/Varginha e região/i)).toBeInTheDocument();
+    expect(screen.getByText(/Varginha/i)).toBeInTheDocument();
   });
 
   it('deve disparar tirarDuvidaGeral ao clicar no botão de contato', () => {
@@ -53,3 +53,4 @@ describe('Componente: CardConsultora', () => {
     expect(mockTirarDuvidaGeral).toHaveBeenCalledTimes(1);
   });
 });
+

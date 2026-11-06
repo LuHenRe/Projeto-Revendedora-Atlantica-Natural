@@ -49,7 +49,7 @@ export function CardConsultora() {
                 </h3>
 
                 <p className="mt-1.5 text-xs sm:text-sm text-muted-foreground leading-relaxed">
-                  Sua revendedora autorizada Atlântica Natural em <strong className="text-foreground">{cidade} e região</strong>.
+                  Sua revendedora autorizada Atlântica Natural em <strong className="text-foreground">{cidade}</strong>.
                   Ajudo você a escolher os melhores óleos essenciais, cosméticos naturais e suplementos para o seu bem-estar, com entrega rápida e atendimento direto pelo WhatsApp.
                 </p>
 
@@ -89,3 +89,4 @@ export function CardConsultora() {
     </section>
   );
 }
+

@@ -138,4 +138,26 @@ describe('Componente: Header', () => {
     expect(toggleTema).toBeInTheDocument();
     expect(toggleTema.textContent).toBe('');
   });
+
+  it('deve recolher (recuar) a primeira barra verde ao descer a página', () => {
+    renderHeader();
+    const topBar = screen.getByTestId('top-bar-institucional');
+    expect(topBar).toHaveClass('max-h-14');
+    expect(topBar).toHaveClass('opacity-100');
+
+    // Simula rolagem para baixo
+    Object.defineProperty(window, 'scrollY', { value: 60, writable: true });
+    fireEvent.scroll(window);
+
+    expect(topBar).toHaveClass('max-h-0');
+    expect(topBar).toHaveClass('opacity-0');
+    expect(topBar).toHaveClass('-translate-y-full');
+
+    // Simula retorno ao topo
+    Object.defineProperty(window, 'scrollY', { value: 0, writable: true });
+    fireEvent.scroll(window);
+
+    expect(topBar).toHaveClass('max-h-14');
+    expect(topBar).toHaveClass('opacity-100');
+  });
 });
