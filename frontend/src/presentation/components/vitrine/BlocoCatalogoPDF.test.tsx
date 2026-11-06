@@ -14,3 +14,4 @@ describe('Componente: BlocoCatalogoPDF', () => {
     expect(botaoVisualizar).toBeInTheDocument();
   });
 });
+

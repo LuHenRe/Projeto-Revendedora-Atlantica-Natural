@@ -84,15 +84,15 @@ describe('Componente: Header', () => {
     ).toBeInTheDocument();
   });
 
-  it('deve renderizar os botões com ícones e textos explicativos (Atendimento, Revendedor, Minha Sacola)', () => {
+  it('deve renderizar os botões com ícones e textos explicativos (Atendimento, Área do Revendedor, Minha Sacola)', () => {
     renderHeader();
 
     // Atendimento com texto
     expect(screen.getAllByText('Atendimento')[0]).toBeInTheDocument();
     expect(screen.getByText('Fale Conosco')).toBeInTheDocument();
 
-    // Revendedor com texto
-    expect(screen.getByText('Revendedor')).toBeInTheDocument();
+    // Área do Revendedor (topo institucional)
+    expect(screen.getByText('Área do Revendedor')).toBeInTheDocument();
 
     // Minha Sacola com texto e badge
     expect(screen.getByText('Minha Sacola')).toBeInTheDocument();
@@ -120,10 +120,12 @@ describe('Componente: Header', () => {
     expect(mockPush).toHaveBeenCalledWith('/produtos?busca=Melaleuca');
   });
 
-  it('deve conter links de navegação rápida para todas as seções da página', () => {
+  it('deve conter links de navegação rápida para todas as seções e categorias da loja', () => {
     renderHeader();
 
     expect(screen.getAllByText('Pronta-Entrega')[0]).toBeInTheDocument();
+    expect(screen.getAllByText('Óleos Essenciais')[0]).toBeInTheDocument();
+    expect(screen.getAllByText('Cosméticos')[0]).toBeInTheDocument();
     expect(screen.getByText('Catálogo Completo')).toBeInTheDocument();
     expect(screen.getByText('Matriz Oficial (Brasil)')).toBeInTheDocument();
     expect(screen.getAllByText('Revista PDF')[0]).toBeInTheDocument();
@@ -134,7 +136,6 @@ describe('Componente: Header', () => {
     renderHeader();
     const toggleTema = screen.getByLabelText(/Ativar modo/i);
     expect(toggleTema).toBeInTheDocument();
-    // Verifica que não contém texto escrito dentro do botão do toggle
     expect(toggleTema.textContent).toBe('');
   });
 });

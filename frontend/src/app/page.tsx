@@ -1,6 +1,7 @@
 import React from 'react';
 import { Header } from '@/presentation/components/vitrine/Header';
 import { HeroBanner } from '@/presentation/components/vitrine/HeroBanner';
+import { CardConsultora } from '@/presentation/components/vitrine/CardConsultora';
 import { BlocoEstoqueLocal } from '@/presentation/components/vitrine/BlocoEstoqueLocal';
 import { BlocoDeepLinks } from '@/presentation/components/vitrine/BlocoDeepLinks';
 import { BlocoCatalogoPDF } from '@/presentation/components/vitrine/BlocoCatalogoPDF';
@@ -51,6 +52,7 @@ export default async function HomePage() {
       <Header />
       <main className="flex-1">
         <HeroBanner />
+        <CardConsultora />
         <BlocoEstoqueLocal produtosIniciais={ofertasLocaisDTO} categorias={categoriasDTO} />
         <BlocoDeepLinks destaquesMatriz={destaquesMatrizDTO} />
         <BlocoCatalogoPDF />

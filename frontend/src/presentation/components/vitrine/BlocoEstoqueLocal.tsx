@@ -6,6 +6,7 @@ import { Produto, ProdutoDTO } from '../../../domain/entities/Produto';
 import { Categoria, CategoriaDTO } from '../../../domain/entities/Categoria';
 import { CardProduto } from './CardProduto';
 import { Button } from '../ui/Button';
+import { useVitrine } from '../../context/VitrineContext';
 
 interface BlocoEstoqueLocalProps {
   produtosIniciais: (Produto | ProdutoDTO)[];
@@ -23,6 +24,9 @@ export function BlocoEstoqueLocal({
   const categorias = useMemo(() => {
     return (categoriasProp || []).map((c) => (c instanceof Categoria ? c : Categoria.fromDTO(c)));
   }, [categoriasProp]);
+
+  const { cidadeConfirmada, regiaoPadrao } = useVitrine();
+  const cidade = cidadeConfirmada || regiaoPadrao;
 
   const [categoriaSelecionada, setCategoriaSelecionada] = useState<string | null>(null);
 
@@ -45,7 +49,7 @@ export function BlocoEstoqueLocal({
               Disponíveis para Pronta-Entrega
             </h2>
             <p className="mt-1 text-sm text-muted-foreground">
-              Receba hoje mesmo na sua residência ou retire na região de Valparaíso e DF.
+              Receba com rapidez e segurança na sua residência em {cidade} e região.
             </p>
           </div>
 
