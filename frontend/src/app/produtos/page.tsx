@@ -29,7 +29,12 @@ async function getDadosCatalogo() {
   }
 }
 
-export default async function ProdutosPage() {
+interface ProdutosPageProps {
+  searchParams?: Promise<{ busca?: string; categoria?: string }>;
+}
+
+export default async function ProdutosPage({ searchParams }: ProdutosPageProps) {
+  const resolvedParams = searchParams ? await searchParams : {};
   const { produtos, categorias } = await getDadosCatalogo();
 
   const produtosDTO = produtos.map((p) =>
@@ -43,7 +48,12 @@ export default async function ProdutosPage() {
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-1 py-10 sm:py-14 bg-background">
-        <CatalogoInterativo produtosIniciais={produtosDTO} categorias={categoriasDTO} />
+        <CatalogoInterativo
+          produtosIniciais={produtosDTO}
+          categorias={categoriasDTO}
+          termoBuscaInicial={resolvedParams.busca || ''}
+          categoriaIdInicial={resolvedParams.categoria || undefined}
+        />
       </main>
       <Footer />
       <ModalTravaGeografica />

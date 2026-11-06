@@ -12,7 +12,10 @@ export function BlocoCatalogoPDF() {
   };
 
   return (
-    <section className="py-12 sm:py-16 bg-brand-50/50 border-t border-b border-border/50">
+    <section
+      id="secao-catalogo-pdf"
+      className="scroll-mt-28 py-12 sm:py-16 bg-brand-50/50 border-t border-b border-border/50"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="bg-gradient-to-br from-brand-900 to-brand-950 rounded-3xl text-white p-6 sm:p-10 lg:p-12 shadow-xl flex flex-col lg:flex-row items-center justify-between gap-8 relative overflow-hidden">
           {/* Elementos Decorativos */}

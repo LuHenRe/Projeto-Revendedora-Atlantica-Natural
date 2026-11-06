@@ -12,7 +12,10 @@ export function BlocoB2B() {
   };
 
   return (
-    <section className="py-14 sm:py-20 bg-background border-t border-border/60">
+    <section
+      id="secao-seja-revendedor"
+      className="scroll-mt-28 py-14 sm:py-20 bg-background border-t border-border/60"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="rounded-3xl border border-brand-200 dark:border-brand-800 bg-gradient-to-br from-brand-50/50 via-card to-gold-50/30 dark:from-brand-950/40 dark:via-card dark:to-gold-950/20 p-8 sm:p-12 lg:p-16 shadow-soft flex flex-col lg:flex-row items-center justify-between gap-10">
           {/* Textos Informativos */}
@@ -23,7 +26,7 @@ export function BlocoB2B() {
             </div>
 
             <h2 className="text-2xl sm:text-4xl font-extrabold text-foreground font-outfit tracking-tight">
-              Seja uma Revendedora Parceira Atlântica Natural
+              Seja um(a) Revendedor(a) Parceiro(a) Atlântica Natural
             </h2>
 
             <p className="mt-4 text-base text-muted-foreground leading-relaxed">
