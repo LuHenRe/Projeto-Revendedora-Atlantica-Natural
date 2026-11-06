@@ -8,9 +8,10 @@ interface DialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   children: React.ReactNode;
+  className?: string;
 }
 
-export function Dialog({ open, onOpenChange, children }: DialogProps) {
+export function Dialog({ open, onOpenChange, children, className }: DialogProps) {
   React.useEffect(() => {
     if (open) {
       document.body.style.overflow = 'hidden';
@@ -30,10 +31,15 @@ export function Dialog({ open, onOpenChange, children }: DialogProps) {
         className="fixed inset-0 bg-black/60 backdrop-blur-xs transition-opacity"
         onClick={() => onOpenChange(false)}
       />
-      <div className="relative z-50 w-full max-w-lg rounded-2xl bg-card p-6 shadow-2xl border border-border animate-in zoom-in-95 duration-200">
+      <div
+        className={cn(
+          'relative z-50 w-full max-w-lg rounded-2xl bg-white dark:bg-[#101c14] bg-card p-6 shadow-2xl border border-gray-200 dark:border-gray-800 border-border animate-in zoom-in-95 duration-200',
+          className
+        )}
+      >
         <button
           onClick={() => onOpenChange(false)}
-          className="absolute right-4 top-4 rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+          className="absolute right-4 top-4 rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground transition-colors cursor-pointer"
           aria-label="Fechar"
         >
           <X className="w-5 h-5" />

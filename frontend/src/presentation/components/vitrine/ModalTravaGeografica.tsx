@@ -79,7 +79,7 @@ export function ModalTravaGeografica() {
                   setCidadeInput(sugestao);
                   handleValidar(sugestao);
                 }}
-                className="text-xs px-3 py-1.5 rounded-lg border border-border bg-muted/40 hover:bg-brand-50 hover:border-brand-300 hover:text-brand-900 transition-colors font-medium cursor-pointer"
+                className="text-xs px-3 py-1.5 rounded-lg border border-gray-200 dark:border-gray-700 border-border bg-gray-100/80 dark:bg-gray-800/80 bg-muted/40 hover:bg-brand-50 hover:border-brand-300 hover:text-brand-900 transition-colors font-medium cursor-pointer"
               >
                 {sugestao}
               </button>

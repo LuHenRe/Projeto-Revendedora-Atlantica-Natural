@@ -43,6 +43,19 @@
   --color-whatsapp: #25D366;
   --color-whatsapp-hover: #1ebd5a;
   --color-whatsapp-dark: #128C7E;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-ring: var(--ring);
 }
 
 :root {
@@ -135,6 +148,28 @@ body {
 
 /* Utilitários Visuais Personalizados */
 @layer utilities {
+  .bg-card {
+    background-color: var(--card);
+  }
+  .text-card-foreground {
+    color: var(--card-foreground);
+  }
+  .border-border {
+    border-color: var(--border);
+  }
+  .bg-muted {
+    background-color: var(--muted);
+  }
+  .text-muted-foreground {
+    color: var(--muted-foreground);
+  }
+  .text-foreground {
+    color: var(--foreground);
+  }
+  .bg-background {
+    background-color: var(--background);
+  }
+
   .glassmorphism {
     background: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(12px);
