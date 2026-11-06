@@ -57,7 +57,7 @@ export function Footer() {
                   rel="noopener noreferrer"
                   className="hover:text-white transition-colors"
                 >
-                  Seja Revendedora (B2B)
+                  Seja um(a) Revendedor(a) (B2B)
                 </a>
               </li>
             </ul>

@@ -11,11 +11,15 @@ import { Button } from '../../presentation/components/ui/Button';
 interface CatalogoInterativoProps {
   produtosIniciais: (Produto | ProdutoDTO)[];
   categorias: (Categoria | CategoriaDTO)[];
+  termoBuscaInicial?: string;
+  categoriaIdInicial?: string;
 }
 
 export function CatalogoInterativo({
   produtosIniciais: produtosIniciaisProp,
   categorias: categoriasProp,
+  termoBuscaInicial = '',
+  categoriaIdInicial = null,
 }: CatalogoInterativoProps) {
   const produtosIniciais = useMemo(() => {
     return (produtosIniciaisProp || []).map((p) => (p instanceof Produto ? p : Produto.fromDTO(p)));
@@ -25,8 +29,8 @@ export function CatalogoInterativo({
     return (categoriasProp || []).map((c) => (c instanceof Categoria ? c : Categoria.fromDTO(c)));
   }, [categoriasProp]);
 
-  const [busca, setBusca] = useState('');
-  const [categoriaId, setCategoriaId] = useState<string | null>(null);
+  const [busca, setBusca] = useState(termoBuscaInicial);
+  const [categoriaId, setCategoriaId] = useState<string | null>(categoriaIdInicial);
   const [ordenacao, setOrdenacao] = useState<'padrao' | 'menor-preco' | 'maior-preco'>('padrao');
 
   const produtosFiltrados = useMemo(() => {

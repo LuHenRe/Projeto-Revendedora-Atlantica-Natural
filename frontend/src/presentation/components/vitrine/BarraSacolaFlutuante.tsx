@@ -13,7 +13,7 @@ export function BarraSacolaFlutuante() {
   if (!sacola.temItens) return null;
 
   return (
-    <div className="fixed bottom-4 left-0 right-0 z-40 px-4 max-w-xl mx-auto pointer-events-none animate-in slide-in-from-bottom-5 duration-300">
+    <div id="barra-sacola-flutuante" className="fixed bottom-4 left-0 right-0 z-40 px-4 max-w-xl mx-auto pointer-events-none animate-in slide-in-from-bottom-5 duration-300">
       <div className="bg-card/95 backdrop-blur-md border border-border shadow-2xl rounded-2xl overflow-hidden pointer-events-auto">
         {/* Gaveta Expandida com Detalhes dos Itens */}
         {expandida && (
