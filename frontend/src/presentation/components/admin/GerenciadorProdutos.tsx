@@ -14,12 +14,19 @@ import {
   Loader2,
   CheckCircle,
   Image as ImageIcon,
+  Camera,
+  RefreshCw,
+  Link as LinkIcon,
 } from 'lucide-react';
 import { Button } from '@/presentation/components/ui/Button';
 import { Input } from '@/presentation/components/ui/Input';
 import { Badge } from '@/presentation/components/ui/Badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/presentation/components/ui/Dialog';
-import { salvarProdutoAction, inativarProdutoAction } from '@/infrastructure/actions/produtoActions';
+import {
+  salvarProdutoAction,
+  inativarProdutoAction,
+  uploadImagemProdutoAction,
+} from '@/infrastructure/actions/produtoActions';
 import { SalvarProdutoInput } from '@/domain/repositories/IProdutoRepository';
 
 const produtoFormSchema = z.object({
@@ -75,10 +82,17 @@ export function GerenciadorProdutos({ initialProdutos, categorias }: Gerenciador
   const [feedback, setFeedback] = useState<{ tipo: 'success' | 'error'; mensagem: string } | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Estados para Upload Direto de Imagem (do celular ou computador)
+  const [imagemPreview, setImagemPreview] = useState<string | null>(null);
+  const [isUploadingImagem, setIsUploadingImagem] = useState(false);
+  const [uploadErro, setUploadErro] = useState<string | null>(null);
+  const [origemImagem, setOrigemImagem] = useState<'arquivo' | 'url'>('arquivo');
+
   const {
     register,
     handleSubmit,
     reset,
+    setValue,
     formState: { errors },
   } = useForm<ProdutoFormData>({
     resolver: zodResolver(produtoFormSchema) as any,
@@ -94,6 +108,9 @@ export function GerenciadorProdutos({ initialProdutos, categorias }: Gerenciador
 
   const abrirModalNovo = () => {
     setProdutoEmEdicao(null);
+    setImagemPreview(null);
+    setUploadErro(null);
+    setOrigemImagem('arquivo');
     reset({
       nome: '',
       descricao: '',
@@ -107,6 +124,9 @@ export function GerenciadorProdutos({ initialProdutos, categorias }: Gerenciador
 
   const abrirModalEdicao = (prod: ProdutoItemDTO) => {
     setProdutoEmEdicao(prod);
+    setImagemPreview(prod.imagemUrl || null);
+    setUploadErro(null);
+    setOrigemImagem('arquivo');
     reset({
       nome: prod.nome,
       descricao: prod.descricao || '',
@@ -116,6 +136,54 @@ export function GerenciadorProdutos({ initialProdutos, categorias }: Gerenciador
       imagem_url: prod.imagemUrl || '',
     });
     setModalAberta(true);
+  };
+
+  const handleSelecionarArquivo = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadErro(null);
+
+    // Validação de tipo
+    if (!file.type.startsWith('image/')) {
+      setUploadErro('Por favor, selecione um arquivo de imagem válido (JPG, PNG ou WEBP).');
+      return;
+    }
+
+    // Validação de tamanho (10MB)
+    if (file.size > 10 * 1024 * 1024) {
+      setUploadErro('A imagem selecionada é muito pesada (máximo 10MB). Escolha outra foto.');
+      return;
+    }
+
+    // Mostra preview instantâneo na tela
+    const previewLocalUrl = URL.createObjectURL(file);
+    setImagemPreview(previewLocalUrl);
+
+    // Envia o arquivo para o servidor
+    setIsUploadingImagem(true);
+    try {
+      const formData = new FormData();
+      formData.append('file', file);
+      const res = await uploadImagemProdutoAction(formData);
+
+      if (res.success && res.data?.url) {
+        setValue('imagem_url', res.data.url, { shouldValidate: true });
+        setImagemPreview(res.data.url);
+      } else {
+        setUploadErro(res.error || 'Não foi possível enviar a imagem. Tente novamente.');
+      }
+    } catch {
+      setUploadErro('Erro ao processar imagem no servidor.');
+    } finally {
+      setIsUploadingImagem(false);
+    }
+  };
+
+  const handleRemoverImagem = () => {
+    setImagemPreview(null);
+    setValue('imagem_url', '');
+    setUploadErro(null);
   };
 
   const onSubmit = async (data: ProdutoFormData) => {
@@ -452,15 +520,141 @@ export function GerenciadorProdutos({ initialProdutos, categorias }: Gerenciador
               />
             </div>
 
-            <div>
-              <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-600 mb-1">
-                URL da Imagem
-              </label>
-              <Input
-                type="url"
-                placeholder="https://exemplo.com/imagem.jpg"
-                {...register('imagem_url')}
-              />
+            {/* Seção da Foto do Produto (Upload pelo celular/PC ou link opcional) */}
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-600">
+                  Foto do Produto
+                </label>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setOrigemImagem(origemImagem === 'arquivo' ? 'url' : 'arquivo');
+                    setUploadErro(null);
+                  }}
+                  className="text-xs text-emerald-700 hover:text-emerald-800 font-medium flex items-center gap-1 cursor-pointer"
+                >
+                  {origemImagem === 'arquivo' ? (
+                    <>
+                      <LinkIcon className="w-3 h-3" />
+                      <span>Inserir por link (URL)</span>
+                    </>
+                  ) : (
+                    <>
+                      <Camera className="w-3 h-3" />
+                      <span>Carregar do celular/PC</span>
+                    </>
+                  )}
+                </button>
+              </div>
+
+              {origemImagem === 'arquivo' ? (
+                <div>
+                  {/* Se houver imagem selecionada ou existente */}
+                  {imagemPreview ? (
+                    <div className="relative rounded-2xl border-2 border-dashed border-emerald-300 dark:border-emerald-800 bg-emerald-50/40 dark:bg-emerald-950/20 p-3 sm:p-4 flex items-center gap-4">
+                      <div className="relative w-20 h-20 sm:w-24 sm:h-24 rounded-xl bg-white overflow-hidden border border-zinc-200 shrink-0 shadow-xs">
+                        <img
+                          src={imagemPreview}
+                          alt="Preview do produto"
+                          className="w-full h-full object-cover"
+                        />
+                        {isUploadingImagem && (
+                          <div className="absolute inset-0 bg-black/50 backdrop-blur-xs flex flex-col items-center justify-center text-white text-[11px] font-semibold gap-1">
+                            <Loader2 className="w-5 h-5 animate-spin" />
+                            <span>Enviando...</span>
+                          </div>
+                        )}
+                      </div>
+
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-1.5 text-xs font-bold text-emerald-800 dark:text-emerald-300">
+                          <CheckCircle className="w-4 h-4 text-emerald-600" />
+                          <span>Foto Selecionada</span>
+                        </div>
+                        <p className="text-xs text-zinc-500 mt-0.5 truncate">
+                          {isUploadingImagem
+                            ? 'Salvando foto no servidor...'
+                            : 'Pronto para salvar junto ao produto'}
+                        </p>
+
+                        <div className="flex items-center gap-2 mt-2.5">
+                          {/* Botão Trocar Foto */}
+                          <label className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 text-xs font-semibold text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 shadow-xs cursor-pointer">
+                            <RefreshCw className="w-3.5 h-3.5 text-zinc-500" />
+                            <span>Trocar Foto</span>
+                            <input
+                              type="file"
+                              accept="image/png,image/jpeg,image/webp,image/jpg"
+                              onChange={handleSelecionarArquivo}
+                              className="sr-only"
+                              disabled={isUploadingImagem}
+                            />
+                          </label>
+
+                          {/* Botão Remover */}
+                          <button
+                            type="button"
+                            onClick={handleRemoverImagem}
+                            disabled={isUploadingImagem}
+                            className="inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium text-red-600 hover:bg-red-50 transition-colors cursor-pointer"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                            <span>Remover</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    /* Área de Seleção de Arquivo / Dropzone Amigável para Celular e PC */
+                    <label className="relative flex flex-col items-center justify-center w-full min-h-[140px] px-4 py-6 border-2 border-dashed border-zinc-300 hover:border-emerald-500 hover:bg-emerald-50/20 rounded-2xl cursor-pointer transition-all bg-zinc-50/70 group text-center">
+                      <div className="w-12 h-12 rounded-2xl bg-white shadow-xs border border-zinc-200 flex items-center justify-center text-emerald-600 group-hover:scale-110 transition-transform mb-2">
+                        {isUploadingImagem ? (
+                          <Loader2 className="w-6 h-6 animate-spin text-emerald-600" />
+                        ) : (
+                          <Camera className="w-6 h-6" />
+                        )}
+                      </div>
+
+                      <span className="text-sm font-semibold text-zinc-800 group-hover:text-emerald-800">
+                        Tirar foto ou escolher do celular / computador
+                      </span>
+                      <span className="text-xs text-zinc-500 mt-1">
+                        Formatos JPG, PNG ou WEBP (até 10MB)
+                      </span>
+
+                      <input
+                        type="file"
+                        accept="image/png,image/jpeg,image/webp,image/jpg"
+                        onChange={handleSelecionarArquivo}
+                        className="sr-only"
+                        disabled={isUploadingImagem}
+                      />
+                    </label>
+                  )}
+
+                  {uploadErro && (
+                    <div className="flex items-center gap-1.5 text-xs text-red-600 mt-1.5">
+                      <AlertCircle className="w-4 h-4 shrink-0" />
+                      <span>{uploadErro}</span>
+                    </div>
+                  )}
+                </div>
+              ) : (
+                /* Modo Alternativo: Inserir URL manual */
+                <div className="space-y-1.5">
+                  <Input
+                    type="url"
+                    placeholder="https://exemplo.com/imagem.jpg"
+                    {...register('imagem_url', {
+                      onChange: (e) => setImagemPreview(e.target.value || null),
+                    })}
+                  />
+                  <span className="text-[11px] text-zinc-400 block">
+                    Cole o link direto da imagem se preferir carregar da internet.
+                  </span>
+                </div>
+              )}
             </div>
 
             <DialogFooter className="pt-4">

@@ -1,6 +1,7 @@
 import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from src.core.config import settings
 from src.api.routes import auth, categorias, produtos, produtos_matriz
 
@@ -9,6 +10,12 @@ app = FastAPI(
     description="Backend para o Hub Híbrido de Curadoria",
     version="1.0.0"
 )
+
+# Diretório para servir arquivos de uploads estáticos (fotos de produtos)
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+UPLOAD_DIR = os.path.join(BASE_DIR, "uploads")
+os.makedirs(os.path.join(UPLOAD_DIR, "produtos"), exist_ok=True)
+app.mount("/uploads", StaticFiles(directory=UPLOAD_DIR), name="uploads")
 
 # CORS config: permite desenvolvimento local e URLs do Render
 origins = [

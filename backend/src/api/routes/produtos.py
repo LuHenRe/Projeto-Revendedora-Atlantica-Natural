@@ -1,4 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+import os
+import uuid
+from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File
 from sqlalchemy.orm import Session
 from uuid import UUID
 
@@ -12,6 +14,13 @@ from src.application.use_cases.criar_produto import CriarProdutoUseCase, CriarPr
 
 router = APIRouter()
 admin_router = APIRouter()
+
+# Diretório para armazenamento seguro de imagens enviadas pela revendedora
+BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+UPLOAD_DIR = os.path.join(BASE_DIR, "uploads", "produtos")
+os.makedirs(UPLOAD_DIR, exist_ok=True)
+ALLOWED_MIME_TYPES = {"image/jpeg", "image/png", "image/webp", "image/gif", "image/jpg"}
+MAX_FILE_SIZE = 10 * 1024 * 1024  # 10 MB
 
 # --- Rotas Públicas ---
 @router.get("/", response_model=list[ProdutoResponse], summary="Listar produtos", description="Retorna uma lista paginada de todos os produtos ativos no catálogo.")
@@ -92,3 +101,47 @@ def deletar_produto(id: UUID, db: Session = Depends(get_db), current_user: str =
     produto.inativar()
     repo.salvar(produto)
     return None
+
+@admin_router.post(
+    "/upload-imagem",
+    summary="Upload de imagem de produto",
+    description="Recebe uma imagem enviada pelo celular ou computador da revendedora, salva com segurança no servidor e retorna a URL acessível."
+)
+async def upload_imagem_produto(
+    file: UploadFile = File(...),
+    current_user: str = Depends(get_current_user)
+):
+    if not file.content_type or file.content_type.lower() not in ALLOWED_MIME_TYPES:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Formato de arquivo inválido. Por favor, envie uma imagem nos formatos JPG, PNG ou WEBP."
+        )
+
+    contents = await file.read()
+    if len(contents) > MAX_FILE_SIZE:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="A imagem selecionada excede o limite máximo permitido de 10MB."
+        )
+
+    ext = os.path.splitext(file.filename or "")[1].lower()
+    if not ext:
+        if "png" in file.content_type:
+            ext = ".png"
+        elif "webp" in file.content_type:
+            ext = ".webp"
+        else:
+            ext = ".jpg"
+
+    unique_filename = f"{uuid.uuid4().hex}{ext}"
+    file_path = os.path.join(UPLOAD_DIR, unique_filename)
+
+    with open(file_path, "wb") as f:
+        f.write(contents)
+
+    return {
+        "url": f"/uploads/produtos/{unique_filename}",
+        "filename": unique_filename,
+        "content_type": file.content_type,
+        "size": len(contents)
+    }

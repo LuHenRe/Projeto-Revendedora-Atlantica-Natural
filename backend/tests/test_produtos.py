@@ -116,3 +116,37 @@ def test_deletar_produto_inexistente(client: TestClient, admin_token_headers):
     res = client.delete(f"/admin/produtos/{uuid.uuid4()}", headers=admin_token_headers)
     assert res.status_code == 404
 
+def test_upload_imagem_produto_sucesso(client: TestClient, admin_token_headers):
+    import io
+    fake_image = io.BytesIO(b"\xff\xd8\xff\xe0\x00\x10JFIF\x00\x01\x01\x01\x00`\x00`\x00\x00\xff\xdb")
+    files = {"file": ("produto_foto.jpg", fake_image, "image/jpeg")}
+
+    res = client.post("/admin/produtos/upload-imagem", files=files, headers=admin_token_headers)
+    assert res.status_code == 200
+    data = res.json()
+    assert "url" in data
+    assert data["url"].startswith("/uploads/produtos/")
+    assert data["filename"].endswith(".jpg")
+    assert data["content_type"] == "image/jpeg"
+
+    # Verifica se a imagem é servida estaticamente
+    res_static = client.get(data["url"])
+    assert res_static.status_code == 200
+
+def test_upload_imagem_produto_formato_invalido(client: TestClient, admin_token_headers):
+    import io
+    fake_txt = io.BytesIO(b"conteudo de texto nao permitido")
+    files = {"file": ("script.sh", fake_txt, "text/plain")}
+
+    res = client.post("/admin/produtos/upload-imagem", files=files, headers=admin_token_headers)
+    assert res.status_code == 400
+    assert "Formato de arquivo inválido" in res.json()["detail"]
+
+def test_upload_imagem_sem_autenticacao(client: TestClient):
+    import io
+    fake_image = io.BytesIO(b"teste")
+    files = {"file": ("foto.jpg", fake_image, "image/jpeg")}
+
+    res = client.post("/admin/produtos/upload-imagem", files=files)
+    assert res.status_code == 401
+
