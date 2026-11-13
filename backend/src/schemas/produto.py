@@ -6,6 +6,7 @@ class ProdutoBase(BaseModel):
     nome: str
     preco: float
     quantidade_estoque: int = 0
+    descricao: str | None = None
     imagem_url: str | None = None
     ativo: bool = True
     categoria_id: UUID
@@ -17,6 +18,7 @@ class ProdutoCreate(ProdutoBase):
                 "nome": "Óleo Essencial de Lavanda 10ml",
                 "preco": 45.90,
                 "quantidade_estoque": 20,
+                "descricao": "Relaxante natural e aromaterapia para noites tranquilas.",
                 "imagem_url": "https://exemplo.com/lavanda.jpg",
                 "ativo": True,
                 "categoria_id": "123e4567-e89b-12d3-a456-426614174000"
@@ -28,6 +30,7 @@ class ProdutoUpdate(BaseModel):
     nome: str | None = None
     preco: float | None = None
     quantidade_estoque: int | None = None
+    descricao: str | None = None
     imagem_url: str | None = None
     ativo: bool | None = None
     categoria_id: UUID | None = None

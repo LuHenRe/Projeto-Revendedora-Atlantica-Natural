@@ -132,7 +132,7 @@ export function GerenciadorProdutos({ initialProdutos, categorias }: Gerenciador
       descricao: prod.descricao || '',
       preco: prod.preco.valor,
       estoque: prod.estoque,
-      categoria_id: prod.categoria?.id || categorias[0]?.id || '',
+      categoria_id: prod.categoria?.id || (prod as any).categoriaId || (prod as any).categoria_id || categorias[0]?.id || '',
       imagem_url: prod.imagemUrl || '',
     });
     setModalAberta(true);
@@ -192,6 +192,7 @@ export function GerenciadorProdutos({ initialProdutos, categorias }: Gerenciador
 
     const input: SalvarProdutoInput = {
       nome: data.nome,
+      descricao: data.descricao?.trim() || null,
       preco: Number(data.preco),
       quantidadeEstoque: Number(data.estoque),
       categoriaId: data.categoria_id,

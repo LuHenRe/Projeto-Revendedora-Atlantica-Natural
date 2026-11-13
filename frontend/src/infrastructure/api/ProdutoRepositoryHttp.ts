@@ -15,6 +15,7 @@ interface ProdutoBackendDTO {
   preco: number;
   quantidade_estoque: number;
   categoria_id: string;
+  descricao?: string | null;
   imagem_url: string | null;
   ativo: boolean;
   categoria?: CategoriaBackendDTO | null;
@@ -33,6 +34,7 @@ export class ProdutoRepositoryHttp implements IProdutoRepository {
       preco: new Preco(dto.preco),
       quantidadeEstoque: dto.quantidade_estoque,
       categoriaId: dto.categoria_id,
+      descricao: dto.descricao,
       imagemUrl: dto.imagem_url,
       ativo: dto.ativo,
       categoria: dto.categoria ? new Categoria(dto.categoria.id, dto.categoria.nome) : null,
@@ -72,6 +74,7 @@ export class ProdutoRepositoryHttp implements IProdutoRepository {
       preco: produto.preco,
       quantidade_estoque: produto.quantidadeEstoque,
       categoria_id: produto.categoriaId,
+      descricao: produto.descricao ?? null,
       imagem_url: produto.imagemUrl ?? null,
       ativo: produto.ativo ?? true,
     };

@@ -53,6 +53,7 @@ def criar_produto(produto_in: ProdutoCreate, db: Session = Depends(get_db), curr
         preco=produto_in.preco,
         categoria_id=produto_in.categoria_id,
         quantidade_estoque=produto_in.quantidade_estoque,
+        descricao=produto_in.descricao,
         imagem_url=produto_in.imagem_url,
         ativo=produto_in.ativo
     )
@@ -81,6 +82,7 @@ def atualizar_produto(id: UUID, produto_in: ProdutoUpdate, db: Session = Depends
             
     # Update entity
     if produto_in.nome is not None: produto.nome = produto_in.nome
+    if produto_in.descricao is not None: produto.descricao = produto_in.descricao
     if produto_in.preco is not None: produto.preco = produto_in.preco
     if produto_in.categoria_id is not None: produto.categoria_id = produto_in.categoria_id
     if produto_in.quantidade_estoque is not None: produto.quantidade_estoque = produto_in.quantidade_estoque

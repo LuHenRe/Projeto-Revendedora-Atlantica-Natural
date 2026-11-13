@@ -10,6 +10,7 @@ class CriarProdutoDTO:
     preco: float
     categoria_id: UUID
     quantidade_estoque: int = 0
+    descricao: str | None = None
     imagem_url: str | None = None
     ativo: bool = True
 
@@ -30,8 +31,10 @@ class CriarProdutoUseCase:
             preco=dto.preco,
             categoria_id=dto.categoria_id,
             quantidade_estoque=dto.quantidade_estoque,
+            descricao=dto.descricao,
             imagem_url=dto.imagem_url,
-            ativo=dto.ativo
+            ativo=dto.ativo,
+            categoria=categoria
         )
 
         return self.produto_repo.salvar(produto)

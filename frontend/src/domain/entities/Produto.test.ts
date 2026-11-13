@@ -102,6 +102,7 @@ describe('Entidade: Produto (Estoque Local)', () => {
       imagemUrl: 'https://exemplo.com/melaleuca.jpg',
       ativo: true,
       categoria: null,
+      descricao: null,
     });
 
     // Reconstrução a partir de DTO

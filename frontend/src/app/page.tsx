@@ -37,9 +37,16 @@ async function getDadosVitrine() {
 export default async function HomePage() {
   const { ofertasLocais, categorias, destaquesMatriz } = await getDadosVitrine();
 
-  const ofertasLocaisDTO = ofertasLocais.map((p) =>
-    typeof p.toDTO === 'function' ? p.toDTO() : p
-  );
+  const ofertasLocaisDTO = ofertasLocais.map((p) => {
+    const dto = typeof p.toDTO === 'function' ? p.toDTO() : p;
+    if (!dto.categoria && dto.categoriaId) {
+      const cat = categorias.find((c: any) => c.id === dto.categoriaId);
+      if (cat) {
+        dto.categoria = typeof cat.toDTO === 'function' ? cat.toDTO() : cat;
+      }
+    }
+    return dto;
+  });
   const categoriasDTO = categorias.map((c) =>
     typeof c.toDTO === 'function' ? c.toDTO() : c
   );

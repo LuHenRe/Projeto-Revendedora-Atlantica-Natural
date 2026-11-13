@@ -5,6 +5,7 @@ export interface SalvarProdutoInput {
   preco: number;
   quantidadeEstoque: number;
   categoriaId: string;
+  descricao?: string | null;
   imagemUrl?: string | null;
   ativo?: boolean;
 }

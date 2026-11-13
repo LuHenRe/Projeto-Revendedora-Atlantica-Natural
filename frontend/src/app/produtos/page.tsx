@@ -37,9 +37,16 @@ export default async function ProdutosPage({ searchParams }: ProdutosPageProps) 
   const resolvedParams = searchParams ? await searchParams : {};
   const { produtos, categorias } = await getDadosCatalogo();
 
-  const produtosDTO = produtos.map((p) =>
-    typeof p.toDTO === 'function' ? p.toDTO() : p
-  );
+  const produtosDTO = produtos.map((p) => {
+    const dto = typeof p.toDTO === 'function' ? p.toDTO() : p;
+    if (!dto.categoria && dto.categoriaId) {
+      const cat = categorias.find((c: any) => c.id === dto.categoriaId);
+      if (cat) {
+        dto.categoria = typeof cat.toDTO === 'function' ? cat.toDTO() : cat;
+      }
+    }
+    return dto;
+  });
   const categoriasDTO = categorias.map((c) =>
     typeof c.toDTO === 'function' ? c.toDTO() : c
   );
