@@ -24,6 +24,7 @@ import {
 } from 'lucide-react';
 import { useVitrine } from '../../context/VitrineContext';
 import { ThemeToggle } from '../common/ThemeToggle';
+import { env } from '../../../infrastructure/config/env';
 
 export function Header() {
   const router = useRouter();
