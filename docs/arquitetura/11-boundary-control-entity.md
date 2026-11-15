@@ -1,99 +1,78 @@
 # Boundary-Control-Entity
 
-Reclassificação das classes do diagrama de classes (seção 4) em três estereótipos de análise. Essa separação se materializa nas camadas de Clean Architecture (seção 13):
+Mapeamento dos componentes implementados nos três estereótipos de análise:
 
-- **Boundary (Fronteira)** → Interface Adapters (camada de entrada)
-- **Control (Controle)** → Application/Use Cases
-- **Entity (Entidade)** → Domain/Entities
+- **Boundary (Fronteira)** → Páginas e componentes de UI (`Next.js` / `React`) e endpoints REST (`FastAPI`)
+- **Control (Controle)** → Casos de uso (`Application/Use Cases`) e hooks/contextos de orquestração
+- **Entity (Entidade)** → Entidades e *Value Objects* do domínio (`Domain`)
 
 ---
 
-## Diagrama de robustez — Fluxo de compra local via WhatsApp
+## Diagrama de Robustez — Compra Local com Trava Geográfica e Sacola
 
 ```mermaid
 flowchart LR
-    Ator((Cliente final))
-    B1[VitrinePage «boundary»]
-    B2[RegiaoModal «boundary»]
-    C1[ConfirmarRegiaoUseCase «control»]
-    C2[GerarLinkWhatsAppUseCase «control»]
+    Ator((Cliente Final))
+    B1[Vitrine / CardProduto «boundary»]
+    B2[BarraSacolaFlutuante «boundary»]
+    B3[ModalTravaGeografica «boundary»]
+    C1[ValidarRegiaoAtendimentoUseCase «control»]
+    C2[GerarMensagemWhatsAppUseCase «control»]
     E1[Produto «entity»]
-    E2[OfertaLocal «entity»]
+    E2[ItemSacola «entity»]
+    E3[RegiaoAtendimento «value object»]
+    E4[ContatoWhatsApp «value object»]
 
     Ator --> B1
-    B1 --> B2
-    B2 --> C1
-    C1 --> E2
-    E2 --> C2
-    C2 --> B1
-    B1 --> Ator
+    Ator --> B2
+    B1 --> B3
+    B2 --> B3
+    B3 --> C1
+    C1 --> E3
+    B1 --> C2
+    B2 --> E2
+    E2 --> E1
+    C2 --> E4
 ```
 
 ---
 
-## Diagrama de robustez — Backoffice (gestão de produto)
+## Diagrama de Robustez — Backoffice (Estoque Local e Matriz)
 
 ```mermaid
 flowchart LR
     Ator((Administradora))
-    B1[BackofficeLogin «boundary»]
-    B2[ProdutoForm «boundary»]
-    C1[AutenticarUseCase «control»]
-    C2[CadastrarProdutoUseCase «control»]
-    C3[AtualizarProdutoUseCase «control»]
-    E1[Usuario «entity»]
-    E2[Produto «entity»]
-    E3[Categoria «entity»]
+    B1[AdminLoginPage «boundary»]
+    B2[GerenciadorProdutos / Matriz «boundary»]
+    C1[AutenticarAdministradorUseCase «control»]
+    C2[CriarProdutoUseCase «control»]
+    C3[AdicionarProdutoMatrizUseCase «control»]
+    E1[Produto «entity»]
+    E2[Categoria «entity»]
+    E3[ProdutoMatriz «entity»]
 
     Ator --> B1
     B1 --> C1
-    C1 --> E1
+    Ator --> B2
     B2 --> C2
+    C2 --> E1
     C2 --> E2
-    C2 --> E3
     B2 --> C3
-    C3 --> E2
+    C3 --> E3
 ```
 
 ---
 
-## Diagrama de robustez — Captação B2B
+## Tabela de Mapeamento BCE por Caso de Uso
 
-```mermaid
-flowchart LR
-    Ator((Potencial parceira))
-    B1[CTA_B2B_Page «boundary»]
-    B2[LeadForm «boundary»]
-    C1[RegistrarLeadUseCase «control»]
-    E1[LeadB2B «entity»]
-
-    Ator --> B1
-    B1 --> B2
-    B2 --> C1
-    C1 --> E1
-```
-
----
-
-## Tabela de mapeamento Boundary-Control-Entity por caso de uso
-
-| Caso de Uso | Boundary | Control | Entities envolvidas |
+| Caso de Uso | Boundary | Control | Entities / VOs envolvidos |
 |---|---|---|---|
-| UC01 - Visualizar vitrine pública | VitrinePage | — (renderização direta do frontend) | Produto, OfertaLocal |
-| UC02 - Confirmar região para compra local | VitrinePage + RegiaoModal | ConfirmarRegiaoUseCase | OfertaLocal |
-| UC03 - Enviar mensagem via WhatsApp | VitrinePage | GerarLinkWhatsAppUseCase | Produto, OfertaLocal |
-| UC04 - Navegar por links externos de afiliada | LinkCard (componente) | — (redirecionamento simples) | — |
-| UC05 - Visualizar catálogo em PDF | CatalogoPDF (componente) | — (renderização embutida) | — |
-| UC06 - Acessar página de captação B2B | CTA_B2B_Page + LeadForm | RegistrarLeadUseCase | LeadB2B |
-| UC07 - Cadastrar ou atualizar produto físico | BackofficeLogin + ProdutoForm | AutenticarUseCase + CadastrarProdutoUseCase / AtualizarProdutoUseCase | Usuario, Produto, Categoria |
-| UC08 - Autenticar no backoffice | BackofficeLogin | AutenticarUseCase | Usuario |
-
----
-
-## Regras de mapeamento
-- **Boundary**: 1 boundary por tela/interface de ator. Nome `XxxPage`, `XxxForm`, `XxxModal`.
-- **Control**: 1 control por caso de uso (ou agrupamento coeso de casos de uso relacionados). Nome `XxxUseCase`.
-- **Entity**: entidades vêm do diagrama de classes (seção 4). Sem dependência de framework.
-
-## Nota de rastreabilidade
-Cada boundary/control/entity desta tabela aparece nos diagramas de sequência (seção 6) com os mesmos nomes, garantindo rastreabilidade: requisito → caso de uso → robustez → sequência.
+| `UC01` Comprar Produto Pronta-Entrega Local | `CardProduto`, `BarraSacolaFlutuante`, `ModalTravaGeografica` | `VitrineContext`, `ValidarRegiaoAtendimentoUseCase`, `GerarMensagemWhatsAppUseCase` | `Produto`, `ItemSacola`, `RegiaoAtendimento`, `ContatoWhatsApp` |
+| `UC05` Consultar Catálogo e Buscar Produtos | `BlocoEstoqueLocal`, `CatalogoInterativo` | `ListarVitrineProdutos` / `ProdutoRepositoryHttp` | `Produto`, `Categoria` |
+| `UC06` Navegar por Destaques da Matriz | `BlocoDeepLinks`, `CardProdutoMatriz` | `ProdutoMatrizRepositoryHttp` | `ProdutoMatriz`, `UrlExterna`, `Preco` |
+| `UC07` Visualizar / Baixar Catálogo PDF | `BlocoCatalogoPDF`, `CatalogoPage` | — (navegação direta) | — |
+| `UC08` Acessar Captação B2B | `BlocoB2B` | — (redirecionamento WhatsApp) | — |
+| `UC09` Autenticar no Backoffice | `AdminLoginPage`, `POST /admin/login` | `AutenticarAdministradorUseCase` | Token JWT |
+| `UC10` Gerenciar Produtos do Estoque Local | `GerenciadorProdutos`, `/admin/produtos` | `CriarProdutoUseCase`, `InativarProdutoLocal` | `Produto`, `Categoria`, `Preco` |
+| `UC11` Gerenciar Categorias | `GerenciadorCategorias`, `/admin/categorias` | `categoriaActions` / `CategoriaRepositoryDB` | `Categoria` |
+| `UC12` Curar Destaques da Matriz | `GerenciadorProdutosMatriz`, `/admin/produtos-matriz` | `AdicionarProdutoMatrizUseCase`, `AtlanticaScraper` | `ProdutoMatriz`, `UrlExterna`, `Preco` |

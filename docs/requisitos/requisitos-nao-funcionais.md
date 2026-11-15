@@ -1,31 +1,27 @@
 # Requisitos Não Funcionais
 
-## RNF01 - Performance em mobile
-A página pública deve carregar com tempo de resposta adequado em dispositivos móveis, preservando boa experiência de navegação e conversão.
+> Requisitos não funcionais priorizados para o sistema atual, com destaque aos 3 critérios principais exigidos para a operação mobile-first da vitrine.
 
-## RNF02 - Usabilidade mobile-first
-A interface deve priorizar navegação em celular, com CTAs claros, grande área de toque e pouca fricção no preenchimento de informações e clique de ação.
+## RNF01 - Usabilidade Mobile-First e Baixa Fricção (Principal)
+A interface pública da vitrine deve ser projetada prioritariamente para smartphones, com tipografia legível, botões de chamada para ação (CTAs) amplos e bem espaçados, suporte a tema claro/escuro e fluxo direto de validação geográfica via modal.
 
-## RNF03 - Segurança da área administrativa
-As rotas de administração devem requerer autenticação e autorização, impedindo acesso indevido a dados sensíveis.
+## RNF02 - Segurança e Controle de Acesso no Backoffice (Principal)
+As operações de escrita no painel administrativo (produtos, upload de imagens, categorias e destaques da matriz) devem exigir token JWT válido emitido pela API (`OAuth2/Bearer`) e proteção de rotas no frontend via middleware e cookies `HttpOnly`.
 
-## RNF04 - Integridade de dados
-O sistema deve manter consistência no cadastro de produtos e categorias, evitando cadastro em estado inválido ou inconsistência de disponibilidade.
+## RNF03 - Desempenho e Carregamento Ágil em Redes Móveis (Principal)
+A página inicial da vitrine deve utilizar renderização no servidor com revalidação incremental (ISR) e payloads enxutos para carregar em menos de 3 segundos em conexões 4G, mantendo alta conversão.
 
-## RNF05 - Manutenibilidade
-O código deve seguir padrões de modularização, separação de responsabilidades e componentes reutilizáveis para facilitar manutenção e evolução.
+## RNF04 - Integridade de Domínio e Consistência de Dados
+As entidades e *Value Objects* devem validar invariantes de negócio (preço não negativo, estoque não negativo, URLs HTTP/HTTPS válidas, nome obrigatório), impedindo persistência ou exibição de estados inválidos.
 
-## RNF06 - Confiabilidade de conversão
-As ações principais de conversão, como WhatsApp e redirecionamento externo, devem estar disponíveis e funcionando corretamente em ambiente de produção.
+## RNF05 - Manutenibilidade e Arquitetura em Camadas
+Tanto o backend (FastAPI) quanto o frontend (Next.js) devem seguir separação clara entre Domínio, Aplicação, Infraestrutura e Apresentação (*Clean Architecture*), favorecendo testes automatizados e evolução modular.
 
-## RNF07 - Escalabilidade funcional
-A estrutura da aplicação deve permitir inclusão de novos blocos, campanhas e categorias sem quebrar o layout geral ou a lógica da vitrine.
+## RNF06 - Confiabilidade das Conversões Externas
+Os links gerados para WhatsApp (`wa.me` com codificação URI) e os redirecionamentos para a loja matriz e catálogo PDF devem ser validados e isolados em camadas específicas, evitando quebra dos canais de venda.
 
-## RNF08 - Portabilidade
-A solução deve funcionar em navegadores modernos e em dispositivos móveis com boa experiência visual e funcional.
+## RNF07 - Portabilidade entre Navegadores e Dispositivos
+A aplicação web responsiva deve operar em navegadores modernos de desktop e dispositivos móveis (Android/iOS) sem necessidade de instalação de aplicativo nativo.
 
-## RNF09 - Acessibilidade
-Os elementos interativos devem ter contraste adequado, texto legível e navegação simples para usuários com diferentes perfis e dispositivos.
-
-## RNF10 - Desacoplamento de integrações externas
-Links externos e integração com WhatsApp devem funcionar como camadas independentes da lógica de negócio interna, reduzindo risco de acoplamento e falhas sistêmicas.
+## RNF08 - Desacoplamento de Integrações Externas
+A coleta de metadados do site da matriz (*Web Scraping*) e a abertura do WhatsApp devem permanecer desacopladas das regras centrais de estoque local, evitando que instabilidades externas comprometam a vitrine local.

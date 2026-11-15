@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>2ª Apresentação - Lab Eng de Software | Atlântica Natural</title>
+
+  <!-- Tipografia Moderna Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap"
+    rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #0f1117;
+      --bg-card: rgba(22, 27, 38, 0.78);
+      --bg-card-hover: rgba(30, 37, 52, 0.9);
+      --border-color: rgba(255, 255, 255, 0.09);
+      --border-highlight: rgba(16, 185, 129, 0.45);
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent-primary: #10b981;
+      --accent-secondary: #3b82f6;
+      --accent-warning: #f59e0b;
+      --accent-danger: #ef4444;
+      --gradient-accent: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      background-image:
+        radial-gradient(circle at 15% 15%, rgba(16, 185, 129, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 85% 85%, rgba(59, 130, 246, 0.08) 0%, transparent 40%);
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+    }
+
+    /* HEADER */
+    header {
+      height: 66px;
+      padding: 0 28px;
+      background: rgba(15, 17, 23, 0.88);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .brand-logo {
+      width: 38px;
+      height: 38px;
+      background: var(--gradient-accent);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 19px;
+      box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+    }
+
+    .brand-title {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 700;
+      font-size: 17px;
+      letter-spacing: -0.02em;
+    }
+
+    .brand-subtitle {
+      font-size: 11px;
+      color: var(--accent-primary);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .header-phase-pill {
+      font-size: 12px;
+      font-weight: 600;
+      color: #cbd5e1;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-color);
+      padding: 6px 14px;
+      border-radius: 999px;
+    }
+
+    /* MAIN */
+    main {
+      flex: 1;
+      padding: 20px 24px;
+      max-width: 1440px;
+      margin: 0 auto;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* SLIDES */
+    .slides-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.38);
+      position: relative;
+      overflow: hidden;
+      min-height: 640px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .slide-progress-bar {
+      height: 4px;
+      background: rgba(255, 255, 255, 0.1);
+      width: 100%;
+      flex-shrink: 0;
+    }
+
+    .slide-progress-fill {
+      height: 100%;
+      background: var(--gradient-accent);
+      width: 0%;
+      transition: width 0.3s ease;
+    }
+
+    .slide-body {
+      flex: 1;
+      padding: 36px 48px;
+      display: none;
+      overflow-y: auto;
+    }
+
+    .slide-body.active {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      animation: slideIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .slide-body.centered {
+      align-items: center;
+      text-align: center;
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(18px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .slide-header-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .slide-title {
+      font-family: 'Outfit', sans-serif;
+      font-size: 36px;
+      font-weight: 800;
+      line-height: 1.18;
+      margin-bottom: 18px;
+      background: linear-gradient(90deg, #fff 0%, #cbd5e1 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .slide-header-row .slide-title {
+      margin-bottom: 0;
+    }
+
+    .slide-subtitle {
+      font-size: 16px;
+      color: var(--text-muted);
+      line-height: 1.55;
+      max-width: 960px;
+      margin-bottom: 24px;
+    }
+
+    .slide-card {
+      background: rgba(15, 17, 23, 0.65);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 22px 26px;
+      transition: all 0.25s;
+    }
+
+    .slide-card p,
+    .slide-card li {
+      font-size: 16.5px;
+      color: var(--text-main);
+      line-height: 1.58;
+    }
+
+    .slide-card ul,
+    .slide-card ol {
+      margin-top: 8px;
+      margin-left: 20px;
+    }
+
+    /* BADGES DE REVISÃO */
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 6px;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      vertical-align: middle;
+    }
+
+    .badge-fixed {
+      background: rgba(245, 158, 11, 0.16);
+      color: #fbbf24;
+      border: 1px solid rgba(245, 158, 11, 0.42);
+    }
+
+    .badge-new {
+      background: rgba(16, 185, 129, 0.16);
+      color: #34d399;
+      border: 1px solid rgba(16, 185, 129, 0.45);
+    }
+
+    .badge-info {
+      background: rgba(59, 130, 246, 0.16);
+      color: #60a5fa;
+      border: 1px solid rgba(59, 130, 246, 0.42);
+    }
+
+    .revision-highlight {
+      border-left: 3px solid var(--accent-warning);
+      padding-left: 14px;
+      background: rgba(245, 158, 11, 0.05);
+      border-radius: 0 8px 8px 0;
+      padding-top: 8px;
+      padding-bottom: 8px;
+      padding-right: 12px;
+    }
+
+    .justification-box {
+      background: rgba(16, 185, 129, 0.09);
+      border: 1px solid rgba(16, 185, 129, 0.35);
+      border-left: 4px solid var(--accent-primary);
+      border-radius: var(--radius-sm);
+      padding: 12px 16px;
+      margin-bottom: 14px;
+      font-size: 14.5px;
+      line-height: 1.5;
+      color: #e2e8f0;
+    }
+
+    .justification-box strong {
+      color: #34d399;
+    }
+
+    /* GRID & CARDS */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 16px;
+    }
+
+    @media (max-width: 960px) {
+
+      .grid-2,
+      .grid-3 {
+        grid-template-columns: 1fr;
+      }
+
+      .slide-body {
+        padding: 24px 20px;
+      }
+
+      .slide-title {
+        font-size: 28px;
+      }
+    }
+
+    /* SUMÁRIO INTERATIVO */
+    .toc-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .toc-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 15px 18px;
+      border-radius: 12px;
+      background: rgba(15, 17, 23, 0.72);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.2s ease;
+      font-family: 'Inter', sans-serif;
+      font-size: 16px;
+    }
+
+    .toc-item:hover {
+      border-color: var(--accent-primary);
+      background: rgba(16, 185, 129, 0.1);
+      transform: translateY(-1px);
+    }
+
+    .toc-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      color: var(--accent-primary);
+      margin-right: 8px;
+    }
+
+    .toc-slide-ref {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--text-muted);
+      flex-shrink: 0;
+    }
+
+    /* DIAGRAMAS + ZOOM */
+    .slide-image-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      background: #ffffff;
+      padding: 14px;
+      border-radius: var(--radius-md);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      position: relative;
+      cursor: zoom-in;
+      transition: box-shadow 0.2s ease;
+    }
+
+    .slide-image-container:hover {
+      box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.55);
+    }
+
+    .slide-image-container img {
+      width: 100%;
+      max-width: 100%;
+      max-height: 430px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .slide-image-container.tall img {
+      max-height: 485px;
+    }
+
+    .zoom-hint {
+      position: absolute;
+      bottom: 10px;
+      right: 12px;
+      background: rgba(15, 23, 42, 0.85);
+      color: #f8fafc;
+      font-size: 11.5px;
+      font-weight: 600;
+      padding: 5px 10px;
+      border-radius: 999px;
+      pointer-events: none;
+    }
+
+    /* TABELAS */
+    .slide-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 15px;
+      background: rgba(15, 17, 23, 0.7);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+    }
+
+    .slide-table th {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--accent-primary);
+      text-align: left;
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 14px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .slide-table td {
+      padding: 11px 16px;
+      border-bottom: 1px solid var(--border-color);
+      color: var(--text-main);
+      vertical-align: top;
+      line-height: 1.5;
+    }
+
+    .slide-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .uc-table td {
+      padding-top: 16px !important;
+      padding-bottom: 16px !important;
+    }
+
+    .uc-table td:nth-child(1) {
+      font-weight: 700;
+      width: 210px;
+      color: var(--accent-primary);
+    }
+
+    /* FOOTER */
+    .slide-footer {
+      height: 62px;
+      padding: 0 28px;
+      background: rgba(15, 17, 23, 0.88);
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: auto;
+      flex-shrink: 0;
+    }
+
+    .footer-left {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .slide-select {
+      background: rgba(255, 255, 255, 0.07);
+      color: var(--text-main);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 6px 10px;
+      font-family: 'Inter', sans-serif;
+      font-size: 12.5px;
+      cursor: pointer;
+    }
+
+    .slide-select option {
+      background: #0f172a;
+      color: #f8fafc;
+    }
+
+    .btn-slide-nav {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      width: 38px;
+      height: 38px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      transition: all 0.2s;
+    }
+
+    .btn-slide-nav:hover {
+      background: var(--accent-primary);
+      border-color: var(--accent-primary);
+      color: #06281e;
+    }
+
+    /* LIGHTBOX MODAL */
+    .lightbox-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(2, 6, 23, 0.92);
+      backdrop-filter: blur(8px);
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 999;
+      padding: 24px;
+    }
+
+    .lightbox-overlay.open {
+      display: flex;
+    }
+
+    .lightbox-toolbar {
+      width: 100%;
+      max-width: 1360px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 12px;
+      color: #f8fafc;
+    }
+
+    .lightbox-btn {
+      background: rgba(255, 255, 255, 0.12);
+      color: #f8fafc;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      padding: 7px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    .lightbox-btn:hover {
+      background: var(--accent-primary);
+      color: #06281e;
+    }
+
+    .lightbox-stage {
+      background: #ffffff;
+      border-radius: 14px;
+      padding: 16px;
+      max-width: 96vw;
+      max-height: 85vh;
+      overflow: auto;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+    }
+
+    .lightbox-stage img {
+      display: block;
+      max-width: 100%;
+      max-height: 79vh;
+      object-fit: contain;
+      transition: transform 0.2s ease;
+    }
+
+    .lightbox-stage.zoomed img {
+      max-width: none;
+      max-height: none;
+      width: 1450px;
+    }
+
+    @media print {
+      body {
+        background-color: #0f1117 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      header,
+      .slide-footer,
+      .slide-progress-bar,
+      .zoom-hint,
+      .lightbox-overlay {
+        display: none !important;
+      }
+
+      main {
+        padding: 0 !important;
+      }
+
+      .slides-container {
+        border: none !important;
+        box-shadow: none !important;
+        overflow: visible !important;
+        display: block !important;
+        min-height: auto !important;
+      }
+
+      .slide-body {
+        display: flex !important;
+        flex-direction: column !important;
+        opacity: 1 !important;
+        transform: none !important;
+        page-break-after: always;
+        min-height: 100vh !important;
+        height: auto !important;
+        page-break-inside: avoid;
+      }
+
+      .slide-body.centered {
+        justify-content: center !important;
+        align-items: center !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="brand">
+      <div class="brand-logo">🌿</div>
+      <div>
+        <div class="brand-title">Atlântica Natural</div>
+        <div class="brand-subtitle">Vitrine Virtual — Hub Híbrido</div>
+      </div>
+    </div>
+    <div class="header-phase-pill">2ª Fase • Modelagem Detalhada &amp; Revisão</div>
+  </header>
+
+  <main>
+    <div class="slides-container">
+      <div class="slide-progress-bar">
+        <div class="slide-progress-fill" id="slideProgress"></div>
+      </div>
+
+      <!-- SLIDE 1: Capa -->
+      <div class="slide-body centered active" data-slide="1" style="position: relative;">
+        <span class="badge badge-new" style="font-size: 13px; padding: 6px 14px; margin-bottom: 18px;">2ª Fase • Entrega
+          e Apresentação</span>
+        <h1 class="slide-title" style="font-size: 56px; margin-bottom: 12px;">Modelagem Detalhada</h1>
+        <p class="slide-subtitle" style="font-size: 30px; color: #fff; margin-bottom: 8px;">
+          Vitrine Virtual — Atlântica Natural
+        </p>
+        <p style="font-size: 19px; color: var(--text-muted); max-width: 760px;">
+          Revisão da 1ª Fase (com destaques), Diagrama de Classes, Diagrama de Atividades e Diagrama de Sequência
+        </p>
+        <p style="margin-top: 38px; font-size: 19px; color: var(--text-main); font-weight: 500;">
+          Antônio Prado Horta &nbsp;•&nbsp; Luiz Henrique Reis &nbsp;•&nbsp; Pedro Henrique de Freitas Frogeri
+        </p>
+        <p style="margin-top: 28px; font-size: 17px; color: var(--accent-primary); font-weight: 600;">
+          CEFET-MG Campus Varginha • Laboratório de Engenharia de Software
+        </p>
+      </div>
+
+      <!-- SLIDE 2: Sumário -->
+      <div class="slide-body" data-slide="2">
+        <h2 class="slide-title">Sumário da Apresentação</h2>
+        <p class="slide-subtitle">Clique em qualquer tópico para ir diretamente ao slide correspondente.</p>
+        <div class="toc-grid">
+          <button class="toc-item" onclick="goToSlide(3)">
+            <span><span class="toc-num">1.</span> Minimundo (Contexto e Correções)</span>
+            <span class="toc-slide-ref">Slide 03</span>
+          </button>
+          <button class="toc-item" onclick="goToSlide(4)">
+            <span><span class="toc-num">2.</span> Requisitos Funcionais Revisados (RF01–RF12)</span>
+            <span class="toc-slide-ref">Slides 04–05</span>
+          </button>
+          <button class="toc-item" onclick="goToSlide(6)">
+            <span><span class="toc-num">3.</span> Requisitos Não Funcionais (RNF01–RNF03)</span>
+            <span class="toc-slide-ref">Slide 06</span>
+          </button>
+          <button class="toc-item" onclick="goToSlide(7)">
+            <span><span class="toc-num">4.</span> Diagrama de Casos de Uso (DCU Corrigido)</span>
+            <span class="toc-slide-ref">Slide 07</span>
+          </button>
+          <button class="toc-item" onclick="goToSlide(8)">
+            <span><span class="toc-num">5.</span> Descrição de Caso de Uso (UC01 Atualizado)</span>
+            <span class="toc-slide-ref">Slides 08–09</span>
+          </button>
+          <button class="toc-item" onclick="goToSlide(10)">
+            <span><span class="toc-num">6.</span> Diagrama de Classes (Nível de Análise)</span>
+            <span class="toc-slide-ref">Slides 10–11</span>
+          </button>
+          <button class="toc-item" onclick="goToSlide(12)">
+            <span><span class="toc-num">7.</span> Diagrama de Atividades + Justificativa</span>
+            <span class="toc-slide-ref">Slide 12</span>
+          </button>
+          <button class="toc-item" onclick="goToSlide(13)">
+            <span><span class="toc-num">8.</span> Diagrama de Sequência + Justificativa</span>
+            <span class="toc-slide-ref">Slide 13</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- SLIDE 3: Minimundo (Revisado com Destaques) -->
+      <div class="slide-body" data-slide="3">
+        <div class="slide-header-row">
+          <h2 class="slide-title">1. Minimundo (Contexto e Revisão)</h2>
+          <span class="badge badge-fixed">Revisado da 1ª Fase</span>
+        </div>
+        <div class="slide-card">
+          <p>
+            A revendedora autorizada da <strong>Atlântica Natural</strong> atua de forma dispersa entre vendas de
+            estoque físico
+            (pronta-entrega local no DF/Entorno), indicação de produtos da loja matriz (afiliada) e captação de novas
+            parceiras (B2B) via WhatsApp.
+          </p>
+          <br>
+          <p><strong style="color: var(--accent-primary); font-size: 18px;">Problemas Atuais:</strong></p>
+          <ul style="margin-bottom: 14px;">
+            <li>Falta de catálogo centralizado para consulta rápida de preços e disponibilidade em estoque local.</li>
+            <li>Pedidos de pronta-entrega vindos de regiões fora da área de entrega da revendedora.</li>
+            <li>Links de produtos da loja matriz e material de catálogo perdidos em conversas e redes sociais.</li>
+          </ul>
+          <p><strong style="color: var(--accent-primary); font-size: 18px;">Solução Implementada (com correções
+              destacadas):</strong></p>
+          <ul
+            style="margin-top: 8px; display: flex; flex-direction: column; gap: 10px; list-style-position: inside; margin-left: 0;">
+            <li class="revision-highlight">
+              <span class="badge badge-fixed">Corrigido</span>
+              <strong>Trava Geográfica sob demanda + Sacola Flutuante:</strong> o cliente navega, pode montar uma sacola
+              com múltiplos itens e, ao clicar para pedir no WhatsApp, uma modal valida sua cidade antes de liberar o
+              envio pré-formatado.
+            </li>
+            <li class="revision-highlight">
+              <span class="badge badge-fixed">Corrigido</span>
+              <strong>Destaques da Matriz curados por Scraping:</strong> a administradora importa produtos da matriz
+              pela URL, gerando cache local (<code>produtos_matriz</code>) com link de afiliada.
+            </li>
+            <li class="revision-highlight">
+              <span class="badge badge-fixed">Corrigido</span>
+              <strong>Captação B2B sem formulário próprio:</strong> área dedicada redireciona interessadas diretamente
+              ao WhatsApp da liderança, mantendo o sistema sem checkout nem persistência de leads.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 4: Requisitos Funcionais (Parte 1) -->
+      <div class="slide-body" data-slide="4">
+        <div class="slide-header-row">
+          <h2 class="slide-title">2. Requisitos Funcionais (RF01–RF06)</h2>
+          <span class="badge badge-fixed">Destaques de Correção</span>
+        </div>
+        <table class="slide-table">
+          <thead>
+            <tr>
+              <th style="width: 150px;">ID / Status</th>
+              <th>Descrição</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>RF01</strong></td>
+              <td>Exibir catálogo de produtos físicos ativos e com estoque local disponível para pronta-entrega na
+                vitrine principal.</td>
+            </tr>
+            <tr>
+              <td><strong>RF02</strong> <span class="badge badge-fixed">Corrigido</span></td>
+              <td>Validar região de atendimento sob demanda via <strong>Modal de Trava Geográfica</strong> (com
+                validação de cidade e persistência em <code>localStorage</code>) antes de liberar o WhatsApp.</td>
+            </tr>
+            <tr>
+              <td><strong>RF03</strong></td>
+              <td>Redirecionar o cliente autorizado para o WhatsApp (<code>wa.me</code>) com mensagem pré-formatada
+                (item único ou resumo da sacola + cidade).</td>
+            </tr>
+            <tr>
+              <td><strong>RF04</strong> <span class="badge badge-fixed">Corrigido</span></td>
+              <td>Bloquear redirecionamento ao WhatsApp local para cidades fora da cobertura, exibindo aviso e link
+                alternativo para compra com frete no <strong>site oficial da matriz</strong>.</td>
+            </tr>
+            <tr>
+              <td><strong>RF05</strong> <span class="badge badge-fixed">Corrigido</span></td>
+              <td>Curar e exibir destaques da loja matriz por extração via URL (<em>Web Scraping</em>), armazenando
+                cache com link de afiliada <em>(antes descrito como "links estáticos")</em>.</td>
+            </tr>
+            <tr>
+              <td><strong>RF06</strong> <span class="badge badge-fixed">Corrigido</span></td>
+              <td>Disponibilizar seção exclusiva de captação B2B com redirecionamento direto para o WhatsApp da
+                liderança (sem formulário interno).</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- SLIDE 5: Requisitos Funcionais (Parte 2) -->
+      <div class="slide-body" data-slide="5">
+        <div class="slide-header-row">
+          <h2 class="slide-title">2. Requisitos Funcionais (RF07–RF12)</h2>
+          <span class="badge badge-new">Alinhado ao Sistema</span>
+        </div>
+        <table class="slide-table">
+          <thead>
+            <tr>
+              <th style="width: 165px;">ID / Status</th>
+              <th>Descrição</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>RF07</strong></td>
+              <td>Restringir o acesso ao painel administrativo (Backoffice) a usuário autenticado via token JWT
+                (<code>POST /admin/login</code>).</td>
+            </tr>
+            <tr>
+              <td><strong>RF08</strong> <span class="badge badge-fixed">Corrigido</span></td>
+              <td>Permitir gerenciamento completo do estoque local no Backoffice: cadastrar, editar, <strong>inativar
+                  (exclusão lógica)</strong> e enviar imagem do produto (<code>upload-imagem</code>).</td>
+            </tr>
+            <tr>
+              <td><strong>RF09</strong></td>
+              <td>Controlar disponibilidade automática na pronta-entrega, exibindo apenas itens com
+                <code>ativo = true</code> e <code>quantidade_estoque &gt; 0</code>.</td>
+            </tr>
+            <tr>
+              <td><strong>RF10</strong></td>
+              <td>Permitir o gerenciamento das categorias de produtos (criar, listar, editar e excluir).</td>
+            </tr>
+            <tr>
+              <td><strong>RF11</strong></td>
+              <td>Disponibilizar visualização em tela (<code>/catalogo</code>) e download direto do catálogo oficial da
+                marca em formato PDF.</td>
+            </tr>
+            <tr>
+              <td><strong>RF12</strong> <span class="badge badge-new">Novo</span></td>
+              <td>Permitir montagem de <strong>Sacola Flutuante</strong> (múltiplos itens e ajuste de quantidades) e
+                busca, filtro por categoria e ordenação por preço em <code>/produtos</code>. <em>(Substitui o antigo
+                  RF12 opcional não implementado.)</em></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- SLIDE 6: Requisitos Não Funcionais -->
+      <div class="slide-body" data-slide="6">
+        <h2 class="slide-title">3. Requisitos Não Funcionais (RNF)</h2>
+        <div class="slide-card">
+          <p style="margin-bottom: 22px; font-size: 19px; color: var(--text-muted);">
+            Os três requisitos não funcionais mais críticos para a vitrine virtual:
+          </p>
+          <ul
+            style="line-height: 1.75; display: flex; flex-direction: column; gap: 18px; list-style: none; margin-left: 0;">
+            <li
+              style="padding: 14px 18px; background: rgba(255,255,255,0.03); border-radius: 10px; border: 1px solid var(--border-color);">
+              <strong style="color: var(--accent-primary);">[RNF01] Usabilidade (Mobile-First):</strong>
+              Interface projetada para smartphones, com CTAs amplos, suporte a tema claro/escuro e validação ágil de
+              cidade na modal de trava geográfica.
+            </li>
+            <li
+              style="padding: 14px 18px; background: rgba(255,255,255,0.03); border-radius: 10px; border: 1px solid var(--border-color);">
+              <strong style="color: var(--accent-primary);">[RNF02] Segurança (JWT + Middleware):</strong>
+              Rotas administrativas na API FastAPI protegidas por Bearer JWT e páginas <code>/admin/*</code> blindadas
+              no Next.js com cookies <code>HttpOnly</code>.
+            </li>
+            <li
+              style="padding: 14px 18px; background: rgba(255,255,255,0.03); border-radius: 10px; border: 1px solid var(--border-color);">
+              <strong style="color: var(--accent-primary);">[RNF03] Desempenho (SSR / ISR):</strong>
+              Página principal renderizada no servidor com revalidação incremental a cada 60 segundos, garantindo
+              carregamento ágil em conexões móveis 4G.
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- SLIDE 7: DCU Corrigido -->
+      <div class="slide-body" data-slide="7">
+        <div class="slide-header-row">
+          <h2 class="slide-title">4. Diagrama de Casos de Uso (DCU)</h2>
+          <span class="badge badge-fixed">Corrigido na 2ª Fase</span>
+        </div>
+        <div class="justification-box" style="margin-bottom: 12px;">
+          <strong>Correções aplicadas:</strong> (1) Fronteira do sistema explicitada; (2) Removida herança indevida
+          <code>Administradora --|&gt; Cliente</code>; (3) Corrigido <code>&lt;&lt;include&gt;&gt;</code> a partir de
+          <code>UC01</code>; (4) Adicionados <code>UC04</code> (Sacola), <code>UC11</code> (Categorias) e
+          <code>UC12</code> (Curadoria da Matriz).
+        </div>
+        <div class="slide-image-container"
+          onclick="openLightbox('./imagens-diagramas/casos-de-uso.png', 'Diagrama de Casos de Uso Corrigido')">
+          <img src="./imagens-diagramas/casos-de-uso.png" alt="Diagrama de Casos de Uso Corrigido">
+          <span class="zoom-hint">🔍 Clique para ampliar</span>
+        </div>
+      </div>
+
+      <!-- SLIDE 8: Descrição de Caso de Uso (Fluxo Principal) -->
+      <div class="slide-body" data-slide="8">
+        <div class="slide-header-row">
+          <h2 class="slide-title">5. Descrição de Caso de Uso — Fluxo Principal</h2>
+          <span class="badge badge-fixed">Atualizado para Modal + Sacola</span>
+        </div>
+        <p style="margin-bottom: 12px; color: var(--accent-primary); font-size: 18px; font-weight: 700;">
+          UC01 — Comprar Produto Pronta-Entrega Local
+        </p>
+        <table class="slide-table uc-table">
+          <tbody>
+            <tr>
+              <td>Ator(es)</td>
+              <td><strong>Principal:</strong> Cliente Final &nbsp;|&nbsp; <strong>Secundários:</strong> WhatsApp, Loja
+                Oficial da Matriz</td>
+            </tr>
+            <tr>
+              <td>Pré-condição</td>
+              <td>O cliente acessou a vitrine pública e o(s) produto(s) selecionado(s) possuem <code>ativo = true</code>
+                e <code>quantidade_estoque &gt; 0</code>.</td>
+            </tr>
+            <tr>
+              <td>Fluxo Principal</td>
+              <td>
+                <ol style="line-height: 1.68; margin: 0; padding-left: 20px;">
+                  <li>O Cliente clica em <strong>"Pedir no WhatsApp"</strong> em um card ou adiciona itens à
+                    <strong>Sacola Flutuante</strong> (<code>UC04</code>) e clica em <strong>"Fechar Pedido"</strong>.
+                  </li>
+                  <li>O Sistema verifica no <code>localStorage</code> se já existe uma região confirmada.</li>
+                  <li>Não havendo região salva, o Sistema abre a <strong>Modal de Trava Geográfica</strong> (<em>"Qual é
+                      a sua cidade?"</em>) com campo de texto.</li>
+                  <li>O Cliente digita sua cidade e confirma.</li>
+                  <li>O Sistema valida a entrada com <code>RegiaoAtendimento.isAtendida()</code>, salva a cidade no
+                    <code>localStorage</code> e fecha a modal.</li>
+                  <li>O Sistema monta a mensagem pré-formatada (item único ou lista + total da sacola + cidade) e
+                    redireciona para o <strong>WhatsApp</strong> (<code>wa.me</code>).</li>
+                </ol>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- SLIDE 9: Descrição de Caso de Uso (Alternativos, Subfluxo e Pós-condição) -->
+      <div class="slide-body" data-slide="9">
+        <div class="slide-header-row">
+          <h2 class="slide-title">5. Descrição de Caso de Uso — Exceções e Pós-condição</h2>
+          <span class="badge badge-fixed">Atualizado</span>
+        </div>
+        <p style="margin-bottom: 12px; color: var(--accent-primary); font-size: 18px; font-weight: 700;">
+          UC01 — Comprar Produto Pronta-Entrega Local
+        </p>
+        <table class="slide-table uc-table">
+          <tbody>
+            <tr>
+              <td>Fluxo Alternativo</td>
+              <td style="line-height: 1.65;">
+                <strong>[2a] Cidade já confirmada anteriormente:</strong> O Sistema recupera a cidade do
+                <code>localStorage</code>, omite a modal (passos 3–5) e vai direto ao envio no WhatsApp.<br><br>
+                <strong>[5a] Cidade fora da área de cobertura:</strong> A modal permanece aberta, o redirecionamento ao
+                WhatsApp local fica bloqueado e o Sistema exibe orientação com link para <em>"Comprar com frete no Site
+                  Oficial da Marca"</em>.
+              </td>
+            </tr>
+            <tr>
+              <td>Subfluxo</td>
+              <td style="line-height: 1.65;">
+                <strong>[4a] Campo de cidade vazio:</strong> Ao tentar confirmar sem informar a cidade, o Sistema exibe
+                o alerta <em>"Por favor, informe sua cidade."</em> e impede a validação.
+              </td>
+            </tr>
+            <tr>
+              <td>Pós-condição</td>
+              <td>Cidade persistida no navegador para novas compras e atendimento iniciado no WhatsApp (ou cliente
+                direcionado à loja oficial da matriz com frete nacional).</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- SLIDE 10: Diagrama de Classes (Resumo de Análise) -->
+      <div class="slide-body" data-slide="10">
+        <h2 class="slide-title">6. Diagrama de Classes — Nível de Análise</h2>
+        <p class="slide-subtitle">Modelagem estrutural alinhada ao domínio real implementado no backend e no frontend.
+        </p>
+        <div class="grid-2">
+          <div class="slide-card">
+            <h3 style="color: var(--accent-primary); font-size: 19px; margin-bottom: 10px;">Entidades Principais</h3>
+            <ul style="line-height: 1.65; display: flex; flex-direction: column; gap: 8px;">
+              <li><strong>Produto</strong> <em>(Aggregate Root)</em>: centraliza preço, estoque e disponibilidade local
+                (<code>emEstoque()</code>, <code>temOfertaLocal()</code>), unificando a antiga classe conceitual
+                <code>OfertaLocal</code>.</li>
+              <li><strong>Categoria</strong>: agrupa produtos locais (<code>1</code> para <code>0..*</code>).</li>
+              <li><strong>ProdutoMatriz</strong>: cache curado via <em>Web Scraping</em> com <code>urlOrigem</code>
+                única e <code>urlAfiliada</code>.</li>
+              <li><strong>ItemSacola</strong>: entidade de sessão no frontend para pedidos multi-item
+                (<code>subtotal()</code>).</li>
+              <li><strong>Administrador</strong>: classe conceitual de análise responsável por gestão e curadoria no
+                Backoffice.</li>
+            </ul>
+          </div>
+          <div class="slide-card">
+            <h3 style="color: var(--accent-secondary); font-size: 19px; margin-bottom: 10px;">Value Objects &amp;
+              Simplificações</h3>
+            <ul style="line-height: 1.65; display: flex; flex-direction: column; gap: 8px;">
+              <li><strong>Preco</strong>: encapsula valor não negativo e formatação monetária.</li>
+              <li><strong>UrlExterna</strong>: valida protocolo <code>http/https</code> e injeta parâmetro de afiliado.
+              </li>
+              <li><strong>RegiaoAtendimento</strong>: encapsula a regra de cidades atendidas (DF e Entorno).</li>
+              <li><strong>ContatoWhatsApp</strong>: sanitiza telefone e gera URL <code>wa.me</code> codificada.</li>
+              <li><span class="badge badge-info">Decisão</span> Sem classe/tabela <code>LeadB2B</code>: captação B2B
+                redireciona diretamente ao WhatsApp da liderança.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- SLIDE 11: Diagrama de Classes (Imagem) -->
+      <div class="slide-body" data-slide="11">
+        <div class="slide-header-row">
+          <h2 class="slide-title">6. Diagrama de Classes — Visão Gráfica</h2>
+          <span class="badge badge-new">Modelagem Atualizada</span>
+        </div>
+        <div class="slide-image-container tall"
+          onclick="openLightbox('./imagens-diagramas/diagrama-classes.png', 'Diagrama de Classes — Nível de Análise')">
+          <img src="./imagens-diagramas/diagrama-classes.png" alt="Diagrama de Classes">
+          <span class="zoom-hint">🔍 Clique para ampliar</span>
+        </div>
+      </div>
+
+      <!-- SLIDE 12: Diagrama de Atividades + Justificativa -->
+      <div class="slide-body" data-slide="12">
+        <div class="slide-header-row">
+          <h2 class="slide-title">7. Diagrama de Atividades (UC01)</h2>
+          <span class="badge badge-new">Com Raias UML</span>
+        </div>
+        <div class="justification-box">
+          <strong>Justificativa da escolha do caso de uso:</strong> <em>Comprar Produtos de Pronta-Entrega com Trava
+            Geográfica e Sacola</em> é o caso de uso não básico mais crítico do sistema: reúne decisão entre compra
+          unitária ou sacola multi-item, leitura/escrita em <code>localStorage</code>, validação condicional de campo e
+          cobertura regional, além de dois desfechos externos distintos (WhatsApp local ou loja oficial da matriz).
+        </div>
+        <div class="slide-image-container"
+          onclick="openLightbox('./imagens-diagramas/atividade-compra-local.png', 'Diagrama de Atividades — Compra Local com Trava e Sacola')">
+          <img src="./imagens-diagramas/atividade-compra-local.png" alt="Diagrama de Atividades">
+          <span class="zoom-hint">🔍 Clique para ampliar</span>
+        </div>
+      </div>
+
+      <!-- SLIDE 13: Diagrama de Sequência + Justificativa -->
+      <div class="slide-body" data-slide="13">
+        <div class="slide-header-row">
+          <h2 class="slide-title">8. Diagrama de Sequência (UC01)</h2>
+          <span class="badge badge-new">Opção B — Compra Local</span>
+        </div>
+        <div class="justification-box">
+          <strong>Justificativa da escolha do caso de uso:</strong> É um fluxo não trivial de ponta a ponta que envolve
+          7 participantes reais da arquitetura (<code>Cliente</code>, <code>Next.js SSR/Client</code>,
+          <code>FastAPI</code>, <code>PostgreSQL</code>, <code>ModalTravaGeografica</code>, <code>LocalStorage</code> e
+          <code>WhatsApp/Matriz</code>), com fragmentos combinados <code>opt</code> (uso opcional da sacola) e
+          <code>alt</code> aninhados (cidade salva vs. validação geográfica permitida ou bloqueada).
+        </div>
+        <div class="slide-image-container"
+          onclick="openLightbox('./imagens-diagramas/sequencia-compra-local.png', 'Diagrama de Sequência — Compra Local com Trava e Sacola')">
+          <img src="./imagens-diagramas/sequencia-compra-local.png" alt="Diagrama de Sequência">
+          <span class="zoom-hint">🔍 Clique para ampliar</span>
+        </div>
+      </div>
+
+      <!-- SLIDE 14: Encerramento & Rastreabilidade -->
+      <div class="slide-body" data-slide="14">
+        <h2 class="slide-title">9. Rastreabilidade Completa do Sistema</h2>
+        <p class="slide-subtitle">Consistência ponta a ponta entre requisitos, modelagem UML e código em produção.</p>
+        <div class="grid-3">
+          <div class="slide-card">
+            <h3 style="color: var(--accent-primary); margin-bottom: 10px;">Requisitos &amp; DCU</h3>
+            <p style="font-size: 15px; color: var(--text-muted);">
+              12 RFs e 3 RNFs prioritários alinhados aos 12 Casos de Uso no diagrama (vitrine pública, sacola, trava
+              geográfica, PDF, B2B e backoffice JWT).
+            </p>
+          </div>
+          <div class="slide-card">
+            <h3 style="color: var(--accent-secondary); margin-bottom: 10px;">Classes &amp; Domínio</h3>
+            <p style="font-size: 15px; color: var(--text-muted);">
+              Entidades <code>Produto</code>, <code>Categoria</code>, <code>ProdutoMatriz</code> e
+              <code>ItemSacola</code> apoiadas por <em>Value Objects</em> imutáveis e 3 tabelas reais no PostgreSQL.
+            </p>
+          </div>
+          <div class="slide-card">
+            <h3 style="color: var(--accent-warning); margin-bottom: 10px;">Comportamento</h3>
+            <p style="font-size: 15px; color: var(--text-muted);">
+              Diagramas de Atividades e Sequência validando exatamente o fluxo real de compra local com trava geográfica
+              em modal, sacola flutuante e conversão no WhatsApp.
+            </p>
+          </div>
+        </div>
+        <div class="slide-card" style="margin-top: 22px; text-align: center;">
+          <p style="font-size: 20px; font-weight: 700; color: #fff;">Obrigado pela atenção!</p>
+          <p style="font-size: 15px; color: var(--text-muted); margin-top: 6px;">
+            Dúvidas e demonstração dos diagramas disponíveis para consulta (clique em qualquer diagrama para ampliar).
+          </p>
+        </div>
+      </div>
+
+      <!-- CONTROLES DO SLIDE -->
+      <div class="slide-footer">
+        <div class="footer-left">
+          <div class="slide-counter" id="slideCounter" style="font-family:'JetBrains Mono'; font-weight:600;">01 / 14
+          </div>
+          <select class="slide-select" id="slideJump" onchange="goToSlide(Number(this.value))"
+            aria-label="Ir para slide">
+            <option value="1">01 — Capa</option>
+            <option value="2">02 — Sumário</option>
+            <option value="3">03 — Minimundo (Revisado)</option>
+            <option value="4">04 — RFs Parte 1 (RF01–RF06)</option>
+            <option value="5">05 — RFs Parte 2 (RF07–RF12)</option>
+            <option value="6">06 — RNFs (RNF01–RNF03)</option>
+            <option value="7">07 — Diagrama de Casos de Uso</option>
+            <option value="8">08 — Caso de Uso UC01 (Principal)</option>
+            <option value="9">09 — Caso de Uso UC01 (Exceções)</option>
+            <option value="10">10 — Diagrama de Classes (Análise)</option>
+            <option value="11">11 — Diagrama de Classes (Gráfico)</option>
+            <option value="12">12 — Diagrama de Atividades</option>
+            <option value="13">13 — Diagrama de Sequência</option>
+            <option value="14">14 — Rastreabilidade &amp; Fim</option>
+          </select>
+        </div>
+        <div style="display:flex; gap:10px;">
+          <button class="btn-slide-nav" onclick="toggleFullScreen()" title="Tela Cheia">⛶</button>
+          <button class="btn-slide-nav" onclick="prevSlide()" title="Slide Anterior">◀</button>
+          <button class="btn-slide-nav" onclick="nextSlide()" title="Próximo Slide">▶</button>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- MODAL LIGHTBOX PARA ZOOM NOS DIAGRAMAS -->
+  <div class="lightbox-overlay" id="lightbox" onclick="handleLightboxBackdrop(event)">
+    <div class="lightbox-toolbar">
+      <strong id="lightboxTitle" style="font-family: 'Outfit', sans-serif; font-size: 16px;">Diagrama</strong>
+      <div style="display: flex; gap: 10px;">
+        <button class="lightbox-btn" onclick="toggleZoom()">🔎 Alternar Zoom</button>
+        <button class="lightbox-btn" onclick="closeLightbox()">✕ Fechar (Esc)</button>
+      </div>
+    </div>
+    <div class="lightbox-stage" id="lightboxStage">
+      <img id="lightboxImg" src="" alt="Diagrama Ampliado">
+    </div>
+  </div>
+
+  <script>
+    let currentSlide = 1;
+    const totalSlides = 14;
+
+    function updateSlideUI() {
+      document.querySelectorAll('.slide-body').forEach(el => el.classList.remove('active'));
+      const target = document.querySelector(`.slide-body[data-slide="${currentSlide}"]`);
+      if (target) target.classList.add('active');
+
+      const currentStr = currentSlide < 10 ? '0' + currentSlide : currentSlide;
+      const totalStr = totalSlides < 10 ? '0' + totalSlides : totalSlides;
+
+      document.getElementById('slideCounter').innerText = `${currentStr} / ${totalStr}`;
+      document.getElementById('slideJump').value = String(currentSlide);
+      document.getElementById('slideProgress').style.width = ((currentSlide / totalSlides) * 100) + '%';
+    }
+
+    function goToSlide(n) {
+      if (n >= 1 && n <= totalSlides) {
+        currentSlide = n;
+        updateSlideUI();
+      }
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides) {
+        currentSlide++;
+        updateSlideUI();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 1) {
+        currentSlide--;
+        updateSlideUI();
+      }
+    }
+
+    // Lightbox
+    function openLightbox(src, title) {
+      document.getElementById('lightboxImg').src = src;
+      document.getElementById('lightboxTitle').innerText = title;
+      document.getElementById('lightboxStage').classList.remove('zoomed');
+      document.getElementById('lightbox').classList.add('open');
+    }
+
+    function closeLightbox() {
+      document.getElementById('lightbox').classList.remove('open');
+    }
+
+    function toggleZoom() {
+      document.getElementById('lightboxStage').classList.toggle('zoomed');
+    }
+
+    function handleLightboxBackdrop(event) {
+      if (event.target.id === 'lightbox') {
+        closeLightbox();
+      }
+    }
+
+    // Keyboard navigation
+    document.addEventListener('keydown', function (event) {
+      const lightboxOpen = document.getElementById('lightbox').classList.contains('open');
+      if (event.key === 'Escape' && lightboxOpen) {
+        closeLightbox();
+        return;
+      }
+      if (lightboxOpen) return;
+
+      if (event.key === 'ArrowRight' || event.key === ' ') {
+        event.preventDefault();
+        nextSlide();
+      } else if (event.key === 'ArrowLeft') {
+        event.preventDefault();
+        prevSlide();
+      }
+    });
+
+    function toggleFullScreen() {
+      const elem = document.querySelector('.slides-container');
+      if (!document.fullscreenElement) {
+        elem.requestFullscreen().catch(err => {
+          console.error(`Erro ao tentar entrar em tela cheia: ${err.message}`);
+        });
+      } else {
+        document.exitFullscreen();
+      }
+    }
+
+    updateSlideUI();
+  </script>
+</body>
+
+</html>

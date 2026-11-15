@@ -1,37 +1,37 @@
 # Requisitos da Vitrine
 
-## Requisitos funcionais (RF)
+## Requisitos Funcionais (RF)
 
 | ID | Descrição | Prioridade | Ator/Origem |
-|----|-----------|------------|-------------|
-| RF01 | Sistema deve exibir o estoque físico local disponível para venda na região de atendimento da revendedora na página principal | Alta | Cliente final |
-| RF02 | Sistema deve validar/confirmar a região de atendimento antes de liberar o botão de contato via WhatsApp | Alta | Cliente final |
-| RF03 | Sistema deve gerar o link do WhatsApp com mensagem pré-formatada após a confirmação da região e seleção do produto | Alta | Cliente final |
-| RF04 | Sistema deve exibir blocos com links externos de categorias/produtos do site oficial da matriz para redirecionamento | Média | Cliente final |
-| RF05 | Sistema deve disponibilizar o catálogo geral em PDF ou visualizador embutido na vitrine | Média | Cliente final |
-| RF06 | Sistema deve exibir uma área separada de captação B2B, sem misturar com a experiência B2C | Média | Potencial parceira |
-| RF07 | Sistema deve permitir que a administradora cadastre, edite e remova logicamente produtos do estoque físico e categorias | Alta | Revendedora/administradora |
-| RF08 | Sistema deve permitir que a administradora atualize textos, imagens e blocos visuais da página pública | Média | Revendedora/administradora |
-| RF09 | Sistema deve controlar a publicação/ocultação de itens com base no estoque e no status de disponibilidade | Alta | Sistema/Revendedora |
-| RF10 | Sistema deve exigir autenticação segura para acesso à área administrativa | Alta | Revendedora/administradora |
+|---|---|---|---|
+| RF01 | Exibir catálogo de produtos físicos ativos com estoque local na vitrine principal | Alta | Cliente final |
+| RF02 | Validar região de atendimento sob demanda via modal de trava geográfica com persistência local | Alta | Cliente final |
+| RF03 | Gerar link do WhatsApp com mensagem pré-formatada (item único ou sacola) após confirmação da região | Alta | Cliente final |
+| RF04 | Bloquear redirecionamento de WhatsApp fora da área de cobertura e orientar compra com frete no site oficial da matriz | Alta | Cliente final |
+| RF05 | Curar produtos da loja matriz via extração por URL (*Web Scraping*) e exibi-los com link de afiliada | Média | Administradora / Cliente final |
+| RF06 | Disponibilizar bloco exclusivo de captação B2B com redirecionamento direto para o WhatsApp da liderança | Média | Potencial parceira |
+| RF07 | Restringir o acesso ao Backoffice administrativo por autenticação JWT | Alta | Administradora |
+| RF08 | Gerenciar produtos do estoque local (criar, editar, inativar logicamente e enviar imagem) | Alta | Administradora |
+| RF09 | Controlar publicação automática de pronta-entrega com base em `ativo` e `quantidade_estoque > 0` | Alta | Sistema / Administradora |
+| RF10 | Gerenciar categorias de produtos no Backoffice (criar, editar, excluir) | Média | Administradora |
+| RF11 | Disponibilizar visualização em tela (`/catalogo`) e download do catálogo oficial em PDF | Média | Cliente final |
+| RF12 | Permitir sacola flutuante multi-item para pronta-entrega e busca/filtro/ordenação no catálogo (`/produtos`) | Média | Cliente final |
 
-## Requisitos não funcionais (RNF)
+## Requisitos Não Funcionais (RNF)
 
 | ID | Descrição | Prioridade | Ator/Origem |
-|----|-----------|------------|-------------|
-| RNF01 | Desempenho: página inicial deve carregar em até 3s em dispositivos móveis com rede 4G, exibindo blocos principais sem bloqueio visual | Alta | Equipe |
-| RNF02 | Usabilidade: interface mobile-first, com CTAs claros, áreas de toque ≥ 44px e leitura simples em tela até 360px de largura | Alta | Equipe |
-| RNF03 | Segurança: rotas administrativas devem exigir autenticação e autorização, com proteção contra acesso indevido (ex: rate limit de login, sessão expirável) | Alta | Equipe |
-| RNF04 | Confiabilidade: links externos e catálogo devem ser verificados para evitar quebras; erros de navegação devem ser mínimos | Média | Equipe |
-| RNF05 | Manutenibilidade: frontend deve seguir componentes isolados e hooks, mantendo módulos pequenos e reutilizáveis | Média | Equipe |
-| RNF06 | Integridade de dados: banco deve manter consistência do estoque físico, sem duplicidade funcional e com regras claras de publicação | Alta | Equipe |
-| RNF07 | Portabilidade: vitrine deve funcionar em navegadores modernos de desktop e mobile, sem dependência de app nativo | Média | Equipe |
+|---|---|---|---|
+| RNF01 | **Usabilidade (Mobile-First)**: interface otimizada para celular, CTAs claros, baixa fricção na modal geográfica e suporte a tema claro/escuro | Alta | Equipe |
+| RNF02 | **Segurança**: rotas administrativas protegidas por autenticação JWT na API e middleware no frontend | Alta | Equipe |
+| RNF03 | **Desempenho**: página principal com renderização SSR/ISR (60s) e carregamento ágil (< 3s em 4G) | Alta | Equipe |
+| RNF04 | **Integridade de dados**: validação de invariantes no domínio (preço/estoque não negativos, URLs válidas) | Alta | Equipe |
+| RNF05 | **Manutenibilidade**: arquitetura limpa em camadas no backend e frontend com testes unitários | Média | Equipe |
+| RNF06 | **Confiabilidade e desacoplamento**: integrações externas (WhatsApp e *scraping* da matriz) isoladas da lógica central | Média | Equipe |
+| RNF07 | **Portabilidade**: funcionamento consistente em navegadores modernos desktop e mobile | Média | Equipe |
 
-## Critérios de aceitação
-- A página principal exibe todos os blocos principais da vitrine em layout mobile-first.
-- A validação geográfica impede o fechamento via WhatsApp antes da confirmação do cliente.
-- O gerenciamento de estoque físico é possível no backoffice sem alteração de código.
-- Links externos abrem corretamente para o destino correto.
-- O catálogo em PDF é acessível no fluxo público.
-- O CTA de B2B está separado da jornada de compra do cliente final.
-- O sistema mantém o foco na conversão e não em operação de e-commerce completo.
+## Critérios de Aceitação
+- A página principal exibe vitrine de pronta-entrega, destaques da matriz, acesso ao catálogo PDF e bloco B2B em layout mobile-first.
+- O fechamento de compra local (direto ou via sacola) exige região válida confirmada na `ModalTravaGeografica` ou em `localStorage`.
+- Clientes fora da região recebem orientação clara com link para a loja oficial da matriz.
+- O Backoffice permite gestão completa de estoque local, categorias e curadoria de produtos da matriz sem alteração de código.
+- A captação B2B permanece visualmente segregada da jornada de compra B2C.
