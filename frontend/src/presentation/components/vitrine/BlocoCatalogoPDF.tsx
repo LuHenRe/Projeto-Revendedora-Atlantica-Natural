@@ -62,11 +62,11 @@ export function BlocoCatalogoPDF() {
               className="w-full sm:w-auto"
             >
               <Button
-                variant="outline"
+                variant="ghost"
                 size="lg"
-                className="w-full border-white/20 text-white hover:bg-white/10 hover:text-white"
+                className="w-full bg-white/15 hover:bg-white/25 text-white hover:text-white border border-white/30 backdrop-blur-xs font-semibold shadow-sm transition-all"
               >
-                <Eye className="w-5 h-5" />
+                <Eye className="w-5 h-5 text-emerald-300" />
                 <span>Visualizar na Tela</span>
               </Button>
             </a>

@@ -69,7 +69,7 @@ export function BlocoB2B() {
                 size="lg"
                 className="w-full shadow-md hover:shadow-lg font-bold gap-3"
               >
-                <span>Quero Ser uma Revendedora</span>
+                <span>Quero Ser um(a) Revendedor(a)</span>
                 <ArrowRight className="w-4 h-4" />
               </Button>
             </a>

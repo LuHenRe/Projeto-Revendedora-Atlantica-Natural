@@ -1,165 +1,95 @@
 # Casos de Uso
 
 ## Atores
-- Cliente final
-- Revendedora / administradora (especialização de Cliente? Não — acesso restrito, herda de `Usuario` conceitual)
-- Potencial parceira B2B (especialização do Cliente final)
-- Sistema externo de matriz
-- Sistema de WhatsApp
+- **Cliente Final**: visitante que navega pela vitrine, consulta produtos de pronta-entrega, monta sacola, acessa catálogo PDF, interage com destaques da matriz ou solicita atendimento local.
+- **Potencial Parceira B2B** *(especialização de Cliente Final)*: visitante interessada em atuar como revendedora que acessa o bloco B2B e segue para atendimento com a liderança.
+- **Administradora**: revendedora autenticada que gerencia produtos locais, upload de imagens, categorias e curadoria de produtos da matriz no Backoffice.
+- **Sistemas Externos (atores secundários)**: **WhatsApp** (fechamento de pedidos locais, dúvidas e contato B2B) e **Loja Oficial da Matriz** (origem dos dados para *scraping* e destino de links de afiliada / clientes fora da região).
 
-**Herança de ator:** `Potencial Parceira --|> Cliente final` (acessa parte da jornada pública e adiciona a captação B2B). A `Revendedora/Administradora` herda a capacidade de navegar pela vitrine, mas participa de casos de uso exclusivos do backoffice, tratados como generalização de um ator administrativo.
+> **Observação de revisão (1ª → 2ª Fase):** Na modelagem inicial, `Administradora` herdava de `Cliente final` e `Confirmar região` incluía `Enviar mensagem via WhatsApp`. Na versão corrigida, `Administradora` é ator independente do Backoffice, a fronteira do sistema foi explicitada, e `UC01 - Comprar Produto Pronta-Entrega Local` passa a incluir a validação da região e o envio ao WhatsApp, com extensão opcional pela sacola de pedidos.
 
-## Diagrama de casos de uso
+## Diagrama de Casos de Uso
 
 ```plantuml
 @startuml
 left to right direction
 skinparam actorStyle stick
 
-actor "Cliente final" as Cliente
-actor "Potencial parceira" as Parceira
+actor "Cliente Final" as Cliente
+actor "Potencial Parceira B2B" as Parceira
 actor "Administradora" as Admin
+actor "WhatsApp" as WA
+actor "Loja Oficial da Matriz" as Matriz
 
-Admin --|> Cliente : herda de
-Parceira --|> Cliente : herda de
+Parceira --|> Cliente
 
-usecase "Visualizar vitrine pública" as UC01
-usecase "Confirmar região para compra local" as UC02
-usecase "Enviar mensagem via WhatsApp" as UC03
-usecase "Navegar por links externos de afiliada" as UC04
-usecase "Visualizar catálogo em PDF" as UC05
-usecase "Acessar página de captação B2B" as UC06
-usecase "Cadastrar ou atualizar produto físico" as UC07
-usecase "Autenticar no backoffice" as UC08
+rectangle "Vitrine Virtual - Atlântica Natural" {
+  usecase "UC01 - Comprar Produto\nPronta-Entrega Local" as UC01
+  usecase "UC02 - Validar Região\nde Atendimento" as UC02
+  usecase "UC03 - Enviar Pedido\nvia WhatsApp" as UC03
+  usecase "UC04 - Montar Sacola\nde Pedidos Local" as UC04
+  usecase "UC05 - Consultar Catálogo\ne Buscar Produtos" as UC05
+  usecase "UC06 - Navegar por Destaques\nda Matriz (Afiliada)" as UC06
+  usecase "UC07 - Visualizar / Baixar\nCatálogo em PDF" as UC07
+  usecase "UC08 - Acessar Captação\nde Revendedoras B2B" as UC08
+  usecase "UC09 - Autenticar no\nBackoffice" as UC09
+  usecase "UC10 - Gerenciar Produtos\ndo Estoque Local" as UC10
+  usecase "UC11 - Gerenciar Categorias" as UC11
+  usecase "UC12 - Curar Destaques\nda Matriz (Scraping)" as UC12
+}
 
 Cliente --> UC01
-Cliente --> UC02
-UC02 ..> UC03 : <<include>>
+Cliente --> UC05
+Cliente --> UC06
+Cliente --> UC07
+Parceira --> UC08
+
+UC01 ..> UC02 : <<include>>
+UC01 ..> UC03 : <<include>>
 UC04 ..> UC01 : <<extend>>
-UC05 ..> UC01 : <<extend>>
 
-Parceira --> UC06
+UC03 --> WA
+UC08 --> WA
+UC06 --> Matriz
 
-Admin --> UC07
-UC07 ..> UC08 : <<include>>
-Admin --> UC08
+Admin --> UC09
+Admin --> UC10
+Admin --> UC11
+Admin --> UC12
+
+UC10 ..> UC09 : <<include>>
+UC11 ..> UC09 : <<include>>
+UC12 ..> UC09 : <<include>>
+UC12 --> Matriz
 @enduml
 ```
 
-> Leitura: `UC02` **sempre** executa `UC03` (include — o link do WhatsApp só é gerado após a confirmação da região). `UC04` e `UC05` são opcionais e apenas estendem a vitrine pública em ponto de extensão (extend). `UC07` sempre inclui `UC08` (autenticação obrigatória antes de gerenciar estoque).
+---
 
-## Casos de uso principais
+## Descrição Detalhada do Caso de Uso Mais Complexo
 
-### UC01 - Visualizar vitrine pública
-**Ator:** Cliente final
+### UC01 - Comprar Produto Pronta-Entrega Local
 
-**Descrição:** o cliente acessa a página principal e visualiza os blocos de venda local, links externos, catálogo e captação B2B.
+| Campo | Detalhamento |
+|---|---|
+| **Ator(es)** | Cliente Final (Principal), WhatsApp e Loja Oficial da Matriz (Secundários) |
+| **Pré-condição** | O cliente acessou a vitrine pública e o(s) produto(s) desejado(s) estão com `ativo = true` e `quantidade_estoque > 0`. |
+| **Fluxo Principal** | 1. O Cliente visualiza os produtos disponíveis na vitrine (ou no catálogo `/produtos`) e opta por clicar diretamente em **"Pedir no WhatsApp"** em um card, ou adiciona itens à **Sacola Flutuante** (`UC04`) e clica em **"Fechar Pedido"**.<br>2. O Sistema verifica no `localStorage` se já existe uma região de atendimento confirmada.<br>3. Não havendo região confirmada, o Sistema exibe a **Modal de Trava Geográfica** (`"Qual é a sua cidade?"`), apresentando um campo de texto para informar a localidade.<br>4. O Cliente digita sua cidade e confirma.<br>5. O Sistema valida a entrada por meio do *Value Object* `RegiaoAtendimento`, confirma que pertence à área atendida, salva a cidade no `localStorage` e fecha a modal.<br>6. O Sistema gera a mensagem pré-formatada (`GerarMensagemWhatsAppUseCase`) com produto(s), quantidades, total e cidade de entrega.<br>7. O Sistema redireciona o Cliente para o aplicativo/web do **WhatsApp** (`wa.me`) com a mensagem pronta para envio à revendedora. |
+| **Fluxo Alternativo** | **[2a] Região já confirmada anteriormente**<br>1. No passo 2, o Sistema encontra a cidade salva no `localStorage`.<br>2. O Sistema pula os passos 3 a 5 (abertura da modal) e segue diretamente para o passo 6 (geração da mensagem e abertura do WhatsApp).<br><br>**[5a] Cidade fora da área de cobertura**<br>1. No passo 5, a cidade informada não pertence à região atendida pela revendedora.<br>2. O Sistema mantém a modal aberta e o redirecionamento ao WhatsApp bloqueado.<br>3. O Sistema exibe mensagem orientativa e disponibiliza o link **"Comprar com frete no Site Oficial da Marca"**, permitindo ao cliente seguir para a loja oficial da matriz. |
+| **Subfluxo (Exceção)** | **[4a] Campo de cidade vazio**<br>1. No passo 4, o Cliente aciona a confirmação sem preencher o nome da cidade.<br>2. O Sistema exibe o alerta `"Por favor, informe sua cidade."` na própria modal e impede a validação até o preenchimento válido. |
+| **Pós-condição** | Em caso de sucesso, a cidade fica registrada no navegador para compras futuras e o atendimento é iniciado no WhatsApp com o pedido estruturado; em caso de cidade fora de cobertura, o cliente é orientado ao canal oficial com frete nacional. |
 
-**Fluxo principal:**
-1. o cliente abre a landing page;
-2. o sistema exibe os blocos e os produtos disponíveis;
-3. o cliente navega pela interface.
+---
 
-**Pós-condição:** a experiência está disponível ao cliente com os blocos relevantes exibidos.
-
-### UC02 - Confirmar região para compra local
-**Ator:** Cliente final
-
-**Descrição:** o cliente informa ou confirma a região de atendimento da revendedora para liberar o WhatsApp.
-
-**Fluxo principal:**
-1. o cliente acessa o bloco de estoque local;
-2. o sistema apresenta o campo de confirmação ou validação de cidade;
-3. o cliente confirma que está na área permitida;
-4. o botão de WhatsApp é liberado.
-
-**Fluxo alternativo:**
-- se a região for inválida, o botão permanece bloqueado e o usuário recebe feedback visual.
-
-### UC03 - Enviar mensagem via WhatsApp
-**Ator:** Cliente final
-
-**Descrição:** após a validação geográfica, o cliente é direcionado ao WhatsApp com mensagem pré-formatada.
-
-**Fluxo principal:**
-1. o cliente clica no botão de WhatsApp;
-2. o sistema monta a URL com mensagem e produto;
-3. o navegador abre o WhatsApp;
-4. o cliente entra em contato com a revendedora.
-
-### UC04 - Navegar por links externos de afiliada
-**Ator:** Cliente final
-
-**Descrição:** o cliente é direcionado para a loja oficial ou categorias específicas da matriz.
-
-**Fluxo principal:**
-1. o cliente clica em um card de deep link;
-2. o sistema abre a URL externa;
-3. o cliente é levado ao fluxo de compra oficial.
-
-**Pós-condição:** a navegação do cliente é encurtada e sem fricção.
-
-### UC05 - Visualizar catálogo em PDF
-**Ator:** Cliente final
-
-**Descrição:** o cliente acessa a apresentação do catálogo em PDF dentro da vitrine.
-
-**Fluxo principal:**
-1. o cliente acessa o bloco do catálogo;
-2. o sistema abre o visualizador ou PDF;
-3. o cliente navega pelo material.
-
-### UC06 - Acessar página de captação B2B
-**Ator:** Potencial parceira (herda de Cliente final)
-
-**Descrição:** a pessoa acessa a página especializada para conhecer o programa de revenda.
-
-**Fluxo principal:**
-1. o cliente clica no CTA de parceria;
-2. o sistema direciona para o fluxo separado;
-3. o visitante entra em contato para conhecer o programa.
-
-### UC07 - Cadastrar ou atualizar produto físico
-**Ator:** Revendedora / administradora
-
-**Relações:** `<<include>> UC08 - Autenticar no backoffice` (autenticação é obrigatória antes de gerenciar estoque).
-
-**Descrição:** a administradora gerencia o estoque físico exibido na vitrine.
-
-**Fluxo principal:**
-1. a administradora acessa o backoffice;
-2. realiza login;
-3. cadastra ou edita produto;
-4. define categoria, preço, imagem e disponibilidade;
-5. salva as alterações.
-
-**Pós-condição:** o item fica disponível ou oculto conforme a regra de publicação.
-
-### UC08 - Autenticar no backoffice
-**Ator:** Revendedora / administradora
-
-**Descrição:** a administradora entra no painel administrativo com acesso seguro.
-
-**Fluxo principal:**
-1. a usuária informa credenciais;
-2. o sistema valida a autenticação;
-3. o painel é liberado.
-
-**Fluxo alternativo:**
-- se as credenciais forem inválidas, o sistema exibe mensagem de erro.
-
-## Fluxos principais
-- visita pública;
-- validação geográfica;
-- WhatsApp local;
-- click em link externo;
-- acesso ao PDF;
-- CTA B2B;
-- gestão de estoque físico no admin.
-
-## Fluxos alternativos
-- cliente fora da região de atendimento;
-- produto indisponível;
-- link externo quebrado ou desatualizado;
-- login administrativo inválido;
-- material de catálogo indisponível.
+## Resumo dos Demais Casos de Uso
+- **UC02 - Validar Região de Atendimento**: valida a cidade informada contra `RegiaoAtendimento` e persiste no `localStorage`. Também pode ser acionado pelo indicador de cidade no `Header`.
+- **UC03 - Enviar Pedido via WhatsApp**: monta a URL `https://wa.me/{numero}?text=...` com os dados do item ou da sacola.
+- **UC04 - Montar Sacola de Pedidos Local**: permite adicionar múltiplos produtos, incrementar/decrementar quantidades, limpar itens e visualizar o total estimado na barra flutuante.
+- **UC05 - Consultar Catálogo e Buscar Produtos**: permite filtrar por categoria na vitrine ou pesquisar por termo e ordenar por preço em `/produtos`.
+- **UC06 - Navegar por Destaques da Matriz (Afiliada)**: exibe os cards de `ProdutoMatriz` com redirecionamento para a `url_afiliada` na loja oficial.
+- **UC07 - Visualizar / Baixar Catálogo em PDF**: acessa a tela `/catalogo` ou baixa o arquivo PDF vigente.
+- **UC08 - Acessar Captação de Revendedoras B2B**: apresenta a proposta de parceria em `BlocoB2B` e direciona a interessada para o WhatsApp da liderança.
+- **UC09 - Autenticar no Backoffice**: valida credenciais administrativas em `POST /admin/login` e retorna JWT.
+- **UC10 - Gerenciar Produtos do Estoque Local**: CRUD completo de `Produto` (com inativação lógica e upload de imagem).
+- **UC11 - Gerenciar Categorias**: criação, edição, listagem e remoção de `Categoria`.
+- **UC12 - Curar Destaques da Matriz (Scraping)**: recebe URL da matriz, executa *Web Scraping* (`AtlanticaScraper`), gera `url_afiliada` e persiste em `produtos_matriz`.

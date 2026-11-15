@@ -1,19 +1,22 @@
 # Diagrama de Estados
 
-O diagrama de estados detalha o ciclo de vida de entidades que possuem status complexos e regras de transição.
+O diagrama de estados detalha o ciclo de vida da entidade `Produto` no estoque físico local, controlada por `ativo` e `quantidade_estoque`.
 
 ## Entidade: Produto (Estoque Físico)
-O `Produto` possui um ciclo de vida simples focado na sua disponibilidade para a vitrine.
 
 ```mermaid
 stateDiagram-v2
-    [*] --> Rascunho : cadastrar()
-    Rascunho --> Ativo : publicar()
-    Ativo --> Inativo : ocultar/desativar()
-    Inativo --> Ativo : reativar()
-    Inativo --> [*] : remover_logicamente()
-    Ativo --> Esgotado : zerar_estoque()
-    Esgotado --> Ativo : repor_estoque()
+    [*] --> AtivoDisponivel : criar_produto(ativo=true, estoque>0)
+    [*] --> AtivoEsgotado : criar_produto(ativo=true, estoque=0)
+    [*] --> Inativo : criar_produto(ativo=false)
+
+    AtivoDisponivel --> AtivoEsgotado : atualizar_estoque(0)
+    AtivoEsgotado --> AtivoDisponivel : repor_estoque(>0)
+
+    AtivoDisponivel --> Inativo : inativar() / excluir_logicamente()
+    AtivoEsgotado --> Inativo : inativar() / excluir_logicamente()
+    Inativo --> AtivoDisponivel : ativar() [estoque > 0]
+    Inativo --> AtivoEsgotado : ativar() [estoque == 0]
 ```
 
-
+> Apenas produtos no estado **AtivoDisponivel** (`ativo = true` e `quantidade_estoque > 0`) são retornados por `GET /produtos/ofertas-locais` na vitrine de pronta-entrega.

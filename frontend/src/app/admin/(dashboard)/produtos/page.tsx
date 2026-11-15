@@ -32,7 +32,7 @@ export default async function AdminProdutosPage() {
     estoque: p.quantidadeEstoque,
     categoria: p.categoria
       ? { id: p.categoria.id, nome: p.categoria.nome }
-      : undefined,
+      : categorias.find((c) => c.id === p.categoriaId),
     imagemUrl: p.imagemUrl,
     ativo: p.ativo,
   }));

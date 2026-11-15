@@ -10,6 +10,7 @@ class ProdutoModel(Base):
     id = Column(UUID(as_uuid=True), primary_key=True, default=uuid.uuid4, index=True)
     categoria_id = Column(UUID(as_uuid=True), ForeignKey("categorias.id"), nullable=False)
     nome = Column(String, index=True, nullable=False)
+    descricao = Column(String, nullable=True)
     preco = Column(Float, nullable=False)
     quantidade_estoque = Column(Integer, default=0, nullable=False)
     imagem_url = Column(String, nullable=True)

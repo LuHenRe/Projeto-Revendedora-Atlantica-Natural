@@ -1,6 +1,7 @@
 import React from 'react';
 import { Header } from '@/presentation/components/vitrine/Header';
 import { HeroBanner } from '@/presentation/components/vitrine/HeroBanner';
+import { CardConsultora } from '@/presentation/components/vitrine/CardConsultora';
 import { BlocoEstoqueLocal } from '@/presentation/components/vitrine/BlocoEstoqueLocal';
 import { BlocoDeepLinks } from '@/presentation/components/vitrine/BlocoDeepLinks';
 import { BlocoCatalogoPDF } from '@/presentation/components/vitrine/BlocoCatalogoPDF';
@@ -36,9 +37,16 @@ async function getDadosVitrine() {
 export default async function HomePage() {
   const { ofertasLocais, categorias, destaquesMatriz } = await getDadosVitrine();
 
-  const ofertasLocaisDTO = ofertasLocais.map((p) =>
-    typeof p.toDTO === 'function' ? p.toDTO() : p
-  );
+  const ofertasLocaisDTO = ofertasLocais.map((p) => {
+    const dto = typeof p.toDTO === 'function' ? p.toDTO() : p;
+    if (!dto.categoria && dto.categoriaId) {
+      const cat = categorias.find((c: any) => c.id === dto.categoriaId);
+      if (cat) {
+        dto.categoria = typeof cat.toDTO === 'function' ? cat.toDTO() : cat;
+      }
+    }
+    return dto;
+  });
   const categoriasDTO = categorias.map((c) =>
     typeof c.toDTO === 'function' ? c.toDTO() : c
   );
@@ -51,6 +59,7 @@ export default async function HomePage() {
       <Header />
       <main className="flex-1">
         <HeroBanner />
+        <CardConsultora />
         <BlocoEstoqueLocal produtosIniciais={ofertasLocaisDTO} categorias={categoriasDTO} />
         <BlocoDeepLinks destaquesMatriz={destaquesMatrizDTO} />
         <BlocoCatalogoPDF />

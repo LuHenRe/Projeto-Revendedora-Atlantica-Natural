@@ -1,27 +1,22 @@
 # Diagrama Entidade-Relacionamento (MER)
 
-## Entidades persistentes
+## Entidades Persistentes (PostgreSQL + Alembic)
 - `categorias`
 - `produtos`
-- `ofertas_locais`
-- `administradores`
-- `leads_b2b`
+- `produtos_matriz`
 
 ## Relacionamentos
-- uma categoria pode ter muitos produtos;
-- um produto pode ter várias ofertas locais;
-- um administrador pode gerenciar vários produtos;
+- Uma `categoria` pode conter muitos `produtos` (`categorias.id` ← `produtos.categoria_id`, `nullable=False`).
+- `produtos_matriz` é independente do estoque físico local, armazenando o cache curado via *Web Scraping* a partir de `url_origem` única.
 
-## Observações
-- o banco guarda somente o estoque físico e os dados operacionais do negócio;
-- links de afiliada não fazem parte do MER principal;
-- a região geográfica da venda fica como regra de interface e configuração operacional, e não como entidade central de produto.
+## Observações de Arquitetura
+- **Disponibilidade local**: fica diretamente na tabela `produtos` (`ativo` e `quantidade_estoque`), eliminando a necessidade de uma tabela separada `ofertas_locais`.
+- **Autenticação administrativa**: usuário único configurado por variáveis de ambiente (`ADMIN_USERNAME` e `ADMIN_PASSWORD`), sem tabela `administradores` no banco.
+- **Captação B2B e Trava Geográfica**: operam sem persistência em banco relacional (B2B redireciona ao WhatsApp e a cidade confirmada fica em `localStorage`).
 
 ```mermaid
 erDiagram
     CATEGORIAS ||--o{ PRODUTOS : contem
-    PRODUTOS ||--o{ OFERTAS_LOCAIS : possui
-    ADMINISTRADORES ||--o{ PRODUTOS : gerencia
 
     CATEGORIAS {
         uuid id PK
@@ -32,24 +27,21 @@ erDiagram
         uuid id PK
         uuid categoria_id FK
         varchar nome
-        decimal preco
+        varchar descricao
+        float preco
         integer quantidade_estoque
         varchar imagem_url
         boolean ativo
     }
 
-    OFERTAS_LOCAIS {
+    PRODUTOS_MATRIZ {
         uuid id PK
-        uuid produto_id FK
-        varchar regiao_atendimento
-        boolean disponivel
-        integer estoque_disponivel
-    }
-
-    ADMINISTRADORES {
-        uuid id PK
+        varchar url_origem UK
+        varchar url_afiliada
         varchar nome
-        varchar email
-        varchar senha_hash
+        float preco
+        varchar imagem_url
+        text descricao
+        boolean ativo
     }
 ```

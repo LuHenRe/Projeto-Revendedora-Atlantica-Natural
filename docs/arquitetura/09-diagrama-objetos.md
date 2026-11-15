@@ -1,35 +1,47 @@
 # Diagrama de Objetos
 
-Este diagrama exemplifica um cenário real de execução, ilustrando as entidades e seus valores em um momento específico para validar as cardinalidades definidas no diagrama de classes.
+Este diagrama exemplifica um cenário real de execução do sistema atual, ilustrando instâncias em memória e persistidas para validar as cardinalidades do Diagrama de Classes (`04-diagrama-classes.md`).
 
-## Cenário: Produto com Oferta Local
-Neste cenário, temos um produto associado a uma categoria e uma oferta local que define sua disponibilidade para a região de "São Paulo - SP".
+## Cenário: Compra Local com Sacola e Categoria + Destaque da Matriz
+Neste cenário, uma categoria agrupa um produto físico em estoque local, referenciado por um item na sacola do cliente para entrega em "Valparaíso de Goiás", coexistindo com um destaque da loja matriz.
 
 ```mermaid
 classDiagram
-    class produtoPerfume {
-        <<instance>>
-        id = "f47ac10b-58cc-4372-a567-0e02b2c3d479"
-        nome = "Perfume Atlântica"
-        preco = 159.90
-        quantidadeEstoque = 10
-        imagemUrl = "http://exemplo.com/img.jpg"
-        ativo = true
-    }
-    class categoriaBeleza {
+    class catOleos {
         <<instance>>
         id = "a12bc34d-56ef-78gh-90ij-12kl34mn56op"
-        nome = "Beleza e Perfumaria"
-    }
-    class ofertaSP {
-        <<instance>>
-        id = "b98cd76e-54fa-32bc-10de-98fe76dc54ba"
-        produtoId = "f47ac10b-58cc-4372-a567-0e02b2c3d479"
-        regiaoAtendimento = "São Paulo - SP"
-        disponivel = true
-        estoqueDisponivel = 10
+        nome = "Óleos Essenciais"
     }
 
-    categoriaBeleza --> produtoPerfume
-    produtoPerfume "1" --> "1" ofertaSP
+    class prodLavanda {
+        <<instance>>
+        id = "f47ac10b-58cc-4372-a567-0e02b2c3d479"
+        nome = "Óleo Essencial de Lavanda 10ml"
+        preco = "R$ 49,90"
+        quantidadeEstoque = 8
+        ativo = true
+    }
+
+    class itemSacola1 {
+        <<instance>>
+        quantidade = 2
+        subtotal = "R$ 99,80"
+    }
+
+    class regiaoValparaiso {
+        <<instance>>
+        descricao = "Valparaíso de Goiás e DF/Entorno"
+    }
+
+    class destaqueMatriz1 {
+        <<instance>>
+        id = "c33de12a-91bc-4012-88aa-77bc99001122"
+        nome = "Kit Spa Terapêutico"
+        preco = "R$ 189,00"
+        urlAfiliada = "https://atlanticanaturalbr.com.br/kit-spa?aff=padrao"
+        ativo = true
+    }
+
+    catOleos --> prodLavanda
+    itemSacola1 --> prodLavanda
 ```

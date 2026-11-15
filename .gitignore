@@ -22,3 +22,7 @@ alembic.ini.bak
 .coverage
 .pytest_cache/
 htmlcov/
+
+# Uploads locais de produtos
+backend/uploads/produtos/*
+!backend/uploads/produtos/.gitkeep

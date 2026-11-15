@@ -13,6 +13,7 @@ def categoria_teste_id(client: TestClient, admin_token_headers):
 def test_criar_produto(client: TestClient, admin_token_headers, categoria_teste_id):
     produto_data = {
         "nome": "Óleo Teste",
+        "descricao": "Óleo 100% puro para massagem e relaxamento",
         "preco": 55.50,
         "quantidade_estoque": 10,
         "ativo": True,
@@ -23,15 +24,27 @@ def test_criar_produto(client: TestClient, admin_token_headers, categoria_teste_
     data = response.json()
     assert data["nome"] == "Óleo Teste"
     assert data["preco"] == 55.50
+    assert data["descricao"] == "Óleo 100% puro para massagem e relaxamento"
+    assert data["categoria"] is not None
+    assert data["categoria"]["id"] == categoria_teste_id
+    assert data["categoria"]["nome"] == "Categoria Produto Teste"
 
 def test_listar_produtos_ativos(client: TestClient, admin_token_headers, categoria_teste_id):
     # Criar um ativo e um inativo
     client.post("/admin/produtos/", json={
-        "nome": "Ativo", "preco": 10.0, "ativo": True, "categoria_id": categoria_teste_id
+        "nome": "Ativo",
+        "descricao": "Produto ativo com categoria",
+        "preco": 10.0,
+        "ativo": True,
+        "categoria_id": categoria_teste_id
     }, headers=admin_token_headers)
     
     client.post("/admin/produtos/", json={
-        "nome": "Inativo", "preco": 10.0, "ativo": False, "categoria_id": categoria_teste_id
+        "nome": "Inativo",
+        "descricao": "Produto inativo",
+        "preco": 10.0,
+        "ativo": False,
+        "categoria_id": categoria_teste_id
     }, headers=admin_token_headers)
 
     response = client.get("/produtos/")
@@ -42,6 +55,12 @@ def test_listar_produtos_ativos(client: TestClient, admin_token_headers, categor
     nomes = [p["nome"] for p in data]
     assert "Ativo" in nomes
     assert "Inativo" not in nomes
+
+    # Valida que categoria e descrição estão presentes no listar_ativos
+    prod_ativo = next(p for p in data if p["nome"] == "Ativo")
+    assert prod_ativo["descricao"] == "Produto ativo com categoria"
+    assert prod_ativo["categoria"] is not None
+    assert prod_ativo["categoria"]["nome"] == "Categoria Produto Teste"
 
 def test_exclusao_logica_produto(client: TestClient, admin_token_headers, categoria_teste_id):
     # Criar produto
@@ -85,12 +104,14 @@ def test_atualizar_produto_sucesso(client: TestClient, admin_token_headers, cate
     # Atualizar dados
     res_update = client.put(f"/admin/produtos/{prod_id}", json={
         "nome": "Produto Atualizado",
+        "descricao": "Nova descrição atualizada",
         "preco": 35.90,
         "quantidade_estoque": 25
     }, headers=admin_token_headers)
     assert res_update.status_code == 200
     data = res_update.json()
     assert data["nome"] == "Produto Atualizado"
+    assert data["descricao"] == "Nova descrição atualizada"
     assert data["preco"] == 35.90
     assert data["quantidade_estoque"] == 25
 
@@ -115,4 +136,38 @@ def test_deletar_produto_inexistente(client: TestClient, admin_token_headers):
     import uuid
     res = client.delete(f"/admin/produtos/{uuid.uuid4()}", headers=admin_token_headers)
     assert res.status_code == 404
+
+def test_upload_imagem_produto_sucesso(client: TestClient, admin_token_headers):
+    import io
+    fake_image = io.BytesIO(b"\xff\xd8\xff\xe0\x00\x10JFIF\x00\x01\x01\x01\x00`\x00`\x00\x00\xff\xdb")
+    files = {"file": ("produto_foto.jpg", fake_image, "image/jpeg")}
+
+    res = client.post("/admin/produtos/upload-imagem", files=files, headers=admin_token_headers)
+    assert res.status_code == 200
+    data = res.json()
+    assert "url" in data
+    assert data["url"].startswith("/uploads/produtos/")
+    assert data["filename"].endswith(".jpg")
+    assert data["content_type"] == "image/jpeg"
+
+    # Verifica se a imagem é servida estaticamente
+    res_static = client.get(data["url"])
+    assert res_static.status_code == 200
+
+def test_upload_imagem_produto_formato_invalido(client: TestClient, admin_token_headers):
+    import io
+    fake_txt = io.BytesIO(b"conteudo de texto nao permitido")
+    files = {"file": ("script.sh", fake_txt, "text/plain")}
+
+    res = client.post("/admin/produtos/upload-imagem", files=files, headers=admin_token_headers)
+    assert res.status_code == 400
+    assert "Formato de arquivo inválido" in res.json()["detail"]
+
+def test_upload_imagem_sem_autenticacao(client: TestClient):
+    import io
+    fake_image = io.BytesIO(b"teste")
+    files = {"file": ("foto.jpg", fake_image, "image/jpeg")}
+
+    res = client.post("/admin/produtos/upload-imagem", files=files)
+    assert res.status_code == 401
 

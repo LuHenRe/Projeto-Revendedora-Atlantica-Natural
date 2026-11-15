@@ -1,5 +1,7 @@
 from dataclasses import dataclass
+from typing import Optional
 from uuid import UUID
+from src.domain.entities.categoria import Categoria
 
 @dataclass
 class Produto:
@@ -8,8 +10,10 @@ class Produto:
     preco: float
     categoria_id: UUID
     quantidade_estoque: int = 0
+    descricao: str | None = None
     imagem_url: str | None = None
     ativo: bool = True
+    categoria: Optional[Categoria] = None
 
     def __post_init__(self):
         if self.preco < 0:

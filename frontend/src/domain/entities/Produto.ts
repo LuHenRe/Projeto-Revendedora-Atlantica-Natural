@@ -7,6 +7,7 @@ export interface ProdutoProps {
   preco: Preco;
   quantidadeEstoque: number;
   categoriaId: string;
+  descricao?: string | null;
   imagemUrl?: string | null;
   ativo?: boolean;
   categoria?: Categoria | null;
@@ -21,6 +22,7 @@ export interface ProdutoDTO {
   };
   quantidadeEstoque: number;
   categoriaId: string;
+  descricao?: string | null;
   imagemUrl: string | null;
   ativo: boolean;
   categoria?: CategoriaDTO | null;
@@ -32,6 +34,7 @@ export class Produto {
   private _preco: Preco;
   private _quantidadeEstoque: number;
   readonly categoriaId: string;
+  readonly descricao: string | null;
   readonly imagemUrl: string | null;
   private _ativo: boolean;
   readonly categoria: Categoria | null;
@@ -55,6 +58,7 @@ export class Produto {
     this._preco = props.preco;
     this._quantidadeEstoque = props.quantidadeEstoque;
     this.categoriaId = props.categoriaId.trim();
+    this.descricao = props.descricao?.trim() || null;
     this.imagemUrl = props.imagemUrl ?? null;
     this._ativo = props.ativo ?? true;
     this.categoria = props.categoria ?? null;
@@ -86,6 +90,7 @@ export class Produto {
       },
       quantidadeEstoque: this._quantidadeEstoque,
       categoriaId: this.categoriaId,
+      descricao: this.descricao,
       imagemUrl: this.imagemUrl,
       ativo: this._ativo,
       categoria: this.categoria ? this.categoria.toDTO() : null,
@@ -102,6 +107,7 @@ export class Produto {
       preco: dto.preco instanceof Preco ? dto.preco : new Preco(dto.preco.valor),
       quantidadeEstoque: dto.quantidadeEstoque,
       categoriaId: dto.categoriaId,
+      descricao: dto.descricao,
       imagemUrl: dto.imagemUrl,
       ativo: dto.ativo,
       categoria: dto.categoria ? Categoria.fromDTO(dto.categoria) : null,
