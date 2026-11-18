@@ -10,4 +10,5 @@ class ProdutoMatriz(BaseModel):
     preco: float
     imagem_url: Optional[str] = None
     descricao: Optional[str] = None
+    categoria_origem: Optional[str] = None
     ativo: bool = True

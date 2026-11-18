@@ -1,26 +1,25 @@
 <div align="center">
 
-# CEFET-MG — Campus Varginha
+# UFCI-MG — Campus Varginha
 ### Laboratório de Engenharia de Software
 
-<br><br>
+<br><br><br><br>
 
 # Modelagem Detalhada
 ## Vitrine Virtual — Atlântica Natural (Hub Híbrido)
 
 **Revisão da 1ª Fase, Requisitos, Casos de Uso, Diagrama de Classes, Diagrama de Atividades e Diagrama de Sequência**
 
-<br><br>
+<br><br><br>
 
 **Autores:**  
 Antônio Prado Horta  
 Luiz Henrique Reis  
 Pedro Henrique de Freitas Frogeri  
 
-<br>
+<br><br><br><br><br>
 
 **Fase:** 2ª Fase • Entrega e Modelagem Detalhada  
-**Baseado em:** `docs/segunda-apresentacao-lab-eng-sw.html`
 
 </div>
 
@@ -123,60 +122,6 @@ Os três requisitos não funcionais mais críticos definidos para a vitrine virt
 
 ![Diagrama de Casos de Uso Corrigido](./imagens-diagramas/casos-de-uso.png)
 
-```plantuml
-@startuml
-left to right direction
-skinparam actorStyle stick
-
-actor "Cliente Final" as Cliente
-actor "Potencial Parceira B2B" as Parceira
-actor "Administradora" as Admin
-actor "WhatsApp" as WA
-actor "Loja Oficial da Matriz" as Matriz
-
-Parceira --|> Cliente
-
-rectangle "Vitrine Virtual - Atlântica Natural" {
-  usecase "UC01 - Comprar Produto\nPronta-Entrega Local" as UC01
-  usecase "UC02 - Validar Região\nde Atendimento" as UC02
-  usecase "UC03 - Enviar Pedido\nvia WhatsApp" as UC03
-  usecase "UC04 - Montar Sacola\nde Pedidos Local" as UC04
-  usecase "UC05 - Consultar Catálogo\ne Buscar Produtos" as UC05
-  usecase "UC06 - Navegar por Destaques\nda Matriz (Afiliada)" as UC06
-  usecase "UC07 - Visualizar / Baixar\nCatálogo em PDF" as UC07
-  usecase "UC08 - Acessar Captação\nde Revendedoras B2B" as UC08
-  usecase "UC09 - Autenticar no\nBackoffice" as UC09
-  usecase "UC10 - Gerenciar Produtos\ndo Estoque Local" as UC10
-  usecase "UC11 - Gerenciar Categorias" as UC11
-  usecase "UC12 - Curar Destaques\nda Matriz (Scraping)" as UC12
-}
-
-Cliente --> UC01
-Cliente --> UC05
-Cliente --> UC06
-Cliente --> UC07
-Parceira --> UC08
-
-UC01 ..> UC02 : <<include>>
-UC01 ..> UC03 : <<include>>
-UC04 ..> UC01 : <<extend>>
-
-UC03 --> WA
-UC08 --> WA
-UC06 --> Matriz
-
-Admin --> UC09
-Admin --> UC10
-Admin --> UC11
-Admin --> UC12
-
-UC10 ..> UC09 : <<include>>
-UC11 ..> UC09 : <<include>>
-UC12 ..> UC09 : <<include>>
-UC12 --> Matriz
-@enduml
-```
-
 ---
 
 ## 5. Descrição de Caso de Uso
@@ -244,91 +189,6 @@ Modelagem estrutural em nível de análise alinhada ao domínio implementado no 
 
 ![Diagrama de Classes — Nível de Análise](./imagens-diagramas/diagrama-classes.png)
 
-```mermaid
-classDiagram
-    class Categoria {
-        -id: UUID
-        -nome: string
-    }
-
-    class Produto {
-        -id: UUID
-        -nome: string
-        -descricao: string
-        -preco: Preco
-        -quantidadeEstoque: int
-        -imagemUrl: string
-        -ativo: bool
-        +ativar() void
-        +inativar() void
-        +emEstoque() bool
-        +temOfertaLocal() bool
-        +atualizarEstoque(qtd: int) void
-    }
-
-    class ProdutoMatriz {
-        -id: UUID
-        -urlOrigem: UrlExterna
-        -urlAfiliada: UrlExterna
-        -nome: string
-        -preco: Preco
-        -imagemUrl: string
-        -descricao: string
-        -ativo: bool
-        +ativar() void
-        +inativar() void
-    }
-
-    class ItemSacola {
-        -produto: Produto
-        -quantidade: int
-        +subtotal() Preco
-        +incrementar(qtd: int) void
-        +decrementar(qtd: int) void
-    }
-
-    class Administrador {
-        -username: string
-        +autenticar(credenciais) Token
-        +gerenciarEstoque() void
-        +gerenciarCategorias() void
-        +curarProdutoMatriz(url) void
-    }
-
-    class Preco {
-        <<value object>>
-        +valor: float
-        +formatado: string
-    }
-
-    class RegiaoAtendimento {
-        <<value object>>
-        +descricao: string
-        +isAtendida(cidade: string) bool
-    }
-
-    class ContatoWhatsApp {
-        <<value object>>
-        +numeroSanitizado: string
-        +gerarLink(mensagem: string) string
-    }
-
-    class UrlExterna {
-        <<value object>>
-        +valor: string
-        +comParametro(chave, valor) UrlExterna
-    }
-
-    Categoria "1" o-- "0..*" Produto : agrupa
-    ItemSacola "0..*" --> "1" Produto : referencia
-    Produto *-- Preco
-    ProdutoMatriz *-- Preco
-    ProdutoMatriz *-- UrlExterna
-    Administrador ..> Produto : gerencia
-    Administrador ..> Categoria : gerencia
-    Administrador ..> ProdutoMatriz : importa e remove
-```
-
 ---
 
 ## 7. Diagrama de Atividades
@@ -342,36 +202,6 @@ classDiagram
 
 ![Diagrama de Atividades — Compra Local com Trava e Sacola](./imagens-diagramas/atividade-compra-local.png)
 
-```mermaid
-flowchart TD
-    Start((Início)) --> A1[Cliente acessa a Vitrine Virtual]
-    A1 --> D1{Compra direta ou Sacola?}
-
-    D1 -- Produto único --> A2[Clica em Pedir no WhatsApp no card]
-    D1 -- Múltiplos itens --> A3[Adiciona produtos na Sacola Flutuante]
-    A3 --> A4[Ajusta quantidades e clica em Fechar Pedido]
-
-    A2 --> D2{Cidade já confirmada no localStorage?}
-    A4 --> D2
-
-    D2 -- Sim --> A9[Gera mensagem pré-formatada via ContatoWhatsApp]
-    D2 -- Não --> A5[Abre Modal de Trava Geográfica]
-
-    A5 --> A6[Cliente digita a cidade e confirma]
-    A6 --> D3{Campo preenchido?}
-    D3 -- Não --> A7[Exibe alerta: Informe sua cidade]
-    A7 --> A6
-
-    D3 -- Sim --> D4{Cidade atendida por RegiaoAtendimento?}
-    D4 -- Não --> A8[Bloqueia envio local e exibe link para Site da Matriz]
-    A8 --> EndAlt((Fim - Canal Matriz))
-
-    D4 -- Sim --> A8b[Salva cidade no localStorage e fecha modal]
-    A8b --> A9
-    A9 --> A10[Redireciona para WhatsApp wa.me com pedido]
-    A10 --> EndOk((Fim - Pedido Iniciado))
-```
-
 ---
 
 ## 8. Diagrama de Sequências
@@ -384,49 +214,3 @@ flowchart TD
 ### 8.2 Visão Gráfica e Fluxo
 
 ![Diagrama de Sequência — Compra Local com Trava e Sacola](./imagens-diagramas/sequencia-compra-local.png)
-
-```mermaid
-sequenceDiagram
-    actor Cliente
-    participant Vitrine as Frontend (Next.js)
-    participant API as Backend (FastAPI)
-    participant DB as Banco (PostgreSQL)
-    participant Modal as ModalTravaGeografica
-    participant Storage as LocalStorage
-    participant WhatsApp as WhatsApp / Matriz
-
-    Cliente->>Vitrine: Acessa a vitrine (/)
-    Vitrine->>API: GET /produtos/ofertas-locais, /categorias/, /produtos-matriz/
-    API->>DB: Consulta produtos ativos em estoque, categorias e destaques
-    DB-->>API: Registros persistidos
-    API-->>Vitrine: Catálogo inicial (SSR/ISR)
-    Vitrine-->>Cliente: Exibe vitrine de pronta-entrega
-
-    opt Cliente utiliza a Sacola de Pedidos
-        Cliente->>Vitrine: Adiciona produto(s) e ajusta quantidades
-        Vitrine->>Vitrine: Instancia ItemSacola e calcula valorTotal
-    end
-
-    Cliente->>Vitrine: Clica em "Pedir no WhatsApp" ou "Fechar Pedido"
-    Vitrine->>Storage: Consulta região confirmada
-    Storage-->>Vitrine: Cidade salva ou null
-
-    alt Cidade ainda não confirmada
-        Vitrine->>Modal: Abre modal ("Qual é a sua cidade?")
-        Cliente->>Modal: Digita a cidade e confirma
-        Modal->>Vitrine: Valida via RegiaoAtendimento.isAtendida(cidade)
-        alt Região permitida (DF / Entorno)
-            Vitrine->>Storage: Salva cidade confirmada
-            Vitrine->>Modal: Fecha modal
-            Vitrine->>Vitrine: GerarMensagemWhatsAppUseCase (item ou sacola)
-            Vitrine->>WhatsApp: Redireciona para wa.me com mensagem pré-formatada
-            WhatsApp-->>Cliente: Chat aberto com a revendedora
-        else Região fora da cobertura
-            Modal-->>Cliente: Exibe bloqueio e link "Comprar no Site Oficial da Matriz"
-        end
-    else Cidade já confirmada
-        Vitrine->>Vitrine: GerarMensagemWhatsAppUseCase (item ou sacola)
-        Vitrine->>WhatsApp: Redireciona para wa.me com mensagem pré-formatada
-        WhatsApp-->>Cliente: Chat aberto com a revendedora
-    end
-```

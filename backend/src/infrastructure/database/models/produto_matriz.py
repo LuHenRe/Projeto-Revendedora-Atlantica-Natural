@@ -13,4 +13,5 @@ class ProdutoMatrizModel(Base):
     preco = Column(Float, nullable=False)
     imagem_url = Column(String, nullable=True)
     descricao = Column(Text, nullable=True)
+    categoria_origem = Column(String, index=True, nullable=True)
     ativo = Column(Boolean, default=True, nullable=False)

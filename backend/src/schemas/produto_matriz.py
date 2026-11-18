@@ -15,5 +15,23 @@ class ProdutoMatrizResponse(BaseModel):
     preco: float
     imagem_url: Optional[str]
     descricao: Optional[str]
+    categoria_origem: Optional[str] = None
     ativo: bool
+
+
+class CategoriaMatrizInfo(BaseModel):
+    nome: str
+    url: str
+
+
+class SincronizarCategoriaRequest(BaseModel):
+    categoria_url: str
+
+
+class SincronizarCategoriaResponse(BaseModel):
+    categoria_url: str
+    adicionados: int
+    atualizados: int
+    removidos: int
+    produtos: list[ProdutoMatrizResponse]
 

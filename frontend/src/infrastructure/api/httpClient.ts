@@ -14,6 +14,7 @@ export class ApiError extends Error {
 interface RequestOptions extends RequestInit {
   token?: string;
   params?: Record<string, string | number | boolean | undefined>;
+  timeoutMs?: number;
 }
 
 export class HttpClient {
@@ -39,7 +40,7 @@ export class HttpClient {
   }
 
   async request<T>(path: string, options: RequestOptions = {}): Promise<T> {
-    const { token, params, headers: customHeaders, ...fetchOptions } = options;
+    const { token, params, timeoutMs = 45000, headers: customHeaders, ...fetchOptions } = options;
     const url = this.buildUrl(path, params);
 
     const headers = new Headers(customHeaders);
@@ -52,13 +53,23 @@ export class HttpClient {
       headers.set('Authorization', `Bearer ${token}`);
     }
 
+    const timeoutSignal =
+      fetchOptions.signal ??
+      (typeof AbortSignal !== 'undefined' && typeof AbortSignal.timeout === 'function'
+        ? AbortSignal.timeout(timeoutMs)
+        : undefined);
+
     let response: Response;
     try {
       response = await fetch(url, {
         ...fetchOptions,
         headers,
+        ...(timeoutSignal ? { signal: timeoutSignal } : {}),
       });
     } catch (error: unknown) {
+      if (error instanceof Error && (error.name === 'TimeoutError' || error.name === 'AbortError')) {
+        throw new ApiError(408, 'Tempo limite esgotado ao conectar com o servidor');
+      }
       throw new ApiError(0, error instanceof Error ? error.message : 'Falha na conexão com o servidor');
     }
 

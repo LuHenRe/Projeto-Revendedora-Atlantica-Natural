@@ -1,13 +1,29 @@
 'use client';
 
-import { useState } from 'react';
+import { useId, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { Sparkles, Link as LinkIcon, Trash2, ExternalLink, AlertCircle, CheckCircle, Loader2 } from 'lucide-react';
+import {
+  Sparkles,
+  Link as LinkIcon,
+  Trash2,
+  ExternalLink,
+  AlertCircle,
+  CheckCircle,
+  Loader2,
+  RefreshCw,
+  FolderSync,
+} from 'lucide-react';
 import { Button } from '@/presentation/components/ui/Button';
 import { Input } from '@/presentation/components/ui/Input';
-import { adicionarDestaqueMatrizAction, removerDestaqueMatrizAction } from '@/infrastructure/actions/matrizActions';
+import {
+  adicionarDestaqueMatrizAction,
+  listarCategoriasMatrizAction,
+  removerDestaqueMatrizAction,
+  sincronizarCategoriaMatrizAction,
+} from '@/infrastructure/actions/matrizActions';
+import { CategoriaMatrizInfo } from '@/domain/repositories/IProdutoMatrizRepository';
 
 const urlSchema = z.object({
   url: z.string().url('Insira uma URL válida da loja da Atlântica Natural'),
@@ -25,16 +41,34 @@ interface ProdutoMatrizDTO {
   imagemUrl: string;
   urlOrigem: string;
   urlAfiliada: string;
+  categoriaOrigem?: string | null;
 }
 
 interface GerenciadorProdutosMatrizProps {
   initialProdutos: ProdutoMatrizDTO[];
+  initialCategorias?: CategoriaMatrizInfo[];
 }
 
-export function GerenciadorProdutosMatriz({ initialProdutos }: GerenciadorProdutosMatrizProps) {
+export function GerenciadorProdutosMatriz({
+  initialProdutos,
+  initialCategorias = [],
+}: GerenciadorProdutosMatrizProps) {
   const [produtos, setProdutos] = useState<ProdutoMatrizDTO[]>(initialProdutos);
+  const [categorias, setCategorias] = useState<CategoriaMatrizInfo[]>(initialCategorias);
+  const [selectedCategoria, setSelectedCategoria] = useState('');
+  const [categoriaTouched, setCategoriaTouched] = useState(false);
+  const [categoriaError, setCategoriaError] = useState<string | null>(null);
   const [feedback, setFeedback] = useState<{ tipo: 'success' | 'error'; mensagem: string } | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSyncingCategoria, setIsSyncingCategoria] = useState(false);
+  const [isLoadingCategorias, setIsLoadingCategorias] = useState(false);
+
+  const syncHeadingId = useId();
+  const categorySelectId = useId();
+  const categoryErrorId = useId();
+  const importHeadingId = useId();
+  const urlInputId = useId();
+  const urlErrorId = useId();
 
   const {
     register,
@@ -45,6 +79,78 @@ export function GerenciadorProdutosMatriz({ initialProdutos }: GerenciadorProdut
     resolver: zodResolver(urlSchema),
     defaultValues: { url: '' },
   });
+
+  const handleRecarregarCategorias = async () => {
+    setIsLoadingCategorias(true);
+    setFeedback(null);
+    try {
+      const res = await listarCategoriasMatrizAction(true);
+      if (res.success && Array.isArray(res.data)) {
+        setCategorias(res.data as CategoriaMatrizInfo[]);
+      } else {
+        setFeedback({
+          tipo: 'error',
+          mensagem: res.error || 'Não foi possível carregar as categorias da loja',
+        });
+      }
+    } catch {
+      setFeedback({ tipo: 'error', mensagem: 'Erro de conexão ao carregar categorias' });
+    } finally {
+      setIsLoadingCategorias(false);
+    }
+  };
+
+  const handleSincronizarCategoria = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setCategoriaTouched(true);
+
+    if (!selectedCategoria) {
+      setCategoriaError('Selecione uma categoria da loja para sincronizar.');
+      document.getElementById(categorySelectId)?.focus();
+      return;
+    }
+
+    setCategoriaError(null);
+    setIsSyncingCategoria(true);
+    setFeedback(null);
+
+    try {
+      const res = await sincronizarCategoriaMatrizAction(selectedCategoria);
+      if (!res.success || !res.data) {
+        setFeedback({
+          tipo: 'error',
+          mensagem: res.error || 'Falha ao sincronizar produtos da categoria',
+        });
+        return;
+      }
+
+      const payload = res.data as {
+        categoriaUrl: string;
+        adicionados: number;
+        atualizados: number;
+        removidos: number;
+        produtos: ProdutoMatrizDTO[];
+      };
+
+      const syncedIds = new Set(payload.produtos.map((p) => p.id));
+
+      setProdutos((prev) => {
+        const restantes = prev.filter(
+          (p) => p.categoriaOrigem !== payload.categoriaUrl && !syncedIds.has(p.id)
+        );
+        return [...payload.produtos, ...restantes];
+      });
+
+      setFeedback({
+        tipo: 'success',
+        mensagem: `Categoria sincronizada: ${payload.adicionados} adicionado(s), ${payload.atualizados} atualizado(s) e ${payload.removidos} removido(s).`,
+      });
+    } catch {
+      setFeedback({ tipo: 'error', mensagem: 'Erro de conexão com o servidor' });
+    } finally {
+      setIsSyncingCategoria(false);
+    }
+  };
 
   const onSubmit = async (data: UrlFormData) => {
     setIsSubmitting(true);
@@ -61,25 +167,37 @@ export function GerenciadorProdutosMatriz({ initialProdutos }: GerenciadorProdut
         return;
       }
 
-      setFeedback({
-        tipo: 'success',
-        mensagem: 'Produto importado da matriz com sucesso e link de afiliada anexado!',
-      });
-
-      // Recarrega lista ou adiciona item retornado
+      const returned = (res.data || {}) as Partial<ProdutoMatrizDTO>;
+      const valorPreco = typeof returned.preco?.valor === 'number' ? returned.preco.valor : 0;
       const novoItem: ProdutoMatrizDTO = {
-        id: (res.data as any)?.id || Date.now().toString(),
-        nome: (res.data as any)?.nome || 'Produto Importado',
+        id: returned.id || returned.urlOrigem || data.url,
+        nome: returned.nome || 'Produto Importado',
         preco: {
-          valor: (res.data as any)?.preco || 0,
-          formatado: `R$ ${Number((res.data as any)?.preco || 0).toFixed(2).replace('.', ',')}`,
+          valor: valorPreco,
+          formatado:
+            returned.preco?.formatado ||
+            `R$ ${Number(valorPreco).toFixed(2).replace('.', ',')}`,
         },
-        imagemUrl: '',
-        urlOrigem: data.url,
-        urlAfiliada: data.url,
+        imagemUrl: returned.imagemUrl || '',
+        urlOrigem: returned.urlOrigem || data.url,
+        urlAfiliada: returned.urlAfiliada || data.url,
+        categoriaOrigem: returned.categoriaOrigem ?? null,
       };
 
-      setProdutos((prev) => [novoItem, ...prev]);
+      const jaExistia = produtos.some((p) => p.id === novoItem.id);
+      setProdutos((prev) => {
+        if (prev.some((p) => p.id === novoItem.id)) {
+          return prev.map((p) => (p.id === novoItem.id ? novoItem : p));
+        }
+        return [novoItem, ...prev];
+      });
+
+      setFeedback({
+        tipo: 'success',
+        mensagem: jaExistia
+          ? 'Este produto já estava cadastrado na vitrine e foi mantido sem duplicação.'
+          : 'Produto importado da matriz com sucesso e link de afiliada anexado!',
+      });
       reset();
     } catch {
       setFeedback({ tipo: 'error', mensagem: 'Erro de conexão com o servidor' });
@@ -104,6 +222,8 @@ export function GerenciadorProdutosMatriz({ initialProdutos }: GerenciadorProdut
     }
   };
 
+  const showCategoryError = Boolean(categoriaTouched && categoriaError);
+
   return (
     <div className="space-y-6">
       <div>
@@ -111,13 +231,15 @@ export function GerenciadorProdutosMatriz({ initialProdutos }: GerenciadorProdut
           Destaques da Loja Matriz
         </h1>
         <p className="text-sm text-zinc-500 mt-1">
-          Puxe produtos especiais da sede da Atlântica Natural via web scraping automático.
+          Sincronize categorias inteiras ou puxe produtos individuais da loja oficial da Atlântica Natural.
           O link gerado na vitrine incluirá seu ID de afiliada para você receber a comissão.
         </p>
       </div>
 
       {feedback && (
         <div
+          role="status"
+          aria-live="polite"
           className={`p-4 rounded-xl text-sm flex items-start gap-3 transition-all ${
             feedback.tipo === 'success'
               ? 'bg-emerald-50 border border-emerald-200 text-emerald-800'
@@ -125,37 +247,147 @@ export function GerenciadorProdutosMatriz({ initialProdutos }: GerenciadorProdut
           }`}
         >
           {feedback.tipo === 'success' ? (
-            <CheckCircle className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+            <CheckCircle className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" aria-hidden="true" />
           ) : (
-            <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" />
+            <AlertCircle className="w-5 h-5 text-red-600 shrink-0 mt-0.5" aria-hidden="true" />
           )}
           <span>{feedback.mensagem}</span>
         </div>
       )}
 
-      {/* Formulário de Importação com Scraper */}
+      {/* Formulário de Sincronização por Categoria */}
       <div className="bg-white border border-zinc-200 rounded-2xl p-6 shadow-xs">
-        <h3 className="text-base font-bold text-zinc-900 mb-2 flex items-center gap-2">
-          <Sparkles className="w-4 h-4 text-amber-500" />
+        <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
+          <h3 id={syncHeadingId} className="text-base font-bold text-zinc-900 flex items-center gap-2">
+            <FolderSync className="w-4 h-4 text-purple-600" aria-hidden="true" />
+            <span>Sincronizar Categoria da Loja</span>
+          </h3>
+          <button
+            type="button"
+            onClick={handleRecarregarCategorias}
+            disabled={isLoadingCategorias || isSyncingCategoria}
+            className="inline-flex items-center gap-1.5 text-xs font-medium text-zinc-600 hover:text-zinc-900 disabled:opacity-50"
+          >
+            <RefreshCw
+              className={`w-3.5 h-3.5 ${isLoadingCategorias ? 'animate-spin' : ''}`}
+              aria-hidden="true"
+            />
+            <span>Atualizar lista de categorias</span>
+          </button>
+        </div>
+        <p className="text-xs text-zinc-500 mb-4">
+          Importa novos produtos, atualiza preços/dados dos existentes e remove itens que saíram da categoria selecionada.
+        </p>
+
+        <form
+          aria-labelledby={syncHeadingId}
+          onSubmit={handleSincronizarCategoria}
+          noValidate
+          className="flex flex-col sm:flex-row sm:items-end gap-3"
+        >
+          <div className="flex-1">
+            <label htmlFor={categorySelectId} className="block text-xs font-medium text-zinc-700 mb-1">
+              Categoria oficial <span aria-hidden="true">*</span>
+            </label>
+            <select
+              id={categorySelectId}
+              name="categoria_url"
+              required
+              value={selectedCategoria}
+              aria-invalid={showCategoryError ? 'true' : 'false'}
+              aria-describedby={showCategoryError ? categoryErrorId : undefined}
+              onChange={(e) => {
+                setSelectedCategoria(e.target.value);
+                setCategoriaTouched(true);
+                if (e.target.value) setCategoriaError(null);
+              }}
+              onBlur={() => {
+                setCategoriaTouched(true);
+                if (!selectedCategoria) {
+                  setCategoriaError('Selecione uma categoria da loja para sincronizar.');
+                }
+              }}
+              className="w-full h-10 px-3 rounded-lg border border-zinc-300 bg-white text-sm text-zinc-900 focus:outline-none focus:ring-2 focus:ring-purple-500 user-invalid:border-red-500"
+            >
+              <option value="" disabled>
+                {categorias.length > 0
+                  ? 'Selecione uma categoria...'
+                  : 'Nenhuma categoria carregada — clique em Atualizar'}
+              </option>
+              {categorias.map((cat) => (
+                <option key={cat.url} value={cat.url}>
+                  {cat.nome}
+                </option>
+              ))}
+            </select>
+            {showCategoryError && (
+              <p id={categoryErrorId} className="text-xs text-red-600 mt-1">
+                {categoriaError}
+              </p>
+            )}
+          </div>
+
+          <Button
+            type="submit"
+            disabled={isSyncingCategoria}
+            className="bg-purple-700 hover:bg-purple-800 text-white shrink-0 gap-2"
+          >
+            {isSyncingCategoria ? (
+              <span className="flex items-center gap-2">
+                <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
+                Sincronizando...
+              </span>
+            ) : (
+              <>
+                <FolderSync className="w-4 h-4" aria-hidden="true" />
+                <span>Sincronizar Categoria</span>
+              </>
+            )}
+          </Button>
+        </form>
+      </div>
+
+      {/* Formulário de Importação Individual com Scraper */}
+      <div className="bg-white border border-zinc-200 rounded-2xl p-6 shadow-xs">
+        <h3 id={importHeadingId} className="text-base font-bold text-zinc-900 mb-2 flex items-center gap-2">
+          <Sparkles className="w-4 h-4 text-amber-500" aria-hidden="true" />
           <span>Importar Produto via Link Oficial</span>
         </h3>
         <p className="text-xs text-zinc-500 mb-4">
-          Cole a URL da página do produto na loja oficial da Atlântica Natural. O sistema obterá automaticamente o título, valor e foto.
+          Cole a URL da página do produto (ou link /visualizar/...) na loja oficial da Atlântica Natural.
         </p>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col sm:flex-row gap-3">
+        <form
+          aria-labelledby={importHeadingId}
+          onSubmit={handleSubmit(onSubmit)}
+          className="flex flex-col sm:flex-row sm:items-end gap-3"
+        >
           <div className="flex-1">
+            <label htmlFor={urlInputId} className="block text-xs font-medium text-zinc-700 mb-1">
+              URL do produto <span aria-hidden="true">*</span>
+            </label>
             <div className="relative">
-              <LinkIcon className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+              <LinkIcon
+                className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2"
+                aria-hidden="true"
+              />
               <Input
+                id={urlInputId}
                 type="url"
-                placeholder="https://loja.atlanticanatural.com.br/produto/..."
+                autoCorrect="off"
+                autoCapitalize="none"
+                spellCheck={false}
+                placeholder="https://loja.atlanticanatural.com.br/produtos/..."
+                aria-invalid={errors.url ? 'true' : 'false'}
+                aria-describedby={errors.url ? urlErrorId : undefined}
                 className="pl-10"
                 {...register('url')}
               />
             </div>
             {errors.url && (
-              <p className="text-xs text-red-500 mt-1">{errors.url.message}</p>
+              <p id={urlErrorId} className="text-xs text-red-500 mt-1">
+                {errors.url.message}
+              </p>
             )}
           </div>
           <Button
@@ -165,12 +397,12 @@ export function GerenciadorProdutosMatriz({ initialProdutos }: GerenciadorProdut
           >
             {isSubmitting ? (
               <span className="flex items-center gap-2">
-                <Loader2 className="w-4 h-4 animate-spin" />
+                <Loader2 className="w-4 h-4 animate-spin" aria-hidden="true" />
                 Extraindo dados...
               </span>
             ) : (
               <>
-                <Sparkles className="w-4 h-4 text-amber-400" />
+                <Sparkles className="w-4 h-4 text-amber-400" aria-hidden="true" />
                 <span>Puxar Dados da Matriz</span>
               </>
             )}
@@ -189,7 +421,7 @@ export function GerenciadorProdutosMatriz({ initialProdutos }: GerenciadorProdut
         <div className="divide-y divide-zinc-100">
           {produtos.length === 0 ? (
             <div className="p-8 text-center text-zinc-400 text-sm">
-              <Sparkles className="w-8 h-8 mx-auto mb-2 opacity-50" />
+              <Sparkles className="w-8 h-8 mx-auto mb-2 opacity-50" aria-hidden="true" />
               Nenhum produto da matriz importado ainda.
             </div>
           ) : (
@@ -207,7 +439,7 @@ export function GerenciadorProdutosMatriz({ initialProdutos }: GerenciadorProdut
                         className="w-full h-full object-cover"
                       />
                     ) : (
-                      <Sparkles className="w-5 h-5 text-purple-600" />
+                      <Sparkles className="w-5 h-5 text-purple-600" aria-hidden="true" />
                     )}
                   </div>
                   <div>
@@ -226,7 +458,7 @@ export function GerenciadorProdutosMatriz({ initialProdutos }: GerenciadorProdut
                     className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-purple-700 bg-purple-50 hover:bg-purple-100 rounded-lg transition-colors"
                   >
                     <span>Testar Link</span>
-                    <ExternalLink className="w-3.5 h-3.5" />
+                    <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" />
                   </a>
 
                   <button
@@ -235,7 +467,7 @@ export function GerenciadorProdutosMatriz({ initialProdutos }: GerenciadorProdut
                     className="p-1.5 text-zinc-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
                     title="Remover destaque"
                   >
-                    <Trash2 className="w-4 h-4" />
+                    <Trash2 className="w-4 h-4" aria-hidden="true" />
                   </button>
                 </div>
               </div>

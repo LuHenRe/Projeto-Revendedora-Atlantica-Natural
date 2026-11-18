@@ -42,6 +42,14 @@ class ProdutoMatrizRepositoryDB(IProdutoMatrizRepository):
         db_produtos = self.db.query(ProdutoMatrizModel).filter(ProdutoMatrizModel.ativo == True).all()
         return [ProdutoMatriz(**p.__dict__) for p in db_produtos]
 
+    def list_by_categoria_origem(self, categoria_url: str) -> List[ProdutoMatriz]:
+        db_produtos = (
+            self.db.query(ProdutoMatrizModel)
+            .filter(ProdutoMatrizModel.categoria_origem == categoria_url)
+            .all()
+        )
+        return [ProdutoMatriz(**p.__dict__) for p in db_produtos]
+
     def delete(self, produto_id: uuid.UUID) -> bool:
         db_produto = self.db.query(ProdutoMatrizModel).filter(ProdutoMatrizModel.id == produto_id).first()
         if db_produto:
