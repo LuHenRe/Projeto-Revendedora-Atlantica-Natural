@@ -8,6 +8,13 @@ class AdicionarProdutoMatrizDTO(BaseModel):
     url_origem: str
     codigo_revendedora: str = "padrao" # Em produção, isso viria das configs ou JWT
 
+
+def build_affiliate_url(url_origem: str, codigo_revendedora: str) -> str:
+    if "?" in url_origem:
+        return f"{url_origem}&aff={codigo_revendedora}"
+    return f"{url_origem}?aff={codigo_revendedora}"
+
+
 class AdicionarProdutoMatrizUseCase:
     def __init__(self, repository: IProdutoMatrizRepository, scraper: AtlanticaScraper):
         self.repository = repository
@@ -28,17 +35,17 @@ class AdicionarProdutoMatrizUseCase:
         if not dados_externos.get("nome"):
             raise ValueError("Não foi possível extrair o título do produto nessa URL.")
 
-        # Gera URL de afiliado
-        # Se for do tipo atlanticanaturalbr.com.br, a estrutura típica pode ser /revendedor
-        # Aqui, montamos uma URL de exemplo genérica se não houver regra específica ainda.
-        if "?" in dto.url_origem:
-            url_afiliada = f"{dto.url_origem}&aff={dto.codigo_revendedora}"
-        else:
-            url_afiliada = f"{dto.url_origem}?aff={dto.codigo_revendedora}"
+        url_canonica = dados_externos.get("url_origem") or dto.url_origem
+        if url_canonica != dto.url_origem:
+            existente_canonico = self.repository.get_by_url_origem(url_canonica)
+            if existente_canonico:
+                return existente_canonico
+
+        url_afiliada = build_affiliate_url(url_canonica, dto.codigo_revendedora)
 
         # Cria a Entidade
         produto = ProdutoMatriz(
-            url_origem=dto.url_origem,
+            url_origem=url_canonica,
             url_afiliada=url_afiliada,
             nome=dados_externos["nome"],
             preco=dados_externos["preco"],

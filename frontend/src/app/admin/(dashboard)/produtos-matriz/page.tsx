@@ -1,15 +1,23 @@
 import { ProdutoMatrizRepositoryHttp } from '@/infrastructure/api/ProdutoMatrizRepositoryHttp';
+import { CategoriaMatrizInfo } from '@/domain/repositories/IProdutoMatrizRepository';
+import { ProdutoMatriz } from '@/domain/entities/ProdutoMatriz';
 import { getAdminTokenServer } from '@/infrastructure/actions/authActions';
 import { GerenciadorProdutosMatriz } from '@/presentation/components/admin/GerenciadorProdutosMatriz';
 
 export default async function AdminProdutosMatrizPage() {
   const token = await getAdminTokenServer();
 
-  let produtosMatriz: any[] = [];
+  let produtosMatriz: ProdutoMatriz[] = [];
+  let categoriasMatriz: CategoriaMatrizInfo[] = [];
 
   try {
     const matrizRepo = new ProdutoMatrizRepositoryHttp(undefined, () => token);
-    produtosMatriz = await matrizRepo.listarAtivos().catch(() => []);
+    const [produtosRes, categoriasRes] = await Promise.all([
+      matrizRepo.listarAtivos().catch(() => []),
+      matrizRepo.listarCategorias().catch(() => []),
+    ]);
+    produtosMatriz = produtosRes;
+    categoriasMatriz = categoriasRes;
   } catch {
     // Fallback gracioso
   }
@@ -24,11 +32,15 @@ export default async function AdminProdutosMatrizPage() {
     imagemUrl: p.imagemUrl,
     urlOrigem: p.urlOrigem.valor,
     urlAfiliada: p.urlAfiliada.valor,
+    categoriaOrigem: p.categoriaOrigem ?? null,
   }));
 
   return (
     <div className="animate-in fade-in duration-300">
-      <GerenciadorProdutosMatriz initialProdutos={produtosMatrizDTO} />
+      <GerenciadorProdutosMatriz
+        initialProdutos={produtosMatrizDTO}
+        initialCategorias={categoriasMatriz}
+      />
     </div>
   );
 }

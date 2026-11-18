@@ -20,6 +20,8 @@ describe('Caso de Uso: ListarVitrineProdutos (Vitrine Híbrida)', () => {
     listarAtivos: vi.fn(),
     adicionarDestaque: vi.fn(),
     removerDestaque: vi.fn(),
+    listarCategorias: vi.fn(),
+    sincronizarCategoria: vi.fn(),
   };
 
   const useCase = new ListarVitrineProdutosUseCase(fakeProdutoRepo, fakeMatrizRepo);

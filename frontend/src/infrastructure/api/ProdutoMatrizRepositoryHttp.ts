@@ -1,4 +1,8 @@
-import { IProdutoMatrizRepository } from '../../domain/repositories/IProdutoMatrizRepository';
+import {
+  IProdutoMatrizRepository,
+  CategoriaMatrizInfo,
+  SincronizarCategoriaMatrizResult,
+} from '../../domain/repositories/IProdutoMatrizRepository';
 import { ProdutoMatriz } from '../../domain/entities/ProdutoMatriz';
 import { Preco } from '../../domain/value-objects/Preco';
 import { UrlExterna } from '../../domain/value-objects/UrlExterna';
@@ -12,7 +16,16 @@ interface ProdutoMatrizBackendDTO {
   preco: number;
   imagem_url?: string | null;
   descricao?: string | null;
+  categoria_origem?: string | null;
   ativo: boolean;
+}
+
+interface SincronizarCategoriaBackendDTO {
+  categoria_url: string;
+  adicionados: number;
+  atualizados: number;
+  removidos: number;
+  produtos: ProdutoMatrizBackendDTO[];
 }
 
 export class ProdutoMatrizRepositoryHttp implements IProdutoMatrizRepository {
@@ -30,6 +43,7 @@ export class ProdutoMatrizRepositoryHttp implements IProdutoMatrizRepository {
       urlAfiliada: new UrlExterna(dto.url_afiliada),
       imagemUrl: dto.imagem_url,
       descricao: dto.descricao,
+      categoriaOrigem: dto.categoria_origem ?? null,
       ativo: dto.ativo,
     });
   }
@@ -56,5 +70,33 @@ export class ProdutoMatrizRepositoryHttp implements IProdutoMatrizRepository {
   async removerDestaque(id: string): Promise<void> {
     const token = this.getToken();
     await this.client.delete(`/admin/produtos-matriz/${id}`, { token });
+  }
+
+  async listarCategorias(forceRefresh = false): Promise<CategoriaMatrizInfo[]> {
+    const token = this.getToken();
+    const data = await this.client.get<CategoriaMatrizInfo[]>(
+      '/admin/produtos-matriz/categorias',
+      {
+        token,
+        params: forceRefresh ? { refresh: true } : undefined,
+      }
+    );
+    return data || [];
+  }
+
+  async sincronizarCategoria(categoriaUrl: string): Promise<SincronizarCategoriaMatrizResult> {
+    const token = this.getToken();
+    const data = await this.client.post<SincronizarCategoriaBackendDTO>(
+      '/admin/produtos-matriz/sincronizar-categoria',
+      { categoria_url: categoriaUrl },
+      { token }
+    );
+    return {
+      categoriaUrl: data.categoria_url,
+      adicionados: data.adicionados,
+      atualizados: data.atualizados,
+      removidos: data.removidos,
+      produtos: (data.produtos || []).map((item) => this.mapToDomain(item)),
+    };
   }
 }

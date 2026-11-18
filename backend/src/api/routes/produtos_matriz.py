@@ -4,10 +4,20 @@ from uuid import UUID
 
 from src.core.database import get_db
 from src.api.deps import get_current_user
-from src.schemas.produto_matriz import ProdutoMatrizResponse, ProdutoMatrizCreate
+from src.schemas.produto_matriz import (
+    ProdutoMatrizResponse,
+    ProdutoMatrizCreate,
+    CategoriaMatrizInfo,
+    SincronizarCategoriaRequest,
+    SincronizarCategoriaResponse,
+)
 from src.infrastructure.database.repositories.produto_matriz_repository import ProdutoMatrizRepositoryDB
 from src.infrastructure.external.scraper import AtlanticaScraper
 from src.application.use_cases.adicionar_produto_matriz import AdicionarProdutoMatrizUseCase, AdicionarProdutoMatrizDTO
+from src.application.use_cases.sincronizar_categoria_matriz import (
+    SincronizarCategoriaMatrizUseCase,
+    SincronizarCategoriaMatrizDTO,
+)
 
 router = APIRouter()
 admin_router = APIRouter()
@@ -30,6 +40,25 @@ async def adicionar_produto_matriz(produto_in: ProdutoMatrizCreate, db: Session 
     try:
         produto = await use_case.execute(dto)
         return produto
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@admin_router.get("/categorias", response_model=list[CategoriaMatrizInfo], summary="Listar categorias da matriz", description="Lista as categorias disponíveis na loja oficial da Atlântica Natural.")
+async def listar_categorias_matriz(refresh: bool = False, current_user: str = Depends(get_current_user)):
+    scraper = AtlanticaScraper()
+    try:
+        return await scraper.fetch_categories(force_refresh=refresh)
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=str(e))
+
+@admin_router.post("/sincronizar-categoria", response_model=SincronizarCategoriaResponse, summary="Sincronizar categoria da matriz", description="Importa novos produtos, atualiza os existentes e remove os que saíram da categoria.")
+async def sincronizar_categoria_matriz(payload: SincronizarCategoriaRequest, db: Session = Depends(get_db), current_user: str = Depends(get_current_user)):
+    repo = ProdutoMatrizRepositoryDB(db)
+    scraper = AtlanticaScraper()
+    use_case = SincronizarCategoriaMatrizUseCase(repo, scraper)
+    dto = SincronizarCategoriaMatrizDTO(categoria_url=payload.categoria_url)
+    try:
+        return await use_case.execute(dto)
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
 

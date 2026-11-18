@@ -58,4 +58,44 @@ describe('Infraestrutura: ProdutoMatrizRepositoryHttp', () => {
       expect.objectContaining({ token: 'mock-token' })
     );
   });
+
+  it('deve listar categorias da loja oficial e sincronizar uma categoria', async () => {
+    vi.spyOn(fakeClient, 'get').mockResolvedValueOnce([
+      { nome: 'Academia', url: 'https://loja.atlanticanatural.com.br/produtos/categoria/academia/4' },
+    ]);
+
+    const cats = await repo.listarCategorias();
+    expect(cats).toEqual([
+      { nome: 'Academia', url: 'https://loja.atlanticanatural.com.br/produtos/categoria/academia/4' },
+    ]);
+
+    vi.spyOn(fakeClient, 'post').mockResolvedValueOnce({
+      categoria_url: 'https://loja.atlanticanatural.com.br/produtos/categoria/academia/4',
+      adicionados: 1,
+      atualizados: 1,
+      removidos: 0,
+      produtos: [
+        {
+          id: 'm-3',
+          url_origem: 'https://loja.atlanticanatural.com.br/produtos/creatina',
+          url_afiliada: 'https://loja.atlanticanatural.com.br/produtos/creatina?aff=padrao',
+          nome: 'Creatina',
+          preco: 153.78,
+          imagem_url: 'https://s3.amazonaws.com/creatina.png',
+          descricao: null,
+          categoria_origem: 'https://loja.atlanticanatural.com.br/produtos/categoria/academia/4',
+          ativo: true,
+        },
+      ],
+    });
+
+    const syncRes = await repo.sincronizarCategoria(
+      'https://loja.atlanticanatural.com.br/produtos/categoria/academia/4'
+    );
+    expect(syncRes.adicionados).toBe(1);
+    expect(syncRes.atualizados).toBe(1);
+    expect(syncRes.produtos[0].categoriaOrigem).toBe(
+      'https://loja.atlanticanatural.com.br/produtos/categoria/academia/4'
+    );
+  });
 });

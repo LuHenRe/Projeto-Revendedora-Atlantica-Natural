@@ -9,6 +9,7 @@ export interface ProdutoMatrizProps {
   urlAfiliada: UrlExterna;
   imagemUrl?: string | null;
   descricao?: string | null;
+  categoriaOrigem?: string | null;
   ativo?: boolean;
 }
 
@@ -23,6 +24,7 @@ export interface ProdutoMatrizDTO {
   urlAfiliada: { valor: string };
   imagemUrl: string | null;
   descricao: string | null;
+  categoriaOrigem?: string | null;
   ativo: boolean;
 }
 
@@ -34,6 +36,7 @@ export class ProdutoMatriz {
   readonly urlAfiliada: UrlExterna;
   readonly imagemUrl: string | null;
   readonly descricao: string | null;
+  readonly categoriaOrigem: string | null;
   private _ativo: boolean;
 
   constructor(props: ProdutoMatrizProps) {
@@ -51,6 +54,7 @@ export class ProdutoMatriz {
     this.urlAfiliada = props.urlAfiliada;
     this.imagemUrl = props.imagemUrl ?? null;
     this.descricao = props.descricao ?? null;
+    this.categoriaOrigem = props.categoriaOrigem ?? null;
     this._ativo = props.ativo ?? true;
   }
 
@@ -70,6 +74,7 @@ export class ProdutoMatriz {
       urlAfiliada: { valor: this.urlAfiliada.valor },
       imagemUrl: this.imagemUrl,
       descricao: this.descricao,
+      ...(this.categoriaOrigem ? { categoriaOrigem: this.categoriaOrigem } : {}),
       ativo: this._ativo,
     };
   }
@@ -88,6 +93,7 @@ export class ProdutoMatriz {
         dto.urlAfiliada instanceof UrlExterna ? dto.urlAfiliada : new UrlExterna(dto.urlAfiliada.valor),
       imagemUrl: dto.imagemUrl,
       descricao: dto.descricao,
+      categoriaOrigem: dto.categoriaOrigem ?? null,
       ativo: dto.ativo,
     });
   }

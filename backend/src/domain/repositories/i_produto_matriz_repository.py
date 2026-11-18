@@ -21,5 +21,9 @@ class IProdutoMatrizRepository(ABC):
         pass
 
     @abstractmethod
+    def list_by_categoria_origem(self, categoria_url: str) -> List[ProdutoMatriz]:
+        pass
+
+    @abstractmethod
     def delete(self, produto_id: uuid.UUID) -> bool:
         pass
