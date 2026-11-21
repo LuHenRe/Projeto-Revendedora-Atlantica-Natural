@@ -12,6 +12,8 @@ import { BarraSacolaFlutuante } from '@/presentation/components/vitrine/BarraSac
 import { ProdutoRepositoryHttp } from '@/infrastructure/api/ProdutoRepositoryHttp';
 import { CategoriaRepositoryHttp } from '@/infrastructure/api/CategoriaRepositoryHttp';
 import { ProdutoMatrizRepositoryHttp } from '@/infrastructure/api/ProdutoMatrizRepositoryHttp';
+import type { ProdutoDTO } from '@/domain/entities/Produto';
+import type { CategoriaDTO } from '@/domain/entities/Categoria';
 
 // Revalidação a cada 60 segundos (ISR)
 export const revalidate = 60;
@@ -37,18 +39,23 @@ async function getDadosVitrine() {
 export default async function HomePage() {
   const { ofertasLocais, categorias, destaquesMatriz } = await getDadosVitrine();
 
-  const ofertasLocaisDTO = ofertasLocais.map((p) => {
-    const dto = typeof p.toDTO === 'function' ? p.toDTO() : p;
+  const ofertasLocaisDTO: ProdutoDTO[] = ofertasLocais.map((p) => {
+    const dto: ProdutoDTO =
+      typeof p.toDTO === 'function' ? p.toDTO() : (p as unknown as ProdutoDTO);
     if (!dto.categoria && dto.categoriaId) {
-      const cat = categorias.find((c: any) => c.id === dto.categoriaId);
+      const cat = categorias.find((c) => c.id === dto.categoriaId);
       if (cat) {
-        dto.categoria = typeof cat.toDTO === 'function' ? cat.toDTO() : cat;
+        return {
+          ...dto,
+          categoria:
+            typeof cat.toDTO === 'function' ? cat.toDTO() : (cat as unknown as CategoriaDTO),
+        };
       }
     }
     return dto;
   });
-  const categoriasDTO = categorias.map((c) =>
-    typeof c.toDTO === 'function' ? c.toDTO() : c
+  const categoriasDTO: CategoriaDTO[] = categorias.map((c) =>
+    typeof c.toDTO === 'function' ? c.toDTO() : (c as unknown as CategoriaDTO)
   );
   const destaquesMatrizDTO = destaquesMatriz.map((p) =>
     typeof p.toDTO === 'function' ? p.toDTO() : p

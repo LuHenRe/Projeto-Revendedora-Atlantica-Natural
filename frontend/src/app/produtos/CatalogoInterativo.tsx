@@ -12,7 +12,7 @@ interface CatalogoInterativoProps {
   produtosIniciais: (Produto | ProdutoDTO)[];
   categorias: (Categoria | CategoriaDTO)[];
   termoBuscaInicial?: string;
-  categoriaIdInicial?: string;
+  categoriaIdInicial?: string | null;
 }
 
 export function CatalogoInterativo({

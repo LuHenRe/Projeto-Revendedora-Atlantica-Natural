@@ -38,7 +38,7 @@ interface ProdutoMatrizDTO {
     valor: number;
     formatado: string;
   };
-  imagemUrl: string;
+  imagemUrl: string | null;
   urlOrigem: string;
   urlAfiliada: string;
   categoriaOrigem?: string | null;

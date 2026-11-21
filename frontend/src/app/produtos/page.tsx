@@ -5,6 +5,8 @@ import { ModalTravaGeografica } from '@/presentation/components/vitrine/ModalTra
 import { BarraSacolaFlutuante } from '@/presentation/components/vitrine/BarraSacolaFlutuante';
 import { ProdutoRepositoryHttp } from '@/infrastructure/api/ProdutoRepositoryHttp';
 import { CategoriaRepositoryHttp } from '@/infrastructure/api/CategoriaRepositoryHttp';
+import type { ProdutoDTO } from '@/domain/entities/Produto';
+import type { CategoriaDTO } from '@/domain/entities/Categoria';
 import { CatalogoInterativo } from './CatalogoInterativo';
 
 export const revalidate = 60;
@@ -37,18 +39,23 @@ export default async function ProdutosPage({ searchParams }: ProdutosPageProps) 
   const resolvedParams = searchParams ? await searchParams : {};
   const { produtos, categorias } = await getDadosCatalogo();
 
-  const produtosDTO = produtos.map((p) => {
-    const dto = typeof p.toDTO === 'function' ? p.toDTO() : p;
+  const produtosDTO: ProdutoDTO[] = produtos.map((p) => {
+    const dto: ProdutoDTO =
+      typeof p.toDTO === 'function' ? p.toDTO() : (p as unknown as ProdutoDTO);
     if (!dto.categoria && dto.categoriaId) {
-      const cat = categorias.find((c: any) => c.id === dto.categoriaId);
+      const cat = categorias.find((c) => c.id === dto.categoriaId);
       if (cat) {
-        dto.categoria = typeof cat.toDTO === 'function' ? cat.toDTO() : cat;
+        return {
+          ...dto,
+          categoria:
+            typeof cat.toDTO === 'function' ? cat.toDTO() : (cat as unknown as CategoriaDTO),
+        };
       }
     }
     return dto;
   });
-  const categoriasDTO = categorias.map((c) =>
-    typeof c.toDTO === 'function' ? c.toDTO() : c
+  const categoriasDTO: CategoriaDTO[] = categorias.map((c) =>
+    typeof c.toDTO === 'function' ? c.toDTO() : (c as unknown as CategoriaDTO)
   );
 
   return (
