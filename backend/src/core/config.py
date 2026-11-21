@@ -19,9 +19,12 @@ class Settings(BaseSettings):
     @field_validator("DATABASE_URL", mode="before")
     @classmethod
     def normalize_database_url(cls, value: str) -> str:
-        """Garante compatibilidade com SQLAlchemy 2.0 quando o provedor fornece postgres://."""
-        if isinstance(value, str) and value.startswith("postgres://"):
-            return value.replace("postgres://", "postgresql://", 1)
+        """Garante compatibilidade com SQLAlchemy 2.0 + psycopg2-binary."""
+        if isinstance(value, str):
+            if value.startswith("postgres://"):
+                return value.replace("postgres://", "postgresql://", 1)
+            if value.startswith("postgresql+psycopg://"):
+                return value.replace("postgresql+psycopg://", "postgresql://", 1)
         return value
 
     model_config = SettingsConfigDict(
