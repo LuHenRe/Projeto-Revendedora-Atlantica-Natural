@@ -45,7 +45,7 @@ jobs:
           python -m pip install -r requirements.txt pytest pytest-cov
 
       - name: Executar testes
-        run: pytest -q
+        run: python -m pytest -q
 
   frontend-tests:
     name: Frontend - Testes e Build
