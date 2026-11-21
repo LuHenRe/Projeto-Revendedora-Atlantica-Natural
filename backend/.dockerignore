@@ -1,0 +1,14 @@
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+*.egg-info/
+tests/
+.env
+.env.*
+uploads/produtos/*
+!uploads/produtos/.gitkeep
