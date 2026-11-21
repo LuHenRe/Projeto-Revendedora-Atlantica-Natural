@@ -15,7 +15,13 @@ const nextConfig: NextConfig = {
     ],
   },
   async rewrites() {
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000';
+    const rawUrl = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000').trim().replace(/\/$/, '');
+    if (!rawUrl || rawUrl === '[SENSITIVE]') {
+      return [];
+    }
+    const apiUrl = rawUrl.startsWith('http://') || rawUrl.startsWith('https://')
+      ? rawUrl
+      : `https://${rawUrl}`;
     return [
       {
         source: '/uploads/:path*',
