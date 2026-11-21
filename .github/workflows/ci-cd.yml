@@ -14,7 +14,7 @@ concurrency:
 env:
   PYTHON_VERSION: "3.12"
   NODE_VERSION: "22"
-  DOCKER_IMAGE_NAME: ${{ vars.DOCKERHUB_IMAGE_NAME || 'atlantica-natural-backend' }}
+  DOCKER_IMAGE_NAME: ${{ vars.DOCKERHUB_IMAGE_NAME || 'revendedora-atlantica-backend' }}
 
 jobs:
   backend-tests:
